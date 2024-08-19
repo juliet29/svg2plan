@@ -1,0 +1,13 @@
+{
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "path": "../gqenv"
+    }
+  ],
+  "settings": {
+    "python.defaultInterpreterPath": "/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/gqenv/bin/python3.10"
+  }
+}
