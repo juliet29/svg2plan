@@ -60,7 +60,7 @@ class SVGReader:
 
     def get_shapely(self, r: SVGRect):
         x0 = r.x
-        y0 = r.y * - 1 #y + height
+        y0 = r.y * (-1) #y + height
 
 
         x1 = x0 + float(r.width)
@@ -68,6 +68,8 @@ class SVGReader:
 
         # ccw from bottom left
         coords = [(x0, y1), (x1, y1), (x1, y0), (x0, y0)]
+        if r.id== "m_bath":
+            print(coords)
         coords = [(c[0], c[1]+self.correction) for c in coords]
         return Polygon(LinearRing(coords))
     

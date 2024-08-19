@@ -5,9 +5,8 @@ from shapely import LinearRing, Polygon
 import networkx as nx
 
 from helpers.graph_viz import draw_spring, draw_planar
-from helpers.shapely import get_point_as_xy
-from positioned_graph import PositionedGraph
-
+from helpers.shapely import get_point_as_xy, list_coords
+from classes.positioned_graph import PositionedGraph
 
 
 class AdjacencyGenerator:
@@ -37,7 +36,8 @@ class AdjacencyGenerator:
     def get_fp_layout(self):
         self.fp_layout = {}
         for k, v in self.domains.items():
-            self.fp_layout[k]  = get_point_as_xy(v.centroid)
+            top_right = list_coords(v.exterior.coords)[2]
+            self.fp_layout[k]  = top_right #get_point_as_xy(v.centroid)
 
     
     
