@@ -69,7 +69,7 @@ class DirectedAdjacencyGenerator:
 
     
     def is_less_than2(self, a, b):
-        return self.corners_a[corner_pairs[a]] < self.corners_b[b]
+        return self.corners_a[a] < self.corners_b[b]
 
     def is_greater_than2(self, a, b):
         return self.corners_a[a] > self.corners_b[b]
