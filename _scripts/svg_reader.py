@@ -4,6 +4,8 @@ from dataclasses import dataclass
 
 from shapely import LinearRing, Polygon
 
+from classes.domains import Domain, Corners
+
 
 @dataclass
 class SVGRect:
@@ -12,6 +14,8 @@ class SVGRect:
     width: float
     height: float
     id: str
+
+
 
 
 class SVGReader:
@@ -36,9 +40,6 @@ class SVGReader:
             self.domains[r.id] = self.get_shapely(r)
         # slide each domain up so that there are no negative y values 
         
-        
-
-
 
     def get_rectangle(self, path):
         return SVGRect(
@@ -59,19 +60,22 @@ class SVGReader:
     
 
     def get_shapely(self, r: SVGRect):
-        x0 = r.x
-        y0 = r.y * (-1) #y + height
+        x_left = r.x
+        y_top = r.y * (-1) # make +y in conventioal +y direction 
 
 
-        x1 = x0 + float(r.width)
-        y1 = y0 - float(r.height)
+        x_right = x_left + float(r.width)
+        y_bottom = y_top - float(r.height)
+
+        y_bottom+=self.correction
+        y_top+=self.correction
 
         # ccw from bottom left
-        coords = [(x0, y1), (x1, y1), (x1, y0), (x0, y0)]
-        if r.id== "m_bath":
-            print(coords)
-        coords = [(c[0], c[1]+self.correction) for c in coords]
-        return Polygon(LinearRing(coords))
+        coords = [(x_left, y_bottom), (x_right, y_bottom), (x_right, y_top), (x_left, y_top)]
+
+        polygon = Polygon(LinearRing(coords))
+        corners = Corners(x_left, x_right, y_bottom, y_top)
+        return Domain(polygon, corners)
     
 
     

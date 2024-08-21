@@ -1,4 +1,4 @@
-from shapely import Point
+from shapely import Point, Polygon
 from shapely.coords import CoordinateSequence
 
 def get_point_as_xy(point: Point):
