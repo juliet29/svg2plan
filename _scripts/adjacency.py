@@ -26,7 +26,7 @@ class AdjacencyGenerator:
     def initialize_graph(self):
         self.G = nx.Graph()
         nodes = [(domain, 
-                  {"neighbor_directions": NeighborDirections()}) 
+                  {"data": NeighborDirections()}) 
                   for domain in self.domains]
         self.G.add_nodes_from(nodes)
 
