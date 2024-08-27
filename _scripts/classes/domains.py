@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Dict
 # from collections import namedtuple
 
 from shapely import Polygon
@@ -20,9 +21,11 @@ class Corners:
 
 @dataclass
 class Domain:
- polygon: Polygon
- corners: Corners
+    polygon: Polygon
+    corners: Corners
 
+
+DomainDict =  Dict[str, Domain]
 
 
 
