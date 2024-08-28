@@ -25,19 +25,19 @@ class Finder:
 
         # there should only be on ne node
         [self.lo.curr_node] = ne_nodes
-        print(f"ne node is {self.lo.curr_node}")
+        # print(f"ne node is {self.lo.curr_node}")
         return True
     
     def search_for_southern_nodes(self):
         for curr_node in self.lo.tracker[self.lo.tracker_row - 1]:
-            print(f"curr_node in row {self.lo.tracker_row - 1} = {curr_node}")
+            # print(f"curr_node in row {self.lo.tracker_row - 1} = {curr_node}")
 
             if self.find_next_directed_node(Direction.SOUTH, curr_node):
-                print(f"next south node is {self.lo.nb}")
+                # print(f"next south node is {self.lo.nb}")
                 self.lo.curr_node = self.lo.nb
                 return True
             else:
-                print(f"---{curr_node} has no southern nbs that are unplaced")
+                # print(f"---{curr_node} has no southern nbs that are unplaced")
                 continue
 
                 # updating to mirror behavior of find_north_east_node

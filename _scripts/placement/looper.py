@@ -6,10 +6,11 @@ from classes.directions import Direction
 from placement.finder import Finder
 from placement.updater import Updater
 from placement.placer import Placer
+from placement.interface import LooperInterface
 
 
 
-class Looper:
+class Looper(LooperInterface):
     def __init__(self, graph: nx.Graph, domains:DomainDict) -> None:
         self.G = deepcopy(graph)
         self.domains = deepcopy(domains)
@@ -35,8 +36,8 @@ class Looper:
                 break 
 
             self.placer.place_next_south_node()
-
             # finding for south nodes automatically updates curr_node
+            
             self.updater.update_tracker()
             self.updater.update_unplaced()
 
