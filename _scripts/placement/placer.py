@@ -8,15 +8,11 @@ class Placer:
         # placing nodes
     
     def place_next_south_node(self):
-        if not self.lo.tracker[0]:
-            # tracker updated AFTER placement
-            self.place_north_east_node()
-        else:
-            north_node = self.lo.tracker[self.lo.tracker_row - 1][0]
-            new_y_top = self.lo.domains[north_node].new_corners.y_bottom
-            new_x_left = 0
+        north_node = self.lo.tracker[self.lo.tracker_column - 1][0]
+        new_y_top = self.lo.domains[north_node].new_corners.y_bottom
+        new_x_left = 0
 
-            self.create_new_corners(self.lo.curr_node, new_x_left, new_y_top)
+        self.create_new_corners(self.lo.curr_node, new_x_left, new_y_top)
 
 
 
@@ -34,7 +30,7 @@ class Placer:
         assert self.lo.curr_node
         new_x_left = self.lo.domains[self.lo.curr_node].new_corners.x_right 
 
-        ref_node = self.lo.tracker[self.lo.tracker_row][0]
+        ref_node = self.lo.tracker[self.lo.tracker_column][0]
         new_y_top = self.lo.domains[ref_node].new_corners.y_top
 
         self.create_new_corners(self.lo.nb, new_x_left, new_y_top)

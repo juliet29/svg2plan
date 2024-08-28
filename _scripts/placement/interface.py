@@ -10,7 +10,7 @@ class LooperInterface:
     domains: DomainDict
     unplaced: list[str]
     tracker: Dict
-    tracker_row: int
-    curr_node: Optional[str]
-    nb: Optional[str]
+    tracker_column: int
+    curr_node: str
+    nb: str
 

@@ -47,18 +47,20 @@ class Finder:
     def find_next_directed_node(self, direction:Direction, curr_node:Optional[str]=None):
         if not curr_node:
             curr_node = self.lo.curr_node
+            
         nbs = self.lo.G.nodes[curr_node]["data"][direction.name]
         available_nbs = list(set(nbs).intersection(set(self.lo.unplaced)))
+
         if not available_nbs:
             return False
 
         try:
             [self.lo.nb] = available_nbs
-            return True
         except ValueError:
             # more than one nb
-            corner = "y_top" if direction.name == "WEST" else "x_right"
+            corner = ("y_top" if direction == Direction.WEST 
+                      else "x_right" if direction == Direction.SOUTH else None)
             corners = [self.lo.domains[node].corners[corner] for node in available_nbs]
             index_of_greatest_corner = corners.index(max(corners))
             self.lo.nb = available_nbs[index_of_greatest_corner]
-            return True
+        return True
