@@ -7,12 +7,12 @@ class Placer:
 
         # placing nodes
     
-    def place_next_south_node(self):
-        north_node = self.lo.tracker[self.lo.tracker_column - 1][0]
+    def place_next_south_node(self, north_node):
+        # north_node = self.lo.tracker[self.lo.tracker_column - 1][0]
         new_y_top = self.lo.domains[north_node].new_corners.y_bottom
-        new_x_left = 0
+        new_x_left = self.lo.domains[north_node].new_corners.x_left
 
-        self.create_new_corners(self.lo.curr_node, new_x_left, new_y_top)
+        self.create_new_corners(self.lo.nb, new_x_left, new_y_top)
 
 
 

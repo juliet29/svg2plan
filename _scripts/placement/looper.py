@@ -83,6 +83,7 @@ class Looper(LooperInterface):
                     # updating tracker
                     v.append(self.nb)
                     # have to place node TODO
+                    self.placer.place_next_south_node(north_node)
                     # curr node doesnt matter anymore.. => should do away with nb rhetoric TODO
                     self.updater.update_unplaced(self.nb)
 
