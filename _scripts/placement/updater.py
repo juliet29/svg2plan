@@ -3,19 +3,23 @@ from placement.interface import LooperInterface
 class Updater:
     def __init__(self, looper_obj:LooperInterface) -> None:
         self.lo = looper_obj
-            # updates
-    def update_curr_node(self):
-        self.lo.curr_node = self.lo.nb
         
 
     def update_tracker(self):
-        if self.lo.tracker_column not in self.lo.tracker.keys():
-            self.lo.tracker[self.lo.tracker_column] = []
+        self.lo.tracker[self.lo.tracker_column] = []
         self.lo.tracker[self.lo.tracker_column].append(self.lo.curr_node)
 
-    def update_tracker_column(self):
+
+    def extend_tracker_west(self):
         self.lo.tracker_column+=1
     
-    def update_unplaced(self, node:str):
-        self.lo.unplaced.remove(node)
+    
+    def extend_tracker_south(self, column):
+        column.append(self.lo.curr_node)
+
+
+    def update_unplaced(self):
+        self.lo.unplaced.remove(self.lo.curr_node)
+
+    
 

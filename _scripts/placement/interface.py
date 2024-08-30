@@ -12,5 +12,4 @@ class LooperInterface:
     tracker: Dict
     tracker_column: int
     curr_node: str
-    nb: str
 
