@@ -20,7 +20,7 @@ class SVGRect:
 
 class SVGReader:
     def __init__(self, svg_name) -> None:
-        self.svg_path = os.path.join("../../svg_imports", svg_name)
+        self.svg_path = os.path.join("../svg_imports", svg_name)
         self.domains = {}
 
     def run(self):

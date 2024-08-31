@@ -1,4 +1,5 @@
 import networkx as nx
+import pickle
 from copy import deepcopy
 
 from classes.domains import DomainDict
@@ -7,6 +8,8 @@ from placement.finder import Finder
 from placement.updater import Updater
 from placement.placer import Placer
 from placement.interface import LooperInterface
+from svg_helpers.plots import prepare_shape_dict, get_plotly_colors, plot_shapes
+from svg_helpers.shapely import create_polygon_from_corners
 
 
 
@@ -94,6 +97,39 @@ class Looper(LooperInterface):
         self.ew_counter+=1
         if self.ew_counter > 5:
             return True
+        
+
+    def plot(self):
+        colors, _ = get_plotly_colors(n_colors=len(self.domains))
+
+        plot_dict = {}
+        for ix, (k, v) in enumerate(self.domains.items()):
+                plot_dict[k] = prepare_shape_dict(v.new_corners, color=colors[ix], label=k) # type: ignore
+
+        fig = plot_shapes(plot_dict, x_range=[-10, 800], y_range=[-600, 10])
+
+        fig.show()
+
+    def clean_up(self):
+        shapes = {}
+        corners = {}
+        for name, room in self.domains.items():
+            corners[name] = room.new_corners
+            shapes[name] = create_polygon_from_corners(room.new_corners)
+
+        results = {
+            "graph": self.G,
+            "corners": corners, 
+            "shapes": shapes
+        }
+
+        with open('../intermediate_solutions/amber.pickle', 'wb') as handle:
+            pickle.dump(results, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+        
+
+
 
 
 

@@ -1,12 +1,7 @@
 from dataclasses import dataclass
 from typing import Dict, Optional
-# from collections import namedtuple
 
 from shapely import Polygon
-
-# Corners = namedtuple("Corners", ["x_left", "x_right", "y_bottom", "y_top"])
-
-
 
 @dataclass
 class Corners:

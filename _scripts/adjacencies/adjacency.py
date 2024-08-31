@@ -4,12 +4,12 @@ from itertools import combinations
 from shapely import Polygon
 import networkx as nx
 
-from helpers.graph_viz import draw_spring, draw_planar
-from helpers.shapely import list_coords
+from svg_helpers.graph_viz import draw_spring, draw_planar
+from svg_helpers.shapely import list_coords
 from classes.positioned_graph import PositionedGraph
 from classes.domains import Domain
 from classes.directions import NeighborDirections
-from directed_adjacency import DirectedAdjacencyGenerator
+from adjacencies.directed_adjacency import DirectedAdjacencyGenerator
 
 
 
@@ -45,7 +45,7 @@ class AdjacencyGenerator:
     # TODO could be its own class, needs the strings, the graph, and the domains.. 
 
 
-    ## graph stuff
+    ## display... 
 
     def get_layout(self):
         self.fp_layout = {}
