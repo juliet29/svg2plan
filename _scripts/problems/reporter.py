@@ -8,6 +8,8 @@ from svg_helpers.helpers import key_from_value
 from copy import deepcopy
 
 
+
+
 class Reporter:
     def __init__(
         self,
@@ -94,8 +96,8 @@ class Reporter:
 
     def summarize(self):
         self.overlaps = [
-            p for p in self.problems if p.problem_type == ProblemType.OVERLAP
+            p for p in self.problems if p.problem_type == ProblemType.OVERLAP and p.resolved == False
         ]
-        self.holes = [p for p in self.problems if p.problem_type == ProblemType.HOLE]
+        self.holes = [p for p in self.problems if p.problem_type == ProblemType.HOLE and p.resolved == False]
         print(f"Overlaps: {len(self.overlaps)}. Holes: {len(self.holes)}.")
         

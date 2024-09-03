@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from enum import Enum
 from shapely import Polygon
+from classes.domains import Corners
+from svg_helpers.shapely import bounds_to_corners
 
 class ProblemType(Enum):
     OVERLAP = 0
@@ -25,4 +27,5 @@ class Problem:
             return False
         
     def __repr__(self) -> str:
-        return f"Problem(index={self.index}, problem_type={self.problem_type}, resolved={self.resolved}, nbs={self.nbs})"
+        corner = bounds_to_corners(self.geometry.bounds)
+        return f"Problem(index={self.index}, problem_type={self.problem_type}, resolved={self.resolved}, nbs={self.nbs}, geom={corner})"

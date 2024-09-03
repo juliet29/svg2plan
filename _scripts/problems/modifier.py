@@ -2,6 +2,7 @@ from shapely import box
 from copy import deepcopy
 from problems.classes.actions import Action, ActionType
 from classes.layout import Layout
+from svg_helpers.shapely import create_polygon_from_corners
 
 
 class ModifyBlock:
@@ -13,6 +14,7 @@ class ModifyBlock:
         self.curr_polygon = self.all_shapes[action.node]
         self.curr_corners = self.all_corners[action.node]
         self.distance = action.distance
+        self.node = action.node
         self.action = action
 
     def run(self):
@@ -25,13 +27,13 @@ class ModifyBlock:
     def stretch(self):
         # to the right 
         self.curr_corners.x_right += self.distance
-        self.curr_polygon = box(*self.curr_corners)
+        self.all_shapes[self.node] = create_polygon_from_corners(self.curr_corners)
 
     def push(self):
         # to the right 
         self.curr_corners.x_right += self.distance
         self.curr_corners.x_left += self.distance
-        self.curr_polygon = box(*self.curr_corners)
+        self.all_shapes[self.node] = create_polygon_from_corners(self.curr_corners)
 
     def get_modified_layout(self):
         self.modified_layout = Layout(self.all_shapes, self.all_corners, self.graph)

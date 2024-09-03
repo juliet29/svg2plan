@@ -33,10 +33,12 @@ class SequenceRunner():
 
     def execute_actions(self):
         print(f"--executing action #{self.limit_counter}")
+        print(f"curr problem = {self.curr_problem}")
         self.limit_counter+=1
         self.decide_action()
         self.take_action()
         self.eval_action()
+        print(f"curr problem = {self.curr_problem}")
 
 
     def decide_action(self):
