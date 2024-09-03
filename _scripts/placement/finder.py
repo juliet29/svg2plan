@@ -6,17 +6,17 @@ class Finder:
     def __init__(self, looper_obj:LooperInterface) -> None:
         self.lo = looper_obj
 
-    def find_north_east_node(self):
+    def find_north_west_node(self):
         ne_nodes = []
         for k, v in self.lo.G.nodes(data=True):
-            if not v["data"].NORTH and not v["data"].EAST:
+            if not v["data"].NORTH and not v["data"].WEST:
                 ne_nodes.append(k)
 
         [self.lo.curr_node] = ne_nodes
         return True
 
-    def find_east_node(self):
-        nbs = self.lo.G.nodes[self.lo.curr_node]["data"][Direction.EAST.name]
+    def find_west_node(self):
+        nbs = self.lo.G.nodes[self.lo.curr_node]["data"][Direction.WEST.name]
         if not nbs:
             return None
 
@@ -54,7 +54,7 @@ class Finder:
 
 def match_corner(direction:Direction):
     match direction:
-        case Direction.WEST:
+        case Direction.EAST:
             return "y_top"
         case Direction.SOUTH:
             return "x_right"

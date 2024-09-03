@@ -28,27 +28,27 @@ class Looper(LooperInterface):
         self.placer = Placer(self)
 
     def run(self):
-        self.set_north_east_node()
-        self.set_north_west_nodes()
+        self.set_north_west_node()
+        self.set_remaining_north_nodes()
         self.set_relative_south_nodes()
 
-    def set_north_east_node(self):
-        self.finder.find_north_east_node()
-        self.placer.place_north_east_node()
+    def set_north_west_node(self):
+        self.finder.find_north_west_node()
+        self.placer.place_north_west_node()
         self.updater.update_tracker()
         self.updater.update_unplaced()
 
 
 
-    def set_north_west_nodes(self):
+    def set_remaining_north_nodes(self):
         self.ew_counter = 0
         while True:
-            east_node = self.tracker[self.tracker_column][0]
-            if not self.finder.find_next_directed_node(Direction.WEST, east_node):
+            west_node = self.tracker[self.tracker_column][0]
+            if not self.finder.find_next_directed_node(Direction.EAST, west_node):
                 print(f"---{self.curr_node} has no western nbs that are unplaced")
                 return 
             else:
-                self.placer.place_next_west_node(east_node)
+                self.placer.place_next_east_node(west_node)
                 self.tracker_column+=1
                 self.updater.update_tracker()
                 self.updater.update_unplaced()
@@ -71,8 +71,8 @@ class Looper(LooperInterface):
                 # sets the nb
                 result = self.finder.find_next_directed_node(Direction.SOUTH, north_node)
                 if result == True: 
-                    east_node = self.finder.find_east_node()       
-                    self.placer.place_next_south_node(north_node, east_node)
+                    west_node = self.finder.find_west_node()       
+                    self.placer.place_next_south_node(north_node, west_node)
                     self.updater.extend_tracker_south(column)
                     self.updater.update_unplaced()
 

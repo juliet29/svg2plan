@@ -1,5 +1,5 @@
 from shapely import STRtree, Point
-from networkx import Graph
+from copy import deepcopy
 
 from classes.layout import Layout
 from classes.directions import Direction, pairs
@@ -7,6 +7,7 @@ from classes.directions import Direction, pairs
 from problems.classes.problem import Problem, ProblemType
 from problems.classes.actions import Action, ActionType
 from problems.classes.sequence import Sequence
+from problems.classes.problems_base import ProblemsBase
 
 from svg_helpers.shapely import bounds_to_corners
 from svg_helpers.helpers import key_from_value
@@ -14,13 +15,14 @@ from svg_helpers.helpers import key_from_value
 
 
 
-class ActionGenerator():
+class ActionGenerator(ProblemsBase):
     def __init__(self, problem: Problem, layout: Layout) -> None:
+        super().__init__(deepcopy(layout))
         self.problem = problem
         # TODO redundant with reporter.py 
         self.tree = STRtree(list(layout.shapes.values()))
-        self.shapes = layout.shapes
-        self.graph = layout.graph
+        # self.shapes = layout.shapes
+        # self.G = layout.G
 
 
     def generate_action(self):
@@ -63,12 +65,12 @@ class ActionGenerator():
 
 
     def is_overlap_dir(self, dir:Direction):
-        assert self.graph
-        if self.v in self.graph.nodes[self.u]["data"][dir.name]:
+        assert self.G
+        if self.v in self.G.nodes[self.u]["data"][dir.name]:
             # print(f"{self.v} is the {dir.name} node")
             self.node = self.v
             return True
-        elif self.v in self.graph.nodes[self.u]["data"][pairs[dir].name]:
+        elif self.v in self.G.nodes[self.u]["data"][pairs[dir].name]:
             # print(f"{self.u} is the {dir.name} node")
             self.node = self.u
             return True

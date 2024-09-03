@@ -35,10 +35,10 @@ class DirectedAdjacencyGenerator:
             return
 
         # a EAST of b 
-        if self.is_less_than2("x_right", "x_left"):
-            self.update_nodes(Direction.EAST)
-        elif self.is_greater_than2("x_left", "x_right"):
+        if self.is_less_than("x_right", "x_left"):
             self.update_nodes(Direction.WEST)
+        elif self.is_greater_than("x_left", "x_right"):
+            self.update_nodes(Direction.EAST)
 
 
 
@@ -49,9 +49,9 @@ class DirectedAdjacencyGenerator:
             return
         
         # a SOUTH of b 
-        if self.is_less_than2("y_top", "y_bottom"):
+        if self.is_less_than("y_top", "y_bottom"):
             self.update_nodes(Direction.SOUTH)
-        elif self.is_greater_than2("y_bottom", "y_top"):
+        elif self.is_greater_than("y_bottom", "y_top"):
             self.update_nodes(Direction.NORTH)
 
   
@@ -65,8 +65,8 @@ class DirectedAdjacencyGenerator:
        return math.isclose(self.corners_a[self.current_corner], self.corners_b[self.current_corner], rel_tol=self.TOLERANCE)
 
     
-    def is_less_than2(self, a, b):
+    def is_less_than(self, a, b):
         return self.corners_a[a] < self.corners_b[b]
 
-    def is_greater_than2(self, a, b):
+    def is_greater_than(self, a, b):
         return self.corners_a[a] > self.corners_b[b]

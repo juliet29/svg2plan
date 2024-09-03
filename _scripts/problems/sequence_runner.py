@@ -5,13 +5,13 @@ from problems.classes.problem import Problem
 from problems.classes.actions import Action
 from problems.classes.sequence import Sequence
 from problems.action_generator import ActionGenerator
-from problems.modifier import ModifyBlock
+from problems.modifier import BlockModifier
 from problems.reporter import Reporter
 
 from svg_helpers.helpers import key_from_value
 
 
-class SequenceRunner():
+class SequenceRunner:
     def __init__(self, sequence: Sequence, starting_problem: Problem):
         self.problems = sequence.problems
         self.actions = sequence.actions
@@ -28,36 +28,35 @@ class SequenceRunner():
             self.execute_actions()
             if self.are_problems_solved:
                 print("no more problems!")
-                break 
-            
+                break
+
             if self.limit_counter > self.LIMIT:
                 print("exceeded max iterations")
                 break
 
-
     def execute_actions(self):
         if self.are_problems_solved:
             print("no more problems!")
-            return 
+            return
         print(f"--executing action #{self.limit_counter}")
         print(f"curr problem = {self.curr_problem}")
-        self.limit_counter+=1
+        self.limit_counter += 1
         self.decide_action()
         self.take_action()
         self.eval_action()
         if self.are_problems_solved:
             print("no more problems!")
-            return 
+            return
         print(f"next problem = {self.curr_problem}")
-
 
     def decide_action(self):
         assert self.layout.graph
-        self.curr_action = ActionGenerator(self.curr_problem, self.layout).generate_action()
-
+        self.curr_action = ActionGenerator(
+            self.curr_problem, self.layout
+        ).generate_action()
 
     def take_action(self):
-        self.mb = ModifyBlock(self.curr_action, self.layout)
+        self.mb = BlockModifier(self.curr_action, self.layout)
         self.mb.run()
         self.temp_layout = self.mb.modified_layout
 
@@ -67,11 +66,12 @@ class SequenceRunner():
         else:
             self.process_action(is_successful_action=False)
 
-
     def is_problem_resolved(self):
         self.re = Reporter(self.temp_layout, self.problems)
         self.re.run()
-        [test_prob] = [p for p in self.re.problems if p.index == self.curr_problem.index]
+        [test_prob] = [
+            p for p in self.re.problems if p.index == self.curr_problem.index
+        ]
         if test_prob.resolved == True:
             print("problem resolved")
             return True
@@ -79,11 +79,10 @@ class SequenceRunner():
             print("problem not resolved")
             return False
 
-
     # def is_helpful_action(self):
     #         return False
-    
-    def process_action(self, is_successful_action:bool):
+
+    def process_action(self, is_successful_action: bool):
         if is_successful_action:
             self.layout = self.temp_layout
             self.problems = self.re.problems
@@ -97,31 +96,19 @@ class SequenceRunner():
 
         if len(indices) == 0:
             self.are_problems_solved = True
-            return 
+            return
 
         if len(indices) == 1:
             print(f"there is just one index and it is {indices}")
             [self.curr_problem] = [p for p in self.problems if p.index == indices[0]]
-            return 
-        
+            return
+
         cycled_indices = cycle(indices)
         iterator = islice(cycled_indices, self.curr_problem.index, None)
 
         next(iterator)
         ix = next(iterator)
         [self.curr_problem] = [p for p in self.problems if p.index == ix]
-        
+
+
 # TODO make it easier to get problems by index
-
-
-        
-
-    
-
-
-    
-
-
-    
-    
-
