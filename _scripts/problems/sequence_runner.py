@@ -20,11 +20,15 @@ class SequenceRunner():
         self.curr_problem = starting_problem
         self.LIMIT = 10
         self.limit_counter = 0
+        self.are_problems_solved = False
 
     def run(self):
         active_problems = [p for p in self.problems if p.resolved == False]
         while len(active_problems) > 0:
             self.execute_actions()
+            if self.are_problems_solved:
+                print("no more problems!")
+                break 
             
             if self.limit_counter > self.LIMIT:
                 print("exceeded max iterations")
@@ -32,13 +36,19 @@ class SequenceRunner():
 
 
     def execute_actions(self):
+        if self.are_problems_solved:
+            print("no more problems!")
+            return 
         print(f"--executing action #{self.limit_counter}")
         print(f"curr problem = {self.curr_problem}")
         self.limit_counter+=1
         self.decide_action()
         self.take_action()
         self.eval_action()
-        print(f"curr problem = {self.curr_problem}")
+        if self.are_problems_solved:
+            print("no more problems!")
+            return 
+        print(f"next problem = {self.curr_problem}")
 
 
     def decide_action(self):
@@ -52,10 +62,10 @@ class SequenceRunner():
         self.temp_layout = self.mb.modified_layout
 
     def eval_action(self):
-        if self.is_problem_resolved() and self.is_helpful_action():
-            self.process_action(SUCCESS=True)
+        if self.is_problem_resolved():
+            self.process_action(is_successful_action=True)
         else:
-            self.process_action(SUCCESS=False)
+            self.process_action(is_successful_action=False)
 
 
     def is_problem_resolved(self):
@@ -70,18 +80,30 @@ class SequenceRunner():
             return False
 
 
-    def is_helpful_action(self):
-            return False
+    # def is_helpful_action(self):
+    #         return False
     
-    def process_action(self, SUCCESS:bool):
-        self.get_next_problem()
-        self.curr_action.succesful = SUCCESS
-        self.actions.append(self.curr_action)
-        if SUCCESS:
+    def process_action(self, is_successful_action:bool):
+        if is_successful_action:
             self.layout = self.temp_layout
+            self.problems = self.re.problems
+        self.get_next_problem()
+        self.curr_action.succesful = is_successful_action
+        self.actions.append(self.curr_action)
 
     def get_next_problem(self):
         indices = [i.index for i in self.problems if i.resolved == False]
+        print(f"indices: {indices}")
+
+        if len(indices) == 0:
+            self.are_problems_solved = True
+            return 
+
+        if len(indices) == 1:
+            print(f"there is just one index and it is {indices}")
+            [self.curr_problem] = [p for p in self.problems if p.index == indices[0]]
+            return 
+        
         cycled_indices = cycle(indices)
         iterator = islice(cycled_indices, self.curr_problem.index, None)
 
@@ -89,6 +111,7 @@ class SequenceRunner():
         ix = next(iterator)
         [self.curr_problem] = [p for p in self.problems if p.index == ix]
         
+# TODO make it easier to get problems by index
 
 
         
