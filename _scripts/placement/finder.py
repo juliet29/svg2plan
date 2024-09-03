@@ -49,9 +49,6 @@ class Finder:
     
 
 
-
-
-
 def match_corner(direction:Direction):
     match direction:
         case Direction.EAST:

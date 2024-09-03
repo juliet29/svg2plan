@@ -58,7 +58,7 @@ class ActionGenerator(ProblemsBase):
 
     def get_node_in_direction_of_overlap(self):
         self.u, self.v = self.problem.nbs
-        if self.is_overlap_dir(Direction.WEST):
+        if self.is_overlap_dir(Direction.EAST):
             return
         elif self.is_overlap_dir(Direction.NORTH):
             return
