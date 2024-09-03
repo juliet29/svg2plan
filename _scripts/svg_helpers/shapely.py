@@ -11,3 +11,7 @@ def list_coords(coords: CoordinateSequence):
 
 def create_polygon_from_corners(corners:Corners):
     return box(corners.x_left, corners.y_bottom, corners.x_right, corners.y_top)
+
+def bounds_to_corners(val:tuple):
+    minx, miny, maxx, maxy = val
+    return Corners(minx, maxx, miny, maxy)

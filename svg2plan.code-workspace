@@ -8,6 +8,8 @@
     }
   ],
   "settings": {
-    "python.defaultInterpreterPath": "/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/gqenv/bin/python3.10"
+    "python.defaultInterpreterPath": "/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/gqenv/bin/python3.10",
+    "python.analysis.include": ["/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/_scripts"],
+    "python.analysis.extraPaths": ["/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/_scripts"]
   }
 }
