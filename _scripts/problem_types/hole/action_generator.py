@@ -1,10 +1,11 @@
 from shapely import STRtree, Point
 
 from classes.layout import Layout
-from classes.directions import GeneralDirection, DirectedPairEW, DirectedPairNS, make_directed_pair
 from problems.classes.problems_base import ProblemsBase
 from problems.classes.problem import Problem, ProblemType
 from problems.classes.actions import Action, ActionType
+
+from problem_types.action_abc import ActionBase
 
 from svg_helpers.shapely import bounds_to_corners
 from svg_helpers.helpers import key_from_value
@@ -12,11 +13,11 @@ from svg_helpers.helpers import key_from_value
 
 
 
-class HoleActionGenerator(ProblemsBase):
+class HoleActionGenerator(ActionBase):
     def __init__(self, problem: Problem, layout: Layout) -> None:
-        super().__init__(layout)
-        self.problem = problem
-        assert self.problem.problem_type == ProblemType.OVERLAP
+        super().__init__(problem, layout)
+        # self.problem = problem
+        assert self.problem.problem_type == ProblemType.HOLE
 
     def generate_action(self):
         self.action_type = ActionType.STRETCH

@@ -53,9 +53,10 @@ class SequenceRunner:
         assert self.layout.graph
         self.curr_action = ActionGenerator(
             self.curr_problem, self.layout
-        ).generate_action()
+        ).handle_case()
 
     def take_action(self):
+        assert self.curr_action
         self.mb = BlockModifier(self.curr_action, self.layout)
         self.mb.run()
         self.temp_layout = self.mb.modified_layout

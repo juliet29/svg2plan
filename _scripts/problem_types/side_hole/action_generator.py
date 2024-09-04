@@ -1,5 +1,6 @@
 from classes.layout import Layout
 from classes.directions import GeneralDirection, DirectedPairEW, DirectedPairNS, make_directed_pair
+from problem_types.action_abc import ActionBase
 from problems.classes.problems_base import ProblemsBase
 from problems.classes.problem import Problem, ProblemType
 from problems.classes.actions import Action, ActionType
@@ -7,10 +8,9 @@ from problems.classes.actions import Action, ActionType
 
 
 
-class SideHoleActionGenerator(ProblemsBase):
+class SideHoleActionGenerator(ActionBase):
     def __init__(self, problem: Problem, layout: Layout) -> None:
-        super().__init__(layout)
-        self.problem = problem
+        super().__init__(problem, layout)
         assert self.problem.problem_type == ProblemType.SIDE_HOLE
         
 
