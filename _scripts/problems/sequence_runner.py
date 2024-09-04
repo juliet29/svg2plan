@@ -51,9 +51,12 @@ class SequenceRunner:
 
     def decide_action(self):
         assert self.layout.graph
-        self.curr_action = ActionGenerator(
+        self.ag = ActionGenerator(
             self.curr_problem, self.layout
-        ).handle_case()
+        )
+        self.ag.handle_case()
+        self.curr_action = self.ag.action
+        print(self.curr_action)
 
     def take_action(self):
         assert self.curr_action
@@ -80,10 +83,9 @@ class SequenceRunner:
             print("problem not resolved")
             return False
 
-    # def is_helpful_action(self):
-    #         return False
 
     def process_action(self, is_successful_action: bool):
+        assert self.curr_action
         if is_successful_action:
             self.layout = self.temp_layout
             self.problems = self.re.problems

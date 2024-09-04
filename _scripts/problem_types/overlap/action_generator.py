@@ -1,12 +1,11 @@
 from classes.layout import Layout
-from classes.directions import GeneralDirection, DirectedPairEW, DirectedPairNS, make_directed_pair
+from classes.directions import GeneralDirection, make_directed_pair
 from problem_types.action_abc import ActionBase
-from problems.classes.problems_base import ProblemsBase
 from problems.classes.problem import Problem, ProblemType
 from problems.classes.actions import Action, ActionType
 
 from svg_helpers.shapely import bounds_to_corners
-from svg_helpers.helpers import key_from_value
+
 
 
 
@@ -47,7 +46,7 @@ class OverlapActionGenerator(ActionBase):
 
     def determine_node(self):
         if self.general_direction == GeneralDirection.EAST_WEST:
-            self.node = self.d.WEST
+            self.node = self.d.EAST
         elif self.general_direction == GeneralDirection.NORTH_SOUTH:
             self.node = self.d.NORTH
 

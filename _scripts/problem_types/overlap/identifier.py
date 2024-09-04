@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from classes.layout import Layout
 from classes.directions import Direction
 from problems.classes.problems_base import ProblemsBase
@@ -22,7 +22,7 @@ class OverlapIdentifier(ProblemsBase):
         self.find_overlaps()
         for ix, data in enumerate(self.overlaps):
             self.problems.append(
-                Problem(ix, ProblemType.HOLE, nbs=data.rooms, geometry=data.shape)
+                Problem(ix, ProblemType.OVERLAP, nbs=data.rooms, geometry=data.shape)
             )
 
     def find_overlaps(self):

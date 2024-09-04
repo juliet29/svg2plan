@@ -15,7 +15,7 @@ class Action:
     succesful: bool = False
 
     def __repr__(self) -> str:
-        txt = f"Action(problem=({self.problem.index, self.problem.problem_type}), action_type={self.action_type}, node={self.node}, distance={self.distance})" 
+        txt = f"Action(problem=({self.problem.index, self.problem.problem_type.name}), action_type={self.action_type}, node={self.node}, distance={self.distance})" 
         return txt
 
 

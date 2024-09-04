@@ -34,7 +34,9 @@ class Problem:
         txt =  f"Problem(index={self.index}, problem_type={self.problem_type}, resolved={self.resolved}, nbs={self.nbs}"
         if self.geometry:
             corner = bounds_to_corners(self.geometry.bounds)
-            txt2  = (f", geom={corner}")
+            txt2  = (f", x_left={corner.x_left})")
+        elif self.direction:
+            txt2 = f", dir={self.direction.name})"
         else:
             txt2 = ")"
         return txt + txt2
