@@ -1,11 +1,17 @@
 from enum import Enum
-from dataclasses import dataclass,field
+from dataclasses import dataclass, field
+
 
 class Direction(Enum):
     NORTH = 0
     SOUTH = 1
     EAST = 2
     WEST = 3
+
+class GeneralDirection(Enum):
+    NORTH_SOUTH = 0
+    EAST_WEST = 1
+
 
 @dataclass
 class NeighborDirections:
@@ -18,10 +24,71 @@ class NeighborDirections:
         return getattr(self, i)
     
 
-pairs  = {
+
+
+DIRECTION_PAIRS = {
     Direction.NORTH: Direction.SOUTH,
     Direction.SOUTH: Direction.NORTH,
     Direction.EAST: Direction.WEST,
     Direction.WEST: Direction.EAST,
 }
+
+
+@dataclass
+class DirectedPairEW:
+    EAST: str
+    WEST: str
+    def __repr__(self) -> str:
+        l1 = f"DirectedPair(`{self.WEST} is WEST of {self.EAST}`)"
+        return l1
+
+@dataclass
+class DirectedPairNS:
+    NORTH: str
+    SOUTH: str
+    def __repr__(self) -> str:
+        l1 = f"DirectedPair(`{self.NORTH} is NORTH of {self.SOUTH}`)"
+        return l1
+
+
+def make_directed_pairEW(G, u, v):
+    u_data = G.nodes(data=True)[u]
+    if v in u_data["data"].EAST:
+        d = DirectedPairEW(EAST=v, WEST=u)
+    elif v in u_data["data"].WEST:
+        d = DirectedPairEW(EAST=u, WEST=v)
+    else:
+        print("No EW relation")
+        return
+
+    return d
+
+def make_directed_pairNS(G, u, v):
+    u_data = G.nodes(data=True)[u]
+    if v in u_data["data"].NORTH:
+        d = DirectedPairNS(NORTH=v, SOUTH=u)
+    elif v in u_data["data"].SOUTH:
+        d = DirectedPairNS(NORTH=u, SOUTH=v)
+    else:
+        print("No NS relation")
+        return
+
+    return d
+
+def make_directed_pair(G, u, v):
+    u_data = G.nodes(data=True)[u]
+    possible_pairs = []
+    if v in u_data["data"].EAST:
+        possible_pairs.append(DirectedPairEW(EAST=v, WEST=u))
+    if v in u_data["data"].WEST:
+        possible_pairs.append(DirectedPairEW(EAST=u, WEST=v))
+    if v in u_data["data"].NORTH:
+        possible_pairs.append(DirectedPairNS(NORTH=v, SOUTH=u))
+    if v in u_data["data"].SOUTH:
+        possible_pairs.append(DirectedPairNS(NORTH=u, SOUTH=v))
+
+    return possible_pairs
+        
+
+
 

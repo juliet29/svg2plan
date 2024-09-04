@@ -1,6 +1,8 @@
+from dataclasses import dataclass
 from classes.layout import Layout
 from classes.directions import Direction
 from problems.classes.problems_base import ProblemsBase
+from problems.classes.problem import Problem, ProblemType
 
 SIDE_HOLE_PAIRS = {
     Direction.NORTH : [Direction.EAST, Direction.WEST],
@@ -9,11 +11,24 @@ SIDE_HOLE_PAIRS = {
     Direction.WEST : [Direction.NORTH, Direction.SOUTH],
 }
 
+@dataclass
+class SideHolePair:
+    pair: tuple
+    direction: Direction
 
-class SideHoleFinder(ProblemsBase):
+
+
+class SideHoleIdentifier(ProblemsBase):
     def __init__(self, layout:Layout) -> None:
         super().__init__(layout)
         self.side_hole_pairs = []
+        self.problems = []
+
+    def report_problems(self):
+        for ix, pair in enumerate(self.side_hole_pairs):
+            self.problems.append(
+                Problem(ix, ProblemType.SIDE_HOLE, nbs=pair.pair, direction=pair.direction)
+            )
 
     def search_layout(self):
         for dir in Direction:
@@ -27,10 +42,10 @@ class SideHoleFinder(ProblemsBase):
 
     def search_near_node(self):
         nbs = self.find_direction_nbs()
-        
         for nb in nbs:
             if not self.shapes[self.node].touches(self.shapes[nb]):
-                    self.side_hole_pairs.append((self.node, nb))
+                    shp = SideHolePair((self.node, nb), self.direction)
+                    self.side_hole_pairs.append(shp)
 
     def find_direction_nbs(self):
         dir1, dir2 = SIDE_HOLE_PAIRS[self.direction]

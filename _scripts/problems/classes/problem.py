@@ -1,19 +1,23 @@
 from dataclasses import dataclass
+from typing import Optional
 from enum import Enum
 from shapely import Polygon
 from classes.domains import Corners
+from classes.directions import Direction
 from svg_helpers.shapely import bounds_to_corners
 
 class ProblemType(Enum):
     OVERLAP = 0
     HOLE = 1
+    SIDE_HOLE = 2
 
 @dataclass
 class Problem:
     index: int
     problem_type: ProblemType
     nbs: list[str]
-    geometry: Polygon
+    geometry: Optional[Polygon] = None
+    direction: Optional[Direction] = None
     resolved: bool = False
     matched: bool = False
 
@@ -27,5 +31,12 @@ class Problem:
             return False
         
     def __repr__(self) -> str:
-        corner = bounds_to_corners(self.geometry.bounds)
-        return f"Problem(index={self.index}, problem_type={self.problem_type}, resolved={self.resolved}, nbs={self.nbs}, geom={corner})"
+        txt =  f"Problem(index={self.index}, problem_type={self.problem_type}, resolved={self.resolved}, nbs={self.nbs}"
+        if self.geometry:
+            corner = bounds_to_corners(self.geometry.bounds)
+            txt2  = (f", geom={corner}")
+        else:
+            txt2 = ")"
+        return txt + txt2
+        
+        
