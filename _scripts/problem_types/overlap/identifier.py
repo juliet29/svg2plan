@@ -1,9 +1,10 @@
 from dataclasses import dataclass, field
-from classes.layout import Layout
-from classes.directions import Direction
-from problems.classes.problems_base import ProblemsBase
+from svg_helpers.layout import Layout
+from svg_helpers.directions import Direction
+from svg_helpers.layout_base import LayoutBase
 from shapely import Polygon, intersection
 from problems.classes.problem import Problem, ProblemType
+
 
 @dataclass
 class OverlapData:
@@ -11,12 +12,11 @@ class OverlapData:
     rooms: list
 
 
-class OverlapIdentifier(ProblemsBase):
-    def __init__(self, layout:Layout) -> None:
+class OverlapIdentifier(LayoutBase):
+    def __init__(self, layout: Layout) -> None:
         super().__init__(layout)
         self.problems: list[Problem] = []
         self.overlaps: list[OverlapData] = []
-
 
     def report_problems(self):
         self.find_overlaps()

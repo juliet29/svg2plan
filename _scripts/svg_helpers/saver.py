@@ -1,4 +1,4 @@
-from classes.layout import Layout
+from svg_helpers.layout import Layout
 import pickle
 import os
 

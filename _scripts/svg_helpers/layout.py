@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Dict, Optional
-from classes.domains import Corners
+from svg_helpers.domains import Corners
 from shapely import Polygon
 from networkx import Graph
 

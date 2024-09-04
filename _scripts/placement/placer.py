@@ -1,5 +1,5 @@
 from placement.interface import LooperInterface
-from classes.domains import Corners
+from svg_helpers.domains import Corners
 
 class Placer:
     def __init__(self, looper_obj:LooperInterface) -> None:

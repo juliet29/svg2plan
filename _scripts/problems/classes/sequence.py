@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from typing import Dict
-from classes.layout import Layout
+from svg_helpers.layout import Layout
 from problems.classes.problem import Problem
 from problems.classes.actions import Action
 

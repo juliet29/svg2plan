@@ -1,4 +1,4 @@
-from classes.layout import Layout
+from svg_helpers.layout import Layout
 from problems.classes.problem import Problem, ProblemType
 
 from problem_types.hole.action_generator import HoleActionGenerator

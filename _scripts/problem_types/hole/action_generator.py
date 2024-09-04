@@ -1,7 +1,7 @@
 from shapely import STRtree, Point
 
-from classes.layout import Layout
-from problems.classes.problems_base import ProblemsBase
+from svg_helpers.layout import Layout
+from svg_helpers.layout_base import LayoutBase
 from problems.classes.problem import Problem, ProblemType
 from problems.classes.actions import Action, ActionType
 
@@ -9,8 +9,6 @@ from problem_types.action_abc import ActionBase
 
 from svg_helpers.shapely import bounds_to_corners
 from svg_helpers.helpers import key_from_value
-
-
 
 
 class HoleActionGenerator(ActionBase):
@@ -26,19 +24,17 @@ class HoleActionGenerator(ActionBase):
             self.determine_distance()
             self.determine_node()
             assert self.node and self.distance
-            self.action = Action(self.problem, self.action_type, self.node, self.distance)
-
+            self.action = Action(
+                self.problem, self.action_type, self.node, self.distance
+            )
 
     def determine_direction(self):
         self.general_direction = True
 
-            
     def determine_distance(self):
         assert self.problem.geometry
         c = bounds_to_corners(self.problem.geometry.bounds)
         self.distance = c.x_right - c.x_left
-
-
 
     def determine_node(self):
         self.tree = STRtree(list(self.shapes.values()))
@@ -48,4 +44,3 @@ class HoleActionGenerator(ActionBase):
         ix = self.tree.nearest(Point(x, y))
         nearest = self.tree.geometries.take(ix)
         self.node = key_from_value(self.shapes, nearest)
-

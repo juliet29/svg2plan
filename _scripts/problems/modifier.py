@@ -1,12 +1,12 @@
 from shapely import box
 from copy import deepcopy
 from problems.classes.actions import Action, ActionType
-from problems.classes.problems_base import ProblemsBase
-from classes.layout import Layout
+from svg_helpers.layout_base import LayoutBase
+from svg_helpers.layout import Layout
 from svg_helpers.shapely import create_polygon_from_corners
 
 
-class BlockModifier(ProblemsBase):
+class BlockModifier(LayoutBase):
     def __init__(self, action: Action, layout: Layout) -> None:
         super().__init__(deepcopy(layout))
         # self.shapes = deepcopy(layout.shapes)

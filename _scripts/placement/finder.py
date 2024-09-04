@@ -1,6 +1,6 @@
 from typing import Optional
 from placement.interface import LooperInterface
-from classes.directions import Direction
+from svg_helpers.directions import Direction
 
 class Finder:
     def __init__(self, looper_obj:LooperInterface) -> None:

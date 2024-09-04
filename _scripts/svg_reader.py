@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from shapely import LinearRing, Polygon
 
-from classes.domains import Domain, Corners
+from svg_helpers.domains import Domain, Corners
 
 
 @dataclass

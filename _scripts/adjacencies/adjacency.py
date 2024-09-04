@@ -6,9 +6,9 @@ import networkx as nx
 
 from svg_helpers.graph_viz import draw_spring, draw_planar
 from svg_helpers.shapely import list_coords
-from classes.positioned_graph import PositionedGraph
-from classes.domains import Domain
-from classes.directions import NeighborDirections
+from svg_helpers.positioned_graph import PositionedGraph
+from svg_helpers.domains import Domain
+from svg_helpers.directions import NeighborDirections
 from adjacencies.directed_adjacency import DirectedAdjacencyGenerator
 
 

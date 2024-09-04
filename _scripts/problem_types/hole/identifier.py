@@ -1,7 +1,7 @@
 from dataclasses import dataclass
-from classes.layout import Layout
-from classes.directions import Direction
-from problems.classes.problems_base import ProblemsBase
+from svg_helpers.layout import Layout
+from svg_helpers.directions import Direction
+from svg_helpers.layout_base import LayoutBase
 from shapely import Polygon, union_all, STRtree, LinearRing
 from problems.classes.problem import Problem, ProblemType
 from svg_helpers.helpers import key_from_value, compare_sequences
@@ -13,7 +13,7 @@ class HoleData:
     rooms: list
 
 
-class HoleIdentifier(ProblemsBase):
+class HoleIdentifier(LayoutBase):
     def __init__(self, layout: Layout) -> None:
         super().__init__(layout)
         self.problems: list[Problem] = []

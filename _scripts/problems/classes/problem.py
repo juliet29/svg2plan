@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from typing import Optional
 from enum import Enum
 from shapely import Polygon
-from classes.domains import Corners
-from classes.directions import Direction
+from svg_helpers.domains import Corners
+from svg_helpers.directions import Direction
 from svg_helpers.shapely import bounds_to_corners
 
 class ProblemType(Enum):

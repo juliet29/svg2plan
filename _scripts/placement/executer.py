@@ -1,8 +1,8 @@
 from networkx import Graph
 from copy import deepcopy
 
-from classes.domains import DomainDict
-from classes.directions import Direction
+from svg_helpers.domains import DomainDict
+from svg_helpers.directions import Direction
 from placement.finder import Finder
 from placement.updater import Updater
 from placement.placer import Placer

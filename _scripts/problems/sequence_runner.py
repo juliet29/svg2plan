@@ -1,6 +1,6 @@
 from itertools import cycle, islice
 
-from classes.layout import Layout
+from svg_helpers.layout import Layout
 from problems.classes.problem import Problem
 from problems.classes.actions import Action
 from problems.classes.sequence import Sequence

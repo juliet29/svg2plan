@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
-from problems.classes.problems_base import ProblemsBase
-from classes.layout import Layout
+from svg_helpers.layout_base import LayoutBase
+from svg_helpers.layout import Layout
 from problems.classes.problem import Problem, ProblemType
 from problems.classes.actions import Action
 
-class ActionBase(ABC, ProblemsBase):
+
+class ActionBase(ABC, LayoutBase):
     def __init__(self, problem: Problem, layout: Layout) -> None:
         super().__init__(layout)
         self.problem = problem

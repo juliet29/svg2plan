@@ -1,4 +1,4 @@
-from classes.domains import Domain, Corners
+from svg_helpers.domains import Domain, Corners
 import plotly.express as px
 import plotly.graph_objects as go
 

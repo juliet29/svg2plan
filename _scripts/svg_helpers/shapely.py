@@ -1,6 +1,6 @@
 from shapely import Point, Polygon, box
 from shapely.coords import CoordinateSequence
-from classes.domains import Corners
+from svg_helpers.domains import Corners
 
 def get_point_as_xy(point: Point):
     return tuple([i[0] for i in point.xy])

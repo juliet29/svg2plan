@@ -1,5 +1,5 @@
-from classes.layout import Layout
-from classes.directions import GeneralDirection, make_directed_pair
+from svg_helpers.layout import Layout
+from svg_helpers.directions import GeneralDirection, make_directed_pair
 from problem_types.action_abc import ActionBase
 from problems.classes.problem import Problem, ProblemType
 from problems.classes.actions import Action, ActionType

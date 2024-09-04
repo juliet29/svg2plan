@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Dict, Optional
 
 import networkx as nx
-from classes.domains import DomainDict
+from svg_helpers.domains import DomainDict
 
 
 class LooperInterface:

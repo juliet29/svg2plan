@@ -2,8 +2,8 @@ import networkx as nx
 from typing import Dict
 import math
 
-from classes.domains import DomainDict
-from classes.directions import Direction, DIRECTION_PAIRS
+from svg_helpers.domains import DomainDict
+from svg_helpers.directions import Direction, DIRECTION_PAIRS
 
 
 class DirectedAdjacencyGenerator:

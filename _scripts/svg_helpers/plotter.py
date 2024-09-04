@@ -1,6 +1,6 @@
 from typing import Dict
 from svg_helpers.plots import prepare_shape_dict, get_plotly_colors, plot_shapes
-from classes.domains import Corners
+from svg_helpers.domains import Corners
 
 class Plotter:
     def __init__(self, corners:Dict[str, Corners]) -> None:
