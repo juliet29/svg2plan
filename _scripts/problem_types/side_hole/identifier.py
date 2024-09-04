@@ -17,7 +17,6 @@ class SideHoleData:
     direction: Direction
 
 
-
 class SideHoleIdentifier(ProblemsBase):
     def __init__(self, layout:Layout) -> None:
         super().__init__(layout)
@@ -42,11 +41,20 @@ class SideHoleIdentifier(ProblemsBase):
              
 
     def search_near_node(self):
+        self.possible_pairs = []
         nbs = self.find_direction_nbs()
         for nb in nbs:
             if not self.shapes[self.node].touches(self.shapes[nb]):
-                    shp = SideHoleData([self.node, nb], self.direction)
-                    self.side_hole_pairs.append(shp)
+                    self.possible_pairs.append([self.node, nb])
+        self.filter_pairs()
+        for pair in self.unique_pairs:
+            shp = SideHoleData(list(pair), self.direction)
+            self.side_hole_pairs.append(shp)
+
+    def filter_pairs(self):
+        pairs = [frozenset(p) for p in self.possible_pairs]
+        self.unique_pairs = set(pairs)
+  
 
     def find_direction_nbs(self):
         dir1, dir2 = SIDE_HOLE_PAIRS[self.direction]

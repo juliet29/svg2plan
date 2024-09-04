@@ -4,7 +4,7 @@ from classes.directions import Direction
 from problems.classes.problems_base import ProblemsBase
 from shapely import Polygon, union_all, STRtree, LinearRing
 from problems.classes.problem import Problem, ProblemType
-from svg_helpers.helpers import key_from_value
+from svg_helpers.helpers import key_from_value, compare_sequences
 
 
 @dataclass
