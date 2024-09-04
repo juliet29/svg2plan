@@ -6,3 +6,4 @@ class LayoutBase:
         self.G = layout.graph
         self.corners = layout.corners
         self.shapes = layout.shapes
+        self.layout  = layout

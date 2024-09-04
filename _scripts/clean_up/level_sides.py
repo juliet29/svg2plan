@@ -17,9 +17,7 @@ class SideLeveler(LayoutBase):
         super().__init__(deepcopy(layout))
 
     def run(self):
-        for k in CORNERS_MATCH:
-            print(k)
-            
+        for k in CORNERS_MATCH:    
             self.match_to_extreme_val(k)
 
 
@@ -27,11 +25,9 @@ class SideLeveler(LayoutBase):
         vals = []
         relevant_nodes = []
         corner, fx = CORNERS_MATCH[direction]
-        print(corner, fx)
 
         for node, data in self.G.nodes(data=True):
             if not data["data"][direction.name]:
-                print(node)
                 vals.append(self.corners[node][corner])
                 relevant_nodes.append(node)
 
