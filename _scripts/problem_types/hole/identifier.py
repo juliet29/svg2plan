@@ -32,15 +32,16 @@ class HoleIdentifier(ProblemsBase):
         self.tree = STRtree(list(self.shapes.values()))
         for hole in self.union.interiors:
             assert isinstance(hole, LinearRing)
+            self.hole = hole
             p = HoleData(
-                Polygon(hole),
+                Polygon(self.hole),
                 self.find_rooms_surrounding_hole(),
             )
             self.holes.append(p)
 
     def find_rooms_surrounding_hole(self):
         assert isinstance(self.union, Polygon)
-        indices = self.tree.query_nearest(self.union.interiors[0])
+        indices = self.tree.query_nearest(self.hole)
         nearest = self.tree.geometries.take(indices).tolist()
         rooms = [key_from_value(self.shapes, p) for p in nearest]
         return rooms

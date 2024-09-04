@@ -38,7 +38,7 @@ class SequenceRunner:
         if self.are_problems_solved:
             print("no more problems!")
             return
-        print(f"--executing action #{self.limit_counter}")
+        print(f"--iteration #{self.limit_counter+1}")
         print(f"curr problem = {self.curr_problem}")
         self.limit_counter += 1
         self.decide_action()
