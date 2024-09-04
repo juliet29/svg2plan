@@ -3,7 +3,7 @@ from copy import deepcopy
 from problems.classes.actions import Action, ActionType
 from svg_helpers.layout_base import LayoutBase
 from svg_helpers.layout import Layout
-from svg_helpers.shapely import create_polygon_from_corners
+from svg_helpers.shapely import create_box_from_corners
 
 
 class BlockModifier(LayoutBase):
@@ -29,13 +29,13 @@ class BlockModifier(LayoutBase):
     def stretch(self):
         # to the right
         self.curr_corners.x_right += self.distance
-        self.shapes[self.node] = create_polygon_from_corners(self.curr_corners)
+        self.shapes[self.node] = create_box_from_corners(self.curr_corners)
 
     def push(self):
         # to the right
         self.curr_corners.x_right += self.distance
         self.curr_corners.x_left += self.distance
-        self.shapes[self.node] = create_polygon_from_corners(self.curr_corners)
+        self.shapes[self.node] = create_box_from_corners(self.curr_corners)
 
     def get_modified_layout(self):
         self.modified_layout = Layout(self.shapes, self.corners, self.G)

@@ -1,0 +1,14 @@
+#/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/gqenv/lib/python3.10/site-packages/ipykernel_launcher.py --f=/Users/julietnwagwuume-ezeoke/Library/Jupyter/runtime/kernel-v2-49167vgq6XlBhhkpc.json
+# GMT Wed Sep  4 22:26:51 2024
+# 
+bedroom_1 transit_space bedroom_2 laundry
+kitchen dining transit_space bedroom_2
+m_bath m_bedroom bath transit_space laundry
+m_bedroom m_closet bath dining
+m_closet dining closet
+bath dining transit_space laundry
+dining transit_space closet
+transit_space bedroom_2 laundry
+closet
+bedroom_2
+laundry

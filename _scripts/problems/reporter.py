@@ -13,8 +13,8 @@ from problem_types.side_hole.identifier import SideHoleIdentifier
 class Reporter:
     def __init__(
         self,
-        layout: Layout,le
-        existing_problems: list[Problem] = [],
+        layout: Layout,
+        existing_problems: list[Problem] = []
     ) -> None:
         self.layout = deepcopy(layout)
         self.problems: list[Problem] = deepcopy(existing_problems)
