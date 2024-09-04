@@ -11,15 +11,15 @@ class ProblemType(Enum):
     HOLE = 1
     SIDE_HOLE = 2
 
-@dataclass
+
+@dataclass()
 class Problem:
     index: int
-    problem_type: ProblemType
-    nbs: list[str]
-    geometry: Optional[Polygon] = None
-    direction: Optional[Direction] = None
+    problem_type: ProblemType # Frozen!
+    nbs: list[str] # Frozen!
+    geometry: Optional[Polygon] = None # Frozen!
+    direction: Optional[Direction] = None # Frozen!
     resolved: bool = False
-    matched: bool = False
 
     def __eq__(self, value) -> bool:
         if (self.problem_type == value.problem_type 
@@ -29,6 +29,16 @@ class Problem:
             return True
         else:
             return False
+        
+    def custom_rep(self):
+        other_data = (self.geometry if self.geometry 
+                      else self.direction if self.direction 
+                      else "")
+        txt = f"problem_type={self.problem_type}, nbs={self.nbs}, detail={other_data}"
+        return txt
+        
+    def __hash__(self):
+        return hash(self.custom_rep())
         
     def __repr__(self) -> str:
         txt =  f"Problem(index={self.index}, problem_type={self.problem_type}, resolved={self.resolved}, nbs={self.nbs}"
@@ -41,4 +51,6 @@ class Problem:
             txt2 = ")"
         return txt + txt2
         
+    
+    
         

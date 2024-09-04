@@ -1,4 +1,5 @@
 from copy import deepcopy
+from icecream import ic
 
 from classes.layout import Layout
 from problems.classes.problem import Problem, ProblemType
@@ -21,53 +22,43 @@ class Reporter():
 
         self.index = len(self.problems)
         self.candidates: list[Problem] = []
-        self.temporary: list[Problem] = []
 
     def run(self):
-        self.reset_exisiting_problems()
-        self.find_problems()
-        self.compare_with_existing()
-        self.check_existing_for_resolution()
-        self.merge_new_and_existing_problems()
+        self.find_new()
+        self.compare_new_and_old()
+        self.handle_resolved()
+        self.update_indices_of_new()
+        self.merge_new_and_old()
         self.summarize()
 
-    def reset_exisiting_problems(self):
-        for p in self.problems:
-            p.matched = False
 
-    def find_problems(self):
+    def find_new(self):
         for identifier in [OverlapIdentifier, HoleIdentifier, SideHoleIdentifier]:
             self.identifier = identifier(self.layout)
             self.identifier.report_problems()
             self.candidates.extend(self.identifier.problems)
 
-    def compare_with_existing(self):
-        for candidate in self.candidates:
-            self.candidate_problem = candidate
-            # print(f"Checking {self.candidate_problem}")
-            for p in self.problems:
-                if candidate == p:
-                    # print(f"{self.candidate_problem} was matched")
-                    p.matched = True
-                    return
-            # print(f"I was not matched {self.candidate_problem}")
-            self.add_problem_and_update_index()
+
+    def compare_new_and_old(self):
+        new_probs = set(self.candidates)
+        old_probs = set(self.problems)
+
+        self.old_and_unresolved = old_probs.intersection(new_probs)
+        self.old_and_resolved = old_probs.difference(new_probs)
+        self.new = new_probs.difference(old_probs)
+
+    def handle_resolved(self):
+        for p in self.old_and_resolved:
+            p.resolved = True
+
+    def update_indices_of_new(self):
+        for p in self.new:
+            self.index += 1
+            p.index = self.index
 
 
-    def add_problem_and_update_index(self):
-        self.index += 1
-        self.candidate_problem.index = self.index
-        self.temporary.append(self.candidate_problem)
-
-    def check_existing_for_resolution(self):
-        for p in self.problems:
-            if p.matched == False:
-                p.resolved = True
-
-    def merge_new_and_existing_problems(self):
-        self.problems.extend(self.temporary)
-
-
+    def merge_new_and_old(self):
+        self.problems.extend(self.new)
 
 
     def summarize(self):
@@ -75,7 +66,6 @@ class Reporter():
         hole = 0
         side_hole = 0
         for p in self.problems:
-            # print(f"summarizing for {p}")
             if p.resolved == False:
                 match p.problem_type:
                     case ProblemType.OVERLAP:
@@ -85,5 +75,5 @@ class Reporter():
                     case ProblemType.SIDE_HOLE:
                         side_hole+=1
                     
-        print(f"Overlaps: {overlap}. Holes: {hole}. Sideholes: {side_hole}")
+        print(f"-- Unresolved Problems. Overlaps: {overlap}. Holes: {hole}. Sideholes: {side_hole}")
         
