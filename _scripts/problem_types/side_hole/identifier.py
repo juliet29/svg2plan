@@ -12,8 +12,8 @@ SIDE_HOLE_PAIRS = {
 }
 
 @dataclass
-class SideHolePair:
-    pair: tuple
+class SideHoleData:
+    pair: list
     direction: Direction
 
 
@@ -21,10 +21,11 @@ class SideHolePair:
 class SideHoleIdentifier(ProblemsBase):
     def __init__(self, layout:Layout) -> None:
         super().__init__(layout)
-        self.side_hole_pairs = []
-        self.problems = []
+        self.problems: list[Problem] = []
+        self.side_hole_pairs: list[SideHoleData] = []
 
     def report_problems(self):
+        self.search_layout()
         for ix, pair in enumerate(self.side_hole_pairs):
             self.problems.append(
                 Problem(ix, ProblemType.SIDE_HOLE, nbs=pair.pair, direction=pair.direction)
@@ -44,7 +45,7 @@ class SideHoleIdentifier(ProblemsBase):
         nbs = self.find_direction_nbs()
         for nb in nbs:
             if not self.shapes[self.node].touches(self.shapes[nb]):
-                    shp = SideHolePair((self.node, nb), self.direction)
+                    shp = SideHoleData([self.node, nb], self.direction)
                     self.side_hole_pairs.append(shp)
 
     def find_direction_nbs(self):

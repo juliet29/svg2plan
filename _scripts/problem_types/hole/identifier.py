@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from classes.layout import Layout
 from classes.directions import Direction
 from problems.classes.problems_base import ProblemsBase
@@ -5,26 +6,37 @@ from shapely import Polygon, union_all, STRtree, LinearRing
 from problems.classes.problem import Problem, ProblemType
 from svg_helpers.helpers import key_from_value
 
+
+@dataclass
+class HoleData:
+    shape: Polygon
+    rooms: list
+
+
 class HoleIdentifier(ProblemsBase):
-    def __init__(self, layout:Layout) -> None:
+    def __init__(self, layout: Layout) -> None:
         super().__init__(layout)
-        self.problems = []
+        self.problems: list[Problem] = []
+        self.holes: list[HoleData] = []
+
+    def report_problems(self):
+        self.find_holes()
+        for ix, data in enumerate(self.holes):
+            self.problems.append(
+                Problem(ix, ProblemType.HOLE, nbs=data.rooms, geometry=data.shape)
+            )
 
     def find_holes(self):
         self.union = union_all(list(self.shapes.values()))
         assert isinstance(self.union, Polygon)
-
         self.tree = STRtree(list(self.shapes.values()))
-
-        for ix, hole in enumerate(self.union.interiors):
+        for hole in self.union.interiors:
             assert isinstance(hole, LinearRing)
-            p  = Problem(
-                ix,
-                ProblemType.HOLE,
-                self.find_rooms_surrounding_hole(),
+            p = HoleData(
                 Polygon(hole),
+                self.find_rooms_surrounding_hole(),
             )
-            self.problems.append(p)
+            self.holes.append(p)
 
     def find_rooms_surrounding_hole(self):
         assert isinstance(self.union, Polygon)

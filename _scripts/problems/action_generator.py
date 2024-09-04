@@ -1,16 +1,5 @@
-from shapely import STRtree, Point
-from copy import deepcopy
-
 from classes.layout import Layout
-from classes.directions import Direction, DIRECTION_PAIRS
-
 from problems.classes.problem import Problem, ProblemType
-from problems.classes.actions import Action, ActionType
-from problems.classes.sequence import Sequence
-from problems.classes.problems_base import ProblemsBase
-
-from svg_helpers.shapely import bounds_to_corners
-from svg_helpers.helpers import key_from_value
 
 from problem_types.hole.action_generator import HoleActionGenerator
 from problem_types.side_hole.action_generator import SideHoleActionGenerator
@@ -27,7 +16,7 @@ class ActionGenerator():
         self.ag = self.create_action()(self.problem, self.layout)
         self.ag.generate_action()
         self.action = self.ag.action
-        
+
     def create_action(self):
         match self.problem.problem_type:
             case ProblemType.OVERLAP:
