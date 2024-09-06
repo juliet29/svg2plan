@@ -1,8 +1,11 @@
-from typing import TypedDict, Optional, Dict
-from svg_helpers.domains import Corners
-import os
 import json
+import os
+from typing import Dict, TypedDict, Optional
 
+from svg_helpers.domains import Corners
+
+
+# final json format is [[{obj}, {obj}...]]
 
 class GPLANRoomType(TypedDict):
     label: str
@@ -10,11 +13,8 @@ class GPLANRoomType(TypedDict):
     top: float
     width: float
     height: float
-    id: Optional[float] 
-    color: Optional[str] 
-
-
-# final json format is [[{obj}, {obj}...]]
+    id: Optional[float]
+    color: Optional[str]
 
 
 class GPLANCreator:
@@ -32,7 +32,7 @@ class GPLANCreator:
         for ix, (room, data) in enumerate(self.corners.items()):
             width = abs(data.x_right - data.x_left)
             height = abs(data.y_top - data.y_bottom)
-            data.y_top*=-1 # flipped in y direction -> distance from top
+            data.y_top *= -1  # flipped in y direction -> distance from top
             g_room: GPLANRoomType = {
                 "id": ix,
                 "label": room,
@@ -40,14 +40,12 @@ class GPLANCreator:
                 "top": data.y_top,
                 "width": width,
                 "height": height,
-                "color": ""
+                "color": "",
             }
             self.rooms.append(g_room)
         self.plan.append(self.rooms)
 
     def write_to_file(self):
         path = os.path.join("../outputs", "amber_a", "gplan.json")
-        with open(path, 'w+') as file:
+        with open(path, "w+") as file:
             json.dump(self.plan, default=str, fp=file)
-
-

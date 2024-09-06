@@ -1,0 +1,75 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "data": { "NORTH": [], "SOUTH": ["bedroom_2"], "EAST": ["transit_space", "laundry"], "WEST": [] },
+      "windows": [{ "direction": "NORTH", "window_type": "A" }],
+      "id": "bedroom_1"
+    },
+    {
+      "data": { "NORTH": ["transit_space"], "SOUTH": [], "EAST": ["dining"], "WEST": ["bedroom_2"] },
+      "windows": [{ "direction": "SOUTH", "window_type": "A" }],
+      "id": "kitchen"
+    },
+    {
+      "data": { "NORTH": [], "SOUTH": ["bath", "transit_space"], "EAST": ["m_bedroom"], "WEST": ["transit_space", "laundry"] },
+      "windows": [{ "direction": "NORTH", "window_type": "A" }],
+      "id": "m_bath"
+    },
+    {
+      "data": { "NORTH": [], "SOUTH": ["m_closet", "dining"], "EAST": [], "WEST": ["m_bath", "bath"] },
+      "windows": [{ "direction": "NORTH", "window_type": "A" }],
+      "id": "m_bedroom"
+    },
+    { "data": { "NORTH": ["m_bedroom"], "SOUTH": ["closet"], "EAST": [], "WEST": ["dining"] }, "windows": [], "id": "m_closet" },
+    {
+      "data": { "NORTH": ["m_bath"], "SOUTH": ["dining"], "EAST": ["m_bedroom"], "WEST": ["transit_space", "laundry"] },
+      "windows": [],
+      "id": "bath"
+    },
+    {
+      "data": { "NORTH": ["m_bedroom", "bath"], "SOUTH": [], "EAST": ["m_closet", "closet"], "WEST": ["kitchen", "transit_space"] },
+      "windows": [{ "direction": "SOUTH", "window_type": "A" }],
+      "id": "dining"
+    },
+    {
+      "data": {
+        "NORTH": ["m_bath", "laundry"],
+        "SOUTH": ["kitchen"],
+        "EAST": ["m_bath", "bath", "dining"],
+        "WEST": ["bedroom_1", "bedroom_2"]
+      },
+      "windows": [],
+      "id": "transit_space"
+    },
+    {
+      "data": { "NORTH": ["m_closet"], "SOUTH": [], "EAST": [], "WEST": ["dining"] },
+      "windows": [{ "direction": "SOUTH", "window_type": "A" }],
+      "id": "closet"
+    },
+    {
+      "data": { "NORTH": ["bedroom_1"], "SOUTH": [], "EAST": ["kitchen", "transit_space"], "WEST": [] },
+      "windows": [{ "direction": "SOUTH", "window_type": "A" }],
+      "id": "bedroom_2"
+    },
+    {
+      "data": { "NORTH": [], "SOUTH": ["transit_space"], "EAST": ["m_bath", "bath"], "WEST": ["bedroom_1"] },
+      "windows": [{ "direction": "NORTH", "window_type": "A" }],
+      "id": "laundry"
+    }
+  ],
+  "links": [
+    { "source": "bedroom_1", "target": "transit_space" },
+    { "source": "kitchen", "target": "dining" },
+    { "source": "m_bath", "target": "m_bedroom" },
+    { "source": "m_bedroom", "target": "m_closet" },
+    { "source": "m_bedroom", "target": "dining" },
+    { "source": "bath", "target": "transit_space" },
+    { "source": "dining", "target": "transit_space" },
+    { "source": "dining", "target": "closet" },
+    { "source": "transit_space", "target": "bedroom_2" },
+    { "source": "transit_space", "target": "laundry" }
+  ]
+}

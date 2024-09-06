@@ -1,5 +1,6 @@
 from enum import Enum
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, fields
+from svg_helpers.helpers import toJson
 
 
 class Direction(Enum):
@@ -22,6 +23,18 @@ class NeighborDirections:
 
     def __getitem__(self, i):
         return getattr(self, i)
+    
+    def get_empty_directions(self):
+        return [i for i in self.__annotations__ if len(self.__getitem__(i)) == 0]
+    
+    def to_json(self):
+        return {
+            "NORTH": self.NORTH,
+            "SOUTH": self.SOUTH,
+            "EAST": self.EAST,
+            "WEST": self.WEST,
+
+        }
     
 
 

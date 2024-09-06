@@ -8,8 +8,6 @@ from svg_helpers.shapely import bounds_to_corners
 
 
 
-
-
 class OverlapActionGenerator(ActionBase):
     def __init__(self, problem: Problem, layout: Layout) -> None:
         super().__init__(problem, layout)
