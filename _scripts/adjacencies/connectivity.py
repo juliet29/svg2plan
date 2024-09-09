@@ -108,9 +108,8 @@ class ConnectivityGenerator:
         
     def jsonify_graph(self):
         self.G_json = nx.node_link_data(self.G)
-        for item in self.G_json["nodes"]:
-            item["data"] = item["data"].to_json()
-            item["windows"] = [i.to_json() for i in item["windows"]]
+        for d in self.G_json["links"]:
+            d["data"] = d["data"].to_json()
 
 
 ######## direction stuff
