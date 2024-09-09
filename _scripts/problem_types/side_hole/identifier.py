@@ -55,7 +55,6 @@ class SideHoleIdentifier(LayoutBase):
     def find_nonadjacent_nbs(self):
         nbs = self.find_nbs_in_direction()
         for nb in nbs:
-            # TODO need to fix so overlap doesnt count..
             if not self.shapes[self.node].touches(self.shapes[nb]):
                 if not self.shapes[self.node].overlaps(self.shapes[nb]):
                     self.possible_pairs.append([self.node, nb])

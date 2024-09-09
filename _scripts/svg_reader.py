@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from shapely import LinearRing, Polygon
 
-from svg_helpers.domains import Domain, Corners
+from svg_helpers.domains import Domain, Corners, DomainDict
 
 
 @dataclass
@@ -21,7 +21,7 @@ class SVGRect:
 class SVGReader:
     def __init__(self, svg_name) -> None:
         self.svg_path = os.path.join("../svg_imports", svg_name)
-        self.domains = {}
+        self.domains: DomainDict = {}
 
     def run(self):
         self.get_rectangles()
@@ -61,7 +61,7 @@ class SVGReader:
 
     def get_shapely(self, r: SVGRect):
         x_left = r.x
-        y_top = r.y * (-1) # make +y in conventioal +y direction 
+        y_top = r.y * (-1) # make +y in conventional +y direction 
 
 
         x_right = x_left + float(r.width)
