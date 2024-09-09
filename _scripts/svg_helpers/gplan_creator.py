@@ -18,10 +18,11 @@ class GPLANRoomType(TypedDict):
 
 
 class GPLANCreator:
-    def __init__(self, corners: Dict[str, Corners]) -> None:
+    def __init__(self, corners: Dict[str, Corners], file_name:str|None = None) -> None:
         self.corners = corners
         self.rooms = []
         self.plan = []
+        self.file_name = file_name
         # self.file_name = file_name
 
     def run(self):
@@ -46,6 +47,7 @@ class GPLANCreator:
         self.plan.append(self.rooms)
 
     def write_to_file(self):
-        path = os.path.join("../outputs", "amber_a", "gplan.json")
+        name = "gplan.json" if not self.file_name else f"{self.file_name}.json"
+        path = os.path.join("../outputs", "amber_a", name )
         with open(path, "w+") as file:
             json.dump(self.plan, default=str, fp=file)
