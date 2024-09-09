@@ -1,0 +1,77 @@
+{
+  "DOOR_TYPES": [
+    {
+      "name": "7",
+      "width": "2,8",
+      "height": "6,8",
+      "thickness": "1,3/8",
+      "material": "SCWD"
+    },
+    {
+      "name": "8",
+      "width": "2,6",
+      "height": "6,8",
+      "thickness": "1,3/8",
+      "material": "SCWD"
+    },
+    {
+      "name": "19",
+      "width": "3,0",
+      "height": "6,8",
+      "thickness": "1,3/8",
+      "material": "SCWD"
+    },
+    {
+      "name": "18",
+      "width": "3,0",
+      "height": "8,0",
+      "thickness": "1,3/8",
+      "material": "SCWD"
+    }
+  ],
+
+  "WINDOW_TYPES": [
+    {
+      "name": "1",
+      "width": "2,4 3/8",
+      "height": "7,0",
+      "head_hight": "7,6",
+      "opening_height": "2,0",
+      "model": "andersen_400",
+      "type": "casement+fixed"
+    },
+    {
+      "name": "2",
+      "width": "4,0",
+      "height": "7,0",
+      "head_hight": "7,6",
+      "model": "andersen_400",
+      "type": "fixed"
+    },
+    {
+      "name": "3",
+      "width": "2,4 3/8",
+      "height": "4,11 3/8",
+      "head_hight": "7,6",
+      "model": "andersen_400",
+      "type": "casement"
+    },
+    {
+      "name": "4",
+      "width": "2,4 3/8",
+      "height": "4,11 3/8",
+      "head_hight": "7,6",
+      "model": "andersen_400",
+      "type": "fixed"
+    },
+    {
+      "name": "11",
+      "width": "2,4 3/8",
+      "height": "3,11 7/8",
+      "head_hight": "7,5 7/8",
+      "model": "andersen_400",
+      "type": "casement"
+    }
+  ],
+  "FLOOR_HEIGHT": "8, 6 3/4"
+}

@@ -11,6 +11,7 @@ from problems.classes.problem import Problem, ProblemType
 from problems.classes.actions import Action, ActionType
 
 
+
 class SideHoleActionGenerator(ActionBase):
     def __init__(self, problem: Problem, layout: Layout) -> None:
         super().__init__(problem, layout)
