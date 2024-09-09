@@ -18,3 +18,13 @@ def create_box_from_corners(corners: Corners):
 def bounds_to_corners(val: tuple):
     minx, miny, maxx, maxy = val
     return Corners(minx, maxx, miny, maxy)
+
+
+
+
+def bounds_to_corners_round(val: tuple):
+    minx, miny, maxx, maxy = val
+    temp = [minx, maxx, miny, maxy]
+    temp = [round(i, 3) for i in temp]
+    return Corners(*temp)
+

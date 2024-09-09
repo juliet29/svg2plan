@@ -3,6 +3,8 @@ from typing import Dict, Optional
 
 from shapely import Polygon
 
+from decimal import Decimal
+
 @dataclass
 class Corners:
     x_left: float
@@ -15,6 +17,10 @@ class Corners:
 
     def __iter__(self):
         return (self[i] for i in list(self.__dataclass_fields__.keys()))
+    
+    def get_decimal_values(self):
+        return (Decimal(self[i]) for i in list(self.__dataclass_fields__.keys()))
+    
 
 
 @dataclass

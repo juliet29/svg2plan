@@ -28,7 +28,7 @@ class PlacementExecuter(LooperInterface):
         self.set_north_west_node()
         self.set_remaining_north_nodes()
         self.set_relative_south_nodes()
-        self.clean_up()
+        self.prepare_data_for_export()
 
     def set_north_west_node(self):
         self.finder.find_north_west_node()
@@ -99,7 +99,7 @@ class PlacementExecuter(LooperInterface):
         if self.ew_counter > 5:
             return True
 
-    def clean_up(self):
+    def prepare_data_for_export(self):
         self.shapes = {}
         self.corners = {}
         for name, room in self.domains.items():

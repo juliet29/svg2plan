@@ -14,13 +14,14 @@ from adjacencies.directed_adjacency import DirectedAdjacencyGenerator
 
 
 class AdjacencyGenerator:
-    def __init__(self, domains:Dict[str, Domain]) -> None:
+    def __init__(self, domains:Dict[str, Domain], buffer_size=30) -> None:
         self.domains = domains
+        self.buffer_size = buffer_size
 
     def run(self):
         self.initialize_graph()
         self.get_layout()
-        self.update_adjacencies()
+        self.create_adjacencies()
         self.positioned_graph = PositionedGraph(self.G, self.fp_layout)
 
     def initialize_graph(self):
@@ -30,7 +31,7 @@ class AdjacencyGenerator:
                   for domain in self.domains]
         self.G.add_nodes_from(nodes)
 
-    def update_adjacencies(self):
+    def create_adjacencies(self):
         self.pairs = list(combinations(self.domains.keys(), 2))
         for a, b in self.pairs:
             if self.check_adjacency(self.domains[a].polygon, self.domains[b].polygon):
@@ -38,11 +39,9 @@ class AdjacencyGenerator:
                 self.DAG = DirectedAdjacencyGenerator(self.domains, self.G, a, b)
 
 
-    def check_adjacency(self, a:Polygon, b:Polygon, buffer_size=30):
-        return a.buffer(buffer_size).intersects(b.buffer(buffer_size))
-    
-
-    # TODO could be its own class, needs the strings, the graph, and the domains.. 
+    def check_adjacency(self, a:Polygon, b:Polygon):
+        sz = self.buffer_size
+        return a.buffer(sz).intersects(b.buffer(sz))
 
 
     ## display... 
