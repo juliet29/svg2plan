@@ -89,6 +89,7 @@ class PlacementExecuter(LooperInterface):
                 print("ns_counter > 4 .. breaking")
                 break
 
+    # TODO make ns and ew counter a class argument 
     def is_over_ns_counter(self):
         self.ns_counter += 1
         if self.ns_counter > 4:

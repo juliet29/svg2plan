@@ -29,7 +29,7 @@ class SideHoleIdentifier(LayoutBase):
         self.unique_pairs: set
 
     def report_problems(self):
-        self.create_comparison_geom()
+        self.find_potential_holes()
         self.search_layout()
         for ix, pair in enumerate(self.side_hole_pairs):
             self.problems.append(
@@ -42,6 +42,12 @@ class SideHoleIdentifier(LayoutBase):
                 )
             )
 
+    def find_potential_holes(self):
+        shapes = list(self.shapes.values())
+        union = union_all(shapes)
+        diffs = union.convex_hull.difference(union)
+        self.tree = STRtree(diffs.geoms)  # type: ignore
+
     def search_layout(self):
         for dir in Direction:
             self.direction = dir
@@ -51,6 +57,8 @@ class SideHoleIdentifier(LayoutBase):
                     self.node_data = data["data"]
                     self.find_nonadjacent_nbs()
         self.clean_up_nbs()
+
+    # TODO => make this clearer => is_on_facade()
 
     def find_nonadjacent_nbs(self):
         nbs = self.find_nbs_in_direction()
@@ -98,9 +106,3 @@ class SideHoleIdentifier(LayoutBase):
         x_right = self.corners[self.EW_pair.WEST].x_right
         x_left = self.corners[self.EW_pair.EAST].x_left
         self.test_line = LineString([[x_right, y], [x_left, y]])
-
-    def create_comparison_geom(self):
-        shapes = list(self.shapes.values())
-        union = union_all(shapes)
-        diffs = union.convex_hull.difference(union)
-        self.tree = STRtree(diffs.geoms)  # type: ignore

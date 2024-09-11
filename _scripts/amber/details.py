@@ -1,5 +1,7 @@
 from adjacencies.connectivity import ConnectivityGenerator
 from svg_helpers.directions import Direction
+from pint import UnitRegistry
+from reader.interfaces import SVGReference
 
 # windows
 id3 = [('m_bath', Direction.NORTH.name),  
@@ -20,3 +22,9 @@ def update_surface_types(cg: ConnectivityGenerator):
 
     return cg
 
+
+# reference length 
+REF_LENGTH_FT = 10 
+REF_LENGTH_IN = 6.75
+# TODO put some checks on this! 
+svg_ref = SVGReference("bedroom_1", "width")

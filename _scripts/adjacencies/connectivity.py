@@ -61,13 +61,11 @@ class ConnectivityGenerator:
     def add_windows(self):
         # TODO this may change for other floor plans..
         for key, data in self.G_rooms.nodes(data=True):
-            # data["windows"] = []
             empty_dir = data["data"].get_empty_directions()
             for d in empty_dir:
                 if d == Direction.NORTH.name or d == Direction.SOUTH.name:
                     self.G.add_edge(key, Direction[d].name, data=Subsurface(SubsurfaceObjectType.WINDOW, 1))
-                    
-                    # data["windows"].append(Window(Direction[d], WindowType.A))
+
 
     def create_connectivity_template(self):
         self.conn: Dict[int, Edge] = {}
