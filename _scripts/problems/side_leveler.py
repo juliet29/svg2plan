@@ -1,7 +1,7 @@
 from svg_helpers.directions import Direction
 from svg_helpers.layout import Layout
 from svg_helpers.layout_base import LayoutBase
-from svg_helpers.shapely import create_box_from_corners
+from svg_helpers.shapely import create_box_from_decimal_corners
 
 
 from copy import deepcopy
@@ -30,4 +30,4 @@ class SideLeveler(LayoutBase):
         val = fx(vals)
         for node in relevant_nodes:
             setattr(self.corners[node], corner, val)
-            self.shapes[node] = create_box_from_corners(self.corners[node])
+            self.shapes[node] = create_box_from_decimal_corners(self.corners[node])

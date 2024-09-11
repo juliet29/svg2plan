@@ -8,7 +8,7 @@ from networkx import Graph
 @dataclass
 class Layout:
     shapes: Dict[str, Polygon]
-    corners: Dict[str, Corners]
+    corners: Dict[str, DecimalCorners]
     graph: Graph
 
 

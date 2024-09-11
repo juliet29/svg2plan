@@ -32,9 +32,3 @@ def bounds_to_decimal_corners(val: tuple):
     f = lambda x: round(Decimal(x), ROUNDING_LIM)
     return DecimalCorners(*[f(i) for i in (minx, maxx, miny, maxy)])
 
-
-def bounds_to_corners_round(val: tuple):
-    minx, miny, maxx, maxy = val
-    temp = [minx, maxx, miny, maxy]
-    temp = [round(i, 3) for i in temp]
-    return Corners(*temp)

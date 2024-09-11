@@ -9,7 +9,7 @@ from svg_helpers.shapely import list_coords
 from svg_helpers.positioned_graph import PositionedGraph
 from svg_helpers.domains import Domain
 from svg_helpers.directions import NeighborDirections
-from svg_helpers.layout import PartialLayout
+from svg_helpers.layout import PartialLayout, Layout
 from svg_helpers.constants import BUFFER_SIZE
 from adjacencies.directed_adjacency import DirectedAdjacencyGenerator
  
@@ -23,9 +23,10 @@ class AdjacencyGenerator:
 
     def run(self):
         self.initialize_graph()
-        self.get_layout()
+        self.get_fp_layout()
         self.create_adjacencies()
         self.positioned_graph = PositionedGraph(self.G, self.fp_layout)
+        self.create_layout_obj()
 
     def initialize_graph(self):
         self.G = nx.Graph()
@@ -45,11 +46,14 @@ class AdjacencyGenerator:
     def check_adjacency(self, a:Polygon, b:Polygon):
         sz = self.buffer_size
         return a.buffer(sz).intersects(b.buffer(sz))
+    
+    def create_layout_obj(self):
+        self.layout_obj = Layout(self.domains.shapes, self.domains.corners, self.G)
 
 
     ## display... 
 
-    def get_layout(self):
+    def get_fp_layout(self):
         self.fp_layout = {}
         for k, v in self.domains.shapes.items():
             top_right_corner = list_coords(v.exterior.coords)[2]

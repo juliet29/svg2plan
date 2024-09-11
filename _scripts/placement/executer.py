@@ -7,17 +7,16 @@ from placement.finder import Finder
 from placement.updater import Updater
 from placement.placer import Placer
 from placement.interface import LooperInterface
-from svg_helpers.shapely import create_box_from_corners, create_box_from_decimal_corners
-from svg_helpers.layout import PartialLayout
+from svg_helpers.shapely import create_box_from_decimal_corners
+from svg_helpers.layout import PartialLayout, Layout
 from svg_helpers.domains import DecimalCorners, empty_decimal_corner
 from decimal import Decimal
 
 
 class PlacementExecuter(LooperInterface):
-    def __init__(self, graph: Graph, domains: PartialLayout) -> None:
-        self.G = deepcopy(graph)
-        self.init_domains= deepcopy(domains)
-
+    def __init__(self, layout: Layout) -> None:
+        self.G = deepcopy(layout.graph)
+        self.init_layout = PartialLayout(deepcopy(layout.shapes), deepcopy(layout.corners))
 
         self.unplaced = list(self.G.nodes)
         self.tracker = {}
@@ -33,10 +32,10 @@ class PlacementExecuter(LooperInterface):
         self.set_north_west_node()
         self.set_remaining_north_nodes()
         self.set_relative_south_nodes()
-        # self.prepare_data_for_export()
+        self.prepare_data_for_export()
 
     def init_new_domains(self):
-        empy_corner = {k: empty_decimal_corner for k in self.init_domains.corners.keys()}
+        empy_corner = {k: empty_decimal_corner for k in self.init_layout.corners.keys()}
         self.new_domains = PartialLayout({}, empy_corner)
 
     def set_north_west_node(self):
@@ -100,9 +99,7 @@ class PlacementExecuter(LooperInterface):
 
     # def look_for_north_node(self):
 
-
-
-    # TODO make ns and ew counter a class argument 
+    # TODO make ns and ew counter a class argument
     def is_over_ns_counter(self):
         self.ns_counter += 1
         if self.ns_counter > 4:
@@ -115,8 +112,7 @@ class PlacementExecuter(LooperInterface):
 
     def prepare_data_for_export(self):
         self.shapes = {}
-        self.corners = {}
-        for name, corner in self.init_domains.corners.items():
-            self.corners[name] = corner
+        for name, corner in self.new_domains.corners.items():
             self.shapes[name] = create_box_from_decimal_corners(corner)
-        # TODO make into a layout object 
+        self.layout = Layout(self.shapes, self.new_domains.corners, self.G)
+

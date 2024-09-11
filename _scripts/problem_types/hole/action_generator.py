@@ -7,7 +7,7 @@ from problems.classes.actions import Action, ActionType
 
 from problem_types.action_abc import ActionBase
 
-from svg_helpers.shapely import bounds_to_corners
+from svg_helpers.shapely import bounds_to_corners, bounds_to_decimal_corners
 from svg_helpers.helpers import key_from_value
 from svg_helpers.decimal_operations import decimal_sub
 
@@ -34,8 +34,8 @@ class HoleActionGenerator(ActionBase):
 
     def determine_distance(self):
         assert self.problem.geometry
-        c = bounds_to_corners(self.problem.geometry.bounds)
-        self.distance = decimal_sub(c.x_right, c.x_left)
+        c = bounds_to_decimal_corners(self.problem.geometry.bounds)
+        self.distance = abs(c.x_right - c.x_left)
 
     def determine_node(self):
         self.tree = STRtree(list(self.shapes.values()))

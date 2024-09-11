@@ -8,10 +8,9 @@ from svg_helpers.layout import PartialLayout
 
 class LooperInterface:
     G: nx.Graph
-    init_domains: PartialLayout
+    init_layout: PartialLayout
     unplaced: list[str]
     tracker: Dict
     tracker_column: int
     curr_node: str
     new_domains: PartialLayout
-
