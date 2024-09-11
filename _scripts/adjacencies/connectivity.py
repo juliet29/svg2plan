@@ -10,6 +10,7 @@ import networkx as nx
 from svg_helpers.directions import Direction
 from svg_helpers.positioned_graph import PositionedGraph
 from svg_helpers.helpers import get_bounds_of_layout
+from svg_helpers.constants import BUFFER_SIZE
 
 # todo for amber plan 01
 LINKED_EDGES = [0, 3, 6, 10, 12, 16, 18, 19, 20, 21]
@@ -122,12 +123,10 @@ class ConnectivityGenerator:
 
     def update_layout_for_direction_nodes(self):
         c = get_bounds_of_layout(self.layout)
-        print(c)
         mid_x = ((c.x_right - c.x_left)/2) + c.x_left
         mid_y = ((c.y_top - c.y_bottom)/2) + c.y_bottom
-        print(mid_x, mid_y)
 
-        PAD = 100
+        PAD = BUFFER_SIZE*4
 
         self.layout[Direction.NORTH.name] = (mid_x, c.y_top+PAD)
         self.layout[Direction.SOUTH.name] = (mid_x, c.y_bottom-PAD)

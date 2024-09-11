@@ -9,12 +9,15 @@ from svg_helpers.shapely import list_coords
 from svg_helpers.positioned_graph import PositionedGraph
 from svg_helpers.domains import Domain
 from svg_helpers.directions import NeighborDirections
+from svg_helpers.layout import PartialLayout
+from svg_helpers.constants import BUFFER_SIZE
 from adjacencies.directed_adjacency import DirectedAdjacencyGenerator
+ 
 
 
 
 class AdjacencyGenerator:
-    def __init__(self, domains:Dict[str, Domain], buffer_size=30) -> None:
+    def __init__(self, domains:PartialLayout, buffer_size=BUFFER_SIZE) -> None:
         self.domains = domains
         self.buffer_size = buffer_size
 
@@ -28,13 +31,13 @@ class AdjacencyGenerator:
         self.G = nx.Graph()
         nodes = [(domain, 
                   {"data": NeighborDirections()}) 
-                  for domain in self.domains]
+                  for domain in self.domains.shapes]
         self.G.add_nodes_from(nodes)
 
     def create_adjacencies(self):
-        self.pairs = list(combinations(self.domains.keys(), 2))
+        self.pairs = list(combinations(self.domains.shapes.keys(), 2))
         for a, b in self.pairs:
-            if self.check_adjacency(self.domains[a].polygon, self.domains[b].polygon):
+            if self.check_adjacency(self.domains.shapes[a], self.domains.shapes[b]):
                 self.G.add_edge(a, b)
                 self.DAG = DirectedAdjacencyGenerator(self.domains, self.G, a, b)
 
@@ -48,8 +51,8 @@ class AdjacencyGenerator:
 
     def get_layout(self):
         self.fp_layout = {}
-        for k, v in self.domains.items():
-            top_right_corner = list_coords(v.polygon.exterior.coords)[2]
+        for k, v in self.domains.shapes.items():
+            top_right_corner = list_coords(v.exterior.coords)[2]
             self.fp_layout[k] = top_right_corner
     
 

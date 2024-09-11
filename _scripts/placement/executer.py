@@ -7,13 +7,17 @@ from placement.finder import Finder
 from placement.updater import Updater
 from placement.placer import Placer
 from placement.interface import LooperInterface
-from svg_helpers.shapely import create_box_from_corners
+from svg_helpers.shapely import create_box_from_corners, create_box_from_decimal_corners
+from svg_helpers.layout import PartialLayout
+from svg_helpers.domains import DecimalCorners, empty_decimal_corner
+from decimal import Decimal
 
 
 class PlacementExecuter(LooperInterface):
-    def __init__(self, graph: Graph, domains: DomainDict) -> None:
+    def __init__(self, graph: Graph, domains: PartialLayout) -> None:
         self.G = deepcopy(graph)
-        self.domains = deepcopy(domains)
+        self.init_domains= deepcopy(domains)
+
 
         self.unplaced = list(self.G.nodes)
         self.tracker = {}
@@ -25,10 +29,15 @@ class PlacementExecuter(LooperInterface):
         self.placer = Placer(self)
 
     def run(self):
+        self.init_new_domains()
         self.set_north_west_node()
         self.set_remaining_north_nodes()
         self.set_relative_south_nodes()
-        self.prepare_data_for_export()
+        # self.prepare_data_for_export()
+
+    def init_new_domains(self):
+        empy_corner = {k: empty_decimal_corner for k in self.init_domains.corners.keys()}
+        self.new_domains = PartialLayout({}, empy_corner)
 
     def set_north_west_node(self):
         self.finder.find_north_west_node()
@@ -55,15 +64,15 @@ class PlacementExecuter(LooperInterface):
 
     def set_relative_south_nodes(self):
         self.ns_counter = 0
-        north_node_reference = 0
+        self.north_node_reference = 0
 
         while len(self.unplaced) > 0:
             for key, column in self.tracker.items():
                 try:
-                    north_node = column[north_node_reference]
+                    north_node = column[self.north_node_reference]
                 except:
                     print(
-                        f"north node = {north_node}. getting index {north_node_reference} in {column} failed"
+                        f"north node = {north_node}. getting index {self.north_node_reference} in {column} failed"
                     )
                     break
                 # sets the nb
@@ -80,14 +89,18 @@ class PlacementExecuter(LooperInterface):
                     print("no more nodes to place")
                     return
 
-            north_node_reference += 1
+            self.north_node_reference += 1
             print(
-                f"changing north node reference to {north_node_reference}. Number of unplaced nodes is {len(self.unplaced)}"
+                f"changing north node reference to {self.north_node_reference}. Number of unplaced nodes is {len(self.unplaced)}"
             )
 
             if self.is_over_ns_counter():
                 print("ns_counter > 4 .. breaking")
                 break
+
+    # def look_for_north_node(self):
+
+
 
     # TODO make ns and ew counter a class argument 
     def is_over_ns_counter(self):
@@ -103,6 +116,7 @@ class PlacementExecuter(LooperInterface):
     def prepare_data_for_export(self):
         self.shapes = {}
         self.corners = {}
-        for name, room in self.domains.items():
-            self.corners[name] = room.new_corners
-            self.shapes[name] = create_box_from_corners(room.new_corners)
+        for name, corner in self.init_domains.corners.items():
+            self.corners[name] = corner
+            self.shapes[name] = create_box_from_decimal_corners(corner)
+        # TODO make into a layout object 

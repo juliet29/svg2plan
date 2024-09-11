@@ -40,6 +40,9 @@ class DecimalCorners:
 
     def get_float_values(self):
         return (float(self[i]) for i in list(self.__dataclass_fields__.keys()))
+    
+
+empty_decimal_corner = DecimalCorners(*[Decimal(i) for i in [0]*4])
 
 
 @dataclass

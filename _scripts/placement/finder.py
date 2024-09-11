@@ -17,6 +17,9 @@ class Finder:
 
     def find_west_node(self):
         nbs = self.lo.G.nodes[self.lo.curr_node]["data"][Direction.WEST.name]
+        # node must already have been placed in self.lo.new_domains
+   
+
         if not nbs:
             return None
 
@@ -30,19 +33,19 @@ class Finder:
 
     def find_next_directed_node(self, direction:Direction, ref_node:str):
         nbs = self.lo.G.nodes[ref_node]["data"][direction.name]
-        available_nbs = list(set(nbs).intersection(set(self.lo.unplaced)))
+        nbs = list(set(nbs).intersection(set(self.lo.unplaced)))
 
-        if not available_nbs:
+        if not nbs:
             return False
         try:
-            [self.lo.curr_node] = available_nbs
+            [self.lo.curr_node] = nbs
         except ValueError:
             corner = match_corner(direction)
-            self.lo.curr_node = self.find_best_node(corner, available_nbs)
+            self.lo.curr_node = self.find_best_node(corner, nbs)
         return True
     
     def find_best_node(self, corner, candidates):
-        corners = [self.lo.domains[node].corners[corner] for node in candidates]
+        corners = [self.lo.init_domains.corners[node][corner] for node in candidates]
         index_of_greatest_corner = corners.index(max(corners))
         return candidates[index_of_greatest_corner]
 

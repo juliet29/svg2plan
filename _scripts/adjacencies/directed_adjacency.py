@@ -4,10 +4,11 @@ import math
 
 from svg_helpers.domains import DomainDict
 from svg_helpers.directions import Direction, DIRECTION_PAIRS
+from svg_helpers.layout import PartialLayout
 
 
 class DirectedAdjacencyGenerator:
-    def __init__(self, domains: DomainDict, graph: nx.Graph, node_a, node_b) -> None:
+    def __init__(self, domains: PartialLayout, graph: nx.Graph, node_a, node_b) -> None:
         self.domains = domains
         self.G = graph
         self.node_a = node_a
@@ -51,8 +52,8 @@ class DirectedAdjacencyGenerator:
             self.update_nodes(Direction.NORTH)
 
     def get_corners(self):
-        self.corners_a = self.domains[self.node_a].corners
-        self.corners_b = self.domains[self.node_b].corners
+        self.corners_a = self.domains.corners[self.node_a]
+        self.corners_b = self.domains.corners[self.node_b]
 
     def is_equal(self):
         return math.isclose(
