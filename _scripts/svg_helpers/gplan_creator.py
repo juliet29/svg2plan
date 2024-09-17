@@ -9,20 +9,20 @@ from svg_helpers.domains import Corners, DecimalCorners
 
 class GPLANRoomType(TypedDict):
     label: str
-    left: float
-    top: float
-    width: float
-    height: float
+    left: str
+    top: str
+    width: str
+    height: str
     id: Optional[float]
     color: Optional[str]
 
 
 class GPLANCreator:
-    def __init__(self, corners: Dict[str, DecimalCorners], file_name:str|None = None) -> None:
+    def __init__(self, corners: Dict[str, DecimalCorners], folder:str = "amber_a") -> None:
         self.corners = corners
         self.rooms = []
         self.plan = []
-        self.file_name = file_name
+        self.folder = folder
 
     def run(self):
         self.create_rooms()
@@ -37,17 +37,17 @@ class GPLANCreator:
             g_room: GPLANRoomType = {
                 "id": ix,
                 "label": room,
-                "left": float(data.x_left),
-                "top": float(data.y_top),
-                "width": width,
-                "height": height,
+                "left": str(data.x_left),
+                "top": str(data.y_top),
+                "width": str(width),
+                "height": str(height),
                 "color": "",
             }
             self.rooms.append(g_room)
         self.plan.append(self.rooms)
 
     def write_to_file(self):
-        name = "gplan.json" if not self.file_name else f"{self.file_name}.json"
-        path = os.path.join("../outputs", "amber_a", name )
+        name = "gplan.json" 
+        path = os.path.join("../outputs", self.folder, name )
         with open(path, "w+") as file:
             json.dump(self.plan, default=str, fp=file)

@@ -14,10 +14,11 @@ from svg_helpers.constants import ROUNDING_LIM
 
 from decimal import Decimal, getcontext
 
+PATH = "/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/svg_imports"
 
 class SVGReader:
     def __init__(self, svg_name) -> None:
-        self.svg_path = os.path.join("../svg_imports", svg_name)
+        self.svg_path = os.path.join(PATH, svg_name)
         self.domains = PartialLayout({}, {})
 
     def run(self):

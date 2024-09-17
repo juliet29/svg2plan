@@ -25,8 +25,13 @@ class ConversionPreparer:
         self.create_conversion()
 
     def get_svg_reference(self):
-        [room] = [i for i in self.rectangles if i.id == self.reference.id]
-        self.svg_length = float(room.__getattribute__(self.reference.dimension))
+        try:
+            [room] = [i for i in self.rectangles if i.id == self.reference.id]
+            self.svg_length = float(room.__getattribute__(self.reference.dimension))
+        except ValueError:
+            print("No reference for svg to meters conversion!! ")
+            self.svg_length = 234
+
 
     def create_conversion(self):
         if not self.ref_length:

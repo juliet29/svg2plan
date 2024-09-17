@@ -38,10 +38,11 @@ class Edge:
 
 
 class ConnectivityGenerator:
-    def __init__(self, pos_graph: PositionedGraph) -> None:
+    def __init__(self, pos_graph: PositionedGraph,  folder:str = "amber_a") -> None:
         self.G_init = pos_graph.G
         self.layout = deepcopy(pos_graph.layout)
         self.G = deepcopy(pos_graph.G)
+        self.folder = folder
 
     def run(self):
         self.add_direction_nodes()
@@ -101,7 +102,7 @@ class ConnectivityGenerator:
 
     def write_to_file(self):
         self.jsonify_graph()
-        path = os.path.join("../outputs", "amber_a", "graph.json")
+        path = os.path.join("../outputs", self.folder, "graph.json")
         with open(path, "w+") as file:
             json.dump(self.G_json, default=str, fp=file)
         
@@ -132,13 +133,3 @@ class ConnectivityGenerator:
         self.layout[Direction.SOUTH.name] = (mid_x, c.y_bottom-PAD)
         self.layout[Direction.EAST.name] = (c.x_left-PAD,mid_y)
         self.layout[Direction.WEST.name] = (c.x_right+PAD,mid_y)
-
-    
-
-
-    # def test_edge(self, e):
-    #     return frozenset(e) in [frozenset(v.edge) for v in self.conn.values()]
-
-    # def run_tests(self, test_fx: list[Callable[[Dict[int, Edge]], bool]]):
-    #     for fx in test_fx:
-    #         fx(self.conn)

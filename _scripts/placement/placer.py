@@ -1,4 +1,5 @@
 from placement.interface import LooperInterface
+from svg_helpers.constants import ROUNDING_LIM
 from svg_helpers.domains import Corners, DecimalCorners, empty_decimal_corner
 from svg_helpers.decimal_operations import decimal_mult, decimal_add, decimal_sub
 
@@ -21,11 +22,12 @@ class Placer:
         new_y_top = self.lo.new_domains.corners[north_node].y_bottom
         if west_node:
             if self.lo.new_domains.corners[west_node] == empty_decimal_corner:
-                print(
-                    f"{west_node}, the east node of {self.lo.curr_node} has not yet been placed."
-                )
                 xl, xr, *_ = self.lo.new_domains.corners[north_node]
-                new_x_left = (xl + xr) / 2
+                new_x_left = round((xl + xr) / 2, ROUNDING_LIM)
+                print(
+                    f"{west_node}, the east node of {self.lo.curr_node} has not yet been placed. Creating a new x_left at {new_x_left}"
+                )
+
             else:
                 new_x_left = self.lo.new_domains.corners[west_node].x_right
         else:
