@@ -30,35 +30,33 @@ class Finder:
         if len(nbs) == 1:
             return nbs[0]
         else:
-            return self.find_best_node("x_right", nbs)
+            return self.find_best_node(Direction.EAST, nbs, self.lo.curr_node)
 
     def find_next_directed_node(self, direction: Direction, ref_node: str):
         nbs = self.lo.G.nodes[ref_node]["data"][direction.name]
         nbs = list(set(nbs).intersection(set(self.lo.unplaced)))
 
         if not nbs:
-            return False
+            return False # TODO try catch elsewhere, instead of returning false 
         try:
             [self.lo.curr_node] = nbs
         except ValueError:
-            corner = match_corner(direction)
-            if direction == Direction.SOUTH:
-                print("matching a south corner! NOTE this was changed for amber b!")
-                self.lo.curr_node = self.find_best_node_south(corner, nbs)
-            else:
-                self.lo.curr_node = self.find_best_node(corner, nbs)
+                self.lo.curr_node = self.find_best_node(direction, nbs, ref_node)
         return True
 
-    def find_best_node(self, corner, candidates):
-        corners = [self.lo.init_layout.corners[node][corner] for node in candidates]
-        index_of_greatest_corner = corners.index(max(corners))
-        return candidates[index_of_greatest_corner]
-    
+    def find_best_node(self, direction: Direction, candidates: list, ref_node):
+        corner = match_corner(direction)
+        difs = [abs(self.get_val(node, corner) - self.get_val(ref_node, corner)) for node in candidates]
+        index_of_closest_corner = difs.index(min(difs))
 
-    def find_best_node_south(self, corner, candidates):
-        corners = [self.lo.init_layout.corners[node][corner] for node in candidates]
-        index_of_greatest_corner = corners.index(min(corners))
-        return candidates[index_of_greatest_corner]
+        print(f"finding node closest to {ref_node} in {direction.name} direction... looking for {corner} closest to {self.get_val(ref_node, corner)}")
+        print(list(zip(candidates,difs)))
+
+        return candidates[index_of_closest_corner]
+    
+    def get_val(self, node, corner):
+        return self.lo.init_layout.corners[node][corner]
+    
 
 def match_corner(direction: Direction):
     match direction:
@@ -66,6 +64,6 @@ def match_corner(direction: Direction):
             return "y_top"
         case Direction.SOUTH:
             # print("finding best node. before this was x_right. now it is x_left. if room stacking fails, this may be why :)")
-            return "x_right"
+            return "x_left"
         case _:
             raise Exception("Invalid direction for matching a corner")

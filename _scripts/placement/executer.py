@@ -48,7 +48,7 @@ class PlacementExecuter(LooperInterface):
         self.ew_counter = 0
         while True:
             west_node = self.tracker[self.tracker_column][0]
-            if not self.finder.find_next_directed_node(Direction.EAST, west_node):
+            if not self.finder.find_next_directed_node(Direction.EAST, west_node): # TODO change to be a try except.. 
                 print(f"---{self.curr_node} has no western nbs that are unplaced")
                 return
             else:
@@ -69,6 +69,7 @@ class PlacementExecuter(LooperInterface):
             for key, column in self.tracker.items():
                 try:
                     north_node = column[self.north_node_reference]
+                    print(f"current north node: {north_node}")
                 except:
                     print(
                         f"north node = {north_node}. getting index {self.north_node_reference} in {column} failed"

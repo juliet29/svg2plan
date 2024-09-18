@@ -32,7 +32,7 @@ class Placer:
             else:
                 new_x_left = self.lo.new_domains.corners[west_node].x_right
         else:
-            print(f"fpr {self.lo.curr_node}, there is no west node")
+            print(f"for {self.lo.curr_node}, there is no west node. using north node as a ref. to place")
             new_x_left = self.lo.new_domains.corners[north_node].x_left
 
         self.create_new_corners(self.lo.curr_node, new_x_left, new_y_top)

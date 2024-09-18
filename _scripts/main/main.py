@@ -17,9 +17,9 @@ class SVG2Plan:
     def __init__(self, svg_name: str, folder_name: str) -> None:
         self.svg_name = svg_name
         self.folder_name = folder_name
+        self.prepare_folder()
 
     def run(self):
-        self.prepare_folder()
         self.read_in_svg()
         self.stack_rooms()
         self.fix_problems()
@@ -41,14 +41,14 @@ class SVG2Plan:
         # self.cg.run() #TODO need to pause and probs make this interactive.. 
 
     def stack_rooms(self):
-        self.lp = PlacementExecuter(self.ag.layout)
-        self.lp.run()
+        self.pe = PlacementExecuter(self.ag.layout)
+        self.pe.run()
 
 
     def fix_problems(self):
-        self.re = Reporter(self.lp.layout)
+        self.re = Reporter(self.pe.layout)
         self.re.run()
-        self.seq = Sequence(0, self.lp.layout, self.re.problems, [])
+        self.seq = Sequence(0, self.pe.layout, self.re.problems, [])
         self.sr = SequenceRunner(self.seq, self.re.problems[0])
         self.sr.run()
 
@@ -64,7 +64,7 @@ class SVG2Plan:
         if is_top:
             yrange=[-1, 14]
         else:
-            yrange=[-8, 1]
+            yrange=[-14, 1]
         self.pl = Plotter(corners, yrange=yrange)
         self.pl.plot()
         

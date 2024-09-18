@@ -43,5 +43,3 @@ def test_all_shapes_are_polygons(runner):
         assert len([i for i in shape.interiors]) == 0
 
 
-
-## test that all decimals have correct precision .. 
