@@ -41,7 +41,7 @@ class SVG2Plan:
         # self.cg.run() #TODO need to pause and probs make this interactive.. 
 
     def stack_rooms(self):
-        self.lp = PlacementExecuter(self.ag.layout_obj)
+        self.lp = PlacementExecuter(self.ag.layout)
         self.lp.run()
 
 

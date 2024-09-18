@@ -2,6 +2,7 @@ from placement.interface import LooperInterface
 from svg_helpers.constants import ROUNDING_LIM
 from svg_helpers.domains import Corners, DecimalCorners, empty_decimal_corner
 from svg_helpers.decimal_operations import decimal_mult, decimal_add, decimal_sub
+from decimal import Decimal
 
 
 class Placer:
@@ -9,12 +10,12 @@ class Placer:
         self.lo = looper_obj
 
     def place_north_west_node(self):
-        new_x_left = 0
-        new_y_top = 0
+        new_x_left = Decimal(0)
+        new_y_top = Decimal(0)
         self.create_new_corners(self.lo.curr_node, new_x_left, new_y_top)
 
     def place_next_east_node(self, west_node):
-        new_y_top = 0
+        new_y_top = Decimal(0)
         new_x_left = self.lo.new_domains.corners[west_node].x_right
         self.create_new_corners(self.lo.curr_node, new_x_left, new_y_top)
 

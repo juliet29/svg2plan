@@ -26,7 +26,7 @@ class AdjacencyGenerator:
         self.get_fp_layout()
         self.create_adjacencies()
         self.positioned_graph = PositionedGraph(self.G, self.fp_layout)
-        self.create_layout_obj()
+        self.create_layout()
 
     def initialize_graph(self):
         self.G = nx.Graph()
@@ -47,8 +47,8 @@ class AdjacencyGenerator:
         sz = self.buffer_size
         return a.buffer(sz).intersects(b.buffer(sz))
     
-    def create_layout_obj(self):
-        self.layout_obj = Layout(self.domains.shapes, self.domains.corners, self.G)
+    def create_layout(self):
+        self.layout = Layout(self.domains.shapes, self.domains.corners, self.G)
 
 
     ## display... 
