@@ -1,4 +1,5 @@
 import os 
+import logging
 from reader.svg_reader import SVGReader
 from adjacencies.adjacency import AdjacencyGenerator
 from adjacencies.connectivity import ConnectivityGenerator
@@ -12,6 +13,8 @@ from problems.side_leveler import SideLeveler
 from svg_helpers.gplan_creator import GPLANCreator
 from svg_helpers.plotter import Plotter
 
+
+logging.basicConfig(filename='test.log', encoding='utf-8', level=logging.DEBUG, format="%(levelno)s:%(module)s> %(message)s", filemode="w")
 
 class SVG2Plan:
     def __init__(self, svg_name: str, folder_name: str) -> None:

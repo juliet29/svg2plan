@@ -1,0 +1,41 @@
+DEBUG:placement.executer:m_bedroom has no western nbs that are unplaced
+DEBUG:placement.executer:current north node: bedroom_1
+DEBUG:placement.executer:current north node: laundry
+DEBUG:placement.executer:current north node: m_bath
+DEBUG:placement.executer:current north node: m_bedroom
+DEBUG:placement.executer:changing north node reference to 1. Number of unplaced nodes is 3
+DEBUG:placement.executer:current north node: bedroom_2
+DEBUG:placement.executer:no more southern nbs for bedroom_2
+DEBUG:placement.executer:current north node: transit_space
+DEBUG:placement.executer:current north node: bath
+DEBUG:placement.executer:current north node: m_closet
+DEBUG:placement.executer:no more nodes to place
+DEBUG:placement.finder:finding node closest to bedroom_1 in EAST direction... looking for closest y_top
+DEBUG:placement.finder:[('transit_space', Decimal('1.90')), ('laundry', Decimal('0.03'))]
+DEBUG:placement.finder:finding node closest to laundry in EAST direction... looking for closest y_top
+DEBUG:placement.finder:[('bath', Decimal('1.48')), ('m_bath', Decimal('0.03'))]
+DEBUG:placement.finder:finding node closest to bedroom_1 in EAST direction... looking for closest y_top
+DEBUG:placement.finder:[('transit_space', Decimal('1.90')), ('laundry', Decimal('0.03'))]
+DEBUG:placement.finder:finding node closest to laundry in EAST direction... looking for closest y_top
+DEBUG:placement.finder:[('bath', Decimal('1.48')), ('m_bath', Decimal('0.03'))]
+DEBUG:placement.executer:m_bedroom has no western nbs that are unplaced
+DEBUG:placement.executer:current north node: bedroom_1
+DEBUG:placement.finder:no west node for bedroom_2
+DEBUG:placement.executer:current north node: laundry
+DEBUG:placement.finder:finding node closest to transit_space in EAST direction... looking for closest y_top
+DEBUG:placement.finder:[('bedroom_1', Decimal('1.90')), ('bedroom_2', Decimal('1.04'))]
+DEBUG:placement.executer:current north node: m_bath
+DEBUG:placement.finder:finding node closest to bath in EAST direction... looking for closest y_top
+DEBUG:placement.finder:[('transit_space', Decimal('0.39')), ('laundry', Decimal('1.48'))]
+DEBUG:placement.executer:current north node: m_bedroom
+DEBUG:placement.finder:finding node closest to m_bedroom in SOUTH direction... looking for closest x_left
+DEBUG:placement.finder:[('dining', Decimal('2.38')), ('m_closet', Decimal('1.13'))]
+DEBUG:placement.executer:changing north node reference to 1. Number of unplaced nodes is 3
+DEBUG:placement.executer:current north node: bedroom_2
+DEBUG:placement.executer:no more southern nbs for bedroom_2
+DEBUG:placement.executer:current north node: transit_space
+DEBUG:placement.executer:current north node: bath
+DEBUG:placement.finder:finding node closest to dining in EAST direction... looking for closest y_top
+DEBUG:placement.finder:[('kitchen', Decimal('0.91')), ('transit_space', Decimal('1.04'))]
+DEBUG:placement.executer:current north node: m_closet
+DEBUG:placement.executer:no more nodes to place

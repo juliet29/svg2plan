@@ -1,5 +1,6 @@
 from networkx import Graph
 from copy import deepcopy
+import logging
 
 from svg_helpers.domains import DomainDict
 from svg_helpers.directions import Direction
@@ -11,6 +12,9 @@ from svg_helpers.shapely import create_box_from_decimal_corners
 from svg_helpers.layout import PartialLayout, Layout
 from svg_helpers.domains import DecimalCorners, empty_decimal_corner
 from decimal import Decimal
+
+logger = logging.getLogger(__name__)
+
 
 
 class PlacementExecuter(LooperInterface):
@@ -51,7 +55,7 @@ class PlacementExecuter(LooperInterface):
             try:
                 self.finder.find_next_directed_node(Direction.EAST, west_node)
             except NodeNotFoundExcepton: 
-                print(f"{self.curr_node} has no western nbs that are unplaced")
+                logger.debug(f"{self.curr_node} has no western nbs that are unplaced")
                 return
             
             self.placer.place_next_east_node(west_node)
@@ -60,7 +64,7 @@ class PlacementExecuter(LooperInterface):
             self.updater.update_unplaced()
 
             if self.is_over_ew_counter():
-                print("ew_counter > 5 .. breaking")
+                logger.warning("ew_counter > 5 .. breaking")
                 return
 
     def set_relative_south_nodes(self):
@@ -71,9 +75,9 @@ class PlacementExecuter(LooperInterface):
             for column in self.tracker.values():
                 try:
                     north_node = column[self.north_node_reference]
-                    print(f"current north node: {north_node}")
+                    logger.debug(f"current north node: {north_node}")
                 except IndexError:
-                    print(f"{column} < {self.north_node_reference}")
+                    logger.debug(f"{column} < {self.north_node_reference}")
                     continue
 
                 try:
@@ -81,22 +85,22 @@ class PlacementExecuter(LooperInterface):
                         Direction.SOUTH, north_node
                     )
                 except NodeNotFoundExcepton:
-                    print(f"no more southern nbs for {north_node}")
+                    logger.debug(f"no more southern nbs for {north_node}")
                     continue
                 
                 self.finish_setting_south_node(north_node, column)
                 
                 if len(self.unplaced) == 0:
-                    print("no more nodes to place")
+                    logger.debug("no more nodes to place")
                     return
 
             self.north_node_reference += 1
-            print(
+            logger.debug(
                 f"changing north node reference to {self.north_node_reference}. Number of unplaced nodes is {len(self.unplaced)}"
             )
 
             if self.is_over_ns_counter():
-                print("ns_counter > 4 .. breaking")
+                logger.warning("ns_counter > 4 .. breaking")
                 break
 
     def finish_setting_south_node(self, north_node, column):
