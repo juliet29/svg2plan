@@ -1,5 +1,5 @@
 from typing import Optional
-from placement.interface import LooperInterface
+from placement.interface import LooperInterface, NodeNotFoundExcepton
 from svg_helpers.directions import Direction
 
 
@@ -17,7 +17,7 @@ class Finder:
             [self.lo.curr_node] = nw_nodes
         except:
             print(f"ne_nodes: {nw_nodes}")
-            raise Exception("too many nw nodes!")
+            raise NodeNotFoundExcepton("too many nw nodes!")
         return True
 
     def find_west_node(self):
@@ -25,7 +25,8 @@ class Finder:
         # node must already have been placed in self.lo.new_domains
 
         if not nbs:
-            return None
+            print(f"no west node for {self.lo.curr_node}")
+            raise NodeNotFoundExcepton
 
         if len(nbs) == 1:
             return nbs[0]
@@ -37,19 +38,19 @@ class Finder:
         nbs = list(set(nbs).intersection(set(self.lo.unplaced)))
 
         if not nbs:
-            return False # TODO try catch elsewhere, instead of returning false 
+            raise NodeNotFoundExcepton
         try:
             [self.lo.curr_node] = nbs
         except ValueError:
                 self.lo.curr_node = self.find_best_node(direction, nbs, ref_node)
-        return True
+
 
     def find_best_node(self, direction: Direction, candidates: list, ref_node):
         corner = match_corner(direction)
         difs = [abs(self.get_val(node, corner) - self.get_val(ref_node, corner)) for node in candidates]
         index_of_closest_corner = difs.index(min(difs))
 
-        print(f"finding node closest to {ref_node} in {direction.name} direction... looking for {corner} closest to {self.get_val(ref_node, corner)}")
+        print(f"finding node closest to {ref_node} in {direction.name} direction... looking for closest {corner}")
         print(list(zip(candidates,difs)))
 
         return candidates[index_of_closest_corner]

@@ -6,7 +6,7 @@ from svg_helpers.directions import Direction
 from placement.finder import Finder
 from placement.updater import Updater
 from placement.placer import Placer
-from placement.interface import LooperInterface
+from placement.interface import LooperInterface, NodeNotFoundExcepton
 from svg_helpers.shapely import create_box_from_decimal_corners
 from svg_helpers.layout import PartialLayout, Layout
 from svg_helpers.domains import DecimalCorners, empty_decimal_corner
@@ -35,8 +35,8 @@ class PlacementExecuter(LooperInterface):
         self.prepare_data_for_export()
 
     def init_new_domains(self):
-        empy_corner = {k: empty_decimal_corner for k in self.init_layout.corners.keys()}
-        self.new_domains = PartialLayout({}, empy_corner)
+        empty_corner = {k: empty_decimal_corner for k in self.init_layout.corners.keys()}
+        self.new_domains = PartialLayout({}, empty_corner)
 
     def set_north_west_node(self):
         self.finder.find_north_west_node()
@@ -48,14 +48,16 @@ class PlacementExecuter(LooperInterface):
         self.ew_counter = 0
         while True:
             west_node = self.tracker[self.tracker_column][0]
-            if not self.finder.find_next_directed_node(Direction.EAST, west_node): # TODO change to be a try except.. 
-                print(f"---{self.curr_node} has no western nbs that are unplaced")
+            try:
+                self.finder.find_next_directed_node(Direction.EAST, west_node)
+            except NodeNotFoundExcepton: 
+                print(f"{self.curr_node} has no western nbs that are unplaced")
                 return
-            else:
-                self.placer.place_next_east_node(west_node)
-                self.tracker_column += 1
-                self.updater.update_tracker()
-                self.updater.update_unplaced()
+            
+            self.placer.place_next_east_node(west_node)
+            self.tracker_column += 1
+            self.updater.update_tracker()
+            self.updater.update_unplaced()
 
             if self.is_over_ew_counter():
                 print("ew_counter > 5 .. breaking")
@@ -66,25 +68,24 @@ class PlacementExecuter(LooperInterface):
         self.north_node_reference = 0
 
         while len(self.unplaced) > 0:
-            for key, column in self.tracker.items():
+            for column in self.tracker.values():
                 try:
                     north_node = column[self.north_node_reference]
                     print(f"current north node: {north_node}")
-                except:
-                    print(
-                        f"north node = {north_node}. getting index {self.north_node_reference} in {column} failed"
-                    )
-                    break
-                # sets the nb
-                result = self.finder.find_next_directed_node(
-                    Direction.SOUTH, north_node
-                )
-                if result == True:
-                    west_node = self.finder.find_west_node()
-                    self.placer.place_next_south_node(north_node, west_node)
-                    self.updater.extend_tracker_south(column)
-                    self.updater.update_unplaced()
+                except IndexError:
+                    print(f"{column} < {self.north_node_reference}")
+                    continue
 
+                try:
+                    self.finder.find_next_directed_node(
+                        Direction.SOUTH, north_node
+                    )
+                except NodeNotFoundExcepton:
+                    print(f"no more southern nbs for {north_node}")
+                    continue
+                
+                self.finish_setting_south_node(north_node, column)
+                
                 if len(self.unplaced) == 0:
                     print("no more nodes to place")
                     return
@@ -98,7 +99,16 @@ class PlacementExecuter(LooperInterface):
                 print("ns_counter > 4 .. breaking")
                 break
 
-    # def look_for_north_node(self):
+    def finish_setting_south_node(self, north_node, column):
+        try: 
+            west_node = self.finder.find_west_node()
+            self.placer.place_next_south_node(north_node, west_node)
+        except:
+            self.placer.place_next_south_node(north_node)
+
+        self.updater.extend_tracker_south(column)
+        self.updater.update_unplaced()
+
 
     # TODO make ns and ew counter a class argument
     def is_over_ns_counter(self):

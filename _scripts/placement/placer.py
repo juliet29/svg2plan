@@ -19,21 +19,20 @@ class Placer:
         new_x_left = self.lo.new_domains.corners[west_node].x_right
         self.create_new_corners(self.lo.curr_node, new_x_left, new_y_top)
 
-    def place_next_south_node(self, north_node, west_node):
+    def place_next_south_node(self, north_node, west_node=None):
         new_y_top = self.lo.new_domains.corners[north_node].y_bottom
-        if west_node:
+        if not west_node:
+            new_x_left = self.lo.new_domains.corners[north_node].x_left
+        else:
             if self.lo.new_domains.corners[west_node] == empty_decimal_corner:
                 xl, xr, *_ = self.lo.new_domains.corners[north_node]
                 new_x_left = round((xl + xr) / 2, ROUNDING_LIM)
                 print(
                     f"{west_node}, the east node of {self.lo.curr_node} has not yet been placed. Creating a new x_left at {new_x_left}"
                 )
-
             else:
                 new_x_left = self.lo.new_domains.corners[west_node].x_right
-        else:
-            print(f"for {self.lo.curr_node}, there is no west node. using north node as a ref. to place")
-            new_x_left = self.lo.new_domains.corners[north_node].x_left
+            
 
         self.create_new_corners(self.lo.curr_node, new_x_left, new_y_top)
 
