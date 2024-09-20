@@ -1,12 +1,13 @@
+from operator import add, sub
 from actions.details import Details
 from new_corners.range import Range
-from svg_helpers.directions import get_opposite_direction
+from svg_helpers.directions import get_axis
 from new_corners.domain import Domain
 from actions.interfaces import (
     Action,
     CurrentDomains,
     get_action_protocol,
-    get_components_of_action,
+    get_side_to_modify
 )
 
 
@@ -14,40 +15,34 @@ class ExecuteAction:
     def __init__(self, current_domains: CurrentDomains, action_type: Action) -> None:
         self.current_domains = current_domains
         self.node = current_domains.node
-        self.action = get_action_protocol(action_type)
         self.modified_domain: Domain
-        self.run()
 
-    def run(self):
-        self.get_details()
+        self.details = Details(self.current_domains)
+        self.action = get_action_protocol(action_type)
         self.modify_domain()
 
-    def get_details(self):
-        self.details = Details(self.current_domains)
-        self.direction = (
-            get_opposite_direction(self.details.relative_direction)
-            if self.action.is_attractive
-            else self.details.relative_direction
-        )
 
     def modify_domain(self):
-        axis, self.fx, self.side = get_components_of_action(self.direction)
-        opp_axis = self.node.get_other_axis(axis)
+        axis = get_axis(self.details.relative_direction)
+        other_axis = self.node.get_other_axis(axis)
 
         temp_domain = {}
         temp_domain["name"] = "new_domain"
         temp_domain[axis] = self.modify_range(self.node[axis])
-        temp_domain[opp_axis] = self.node[opp_axis]
+        temp_domain[other_axis] = self.node[other_axis]
 
         self.modified_domain = Domain(**temp_domain)
 
     def modify_range(self, range):
+        fx = add if self.action.is_attractive else sub
+        side = get_side_to_modify(self.details.relative_direction)
         value = self.details.problem_size
+
         if self.action.is_deformed:
             temp_range = {}
-            temp_range[self.side] = self.fx(range[self.side], value)
-            other_side = range.get_other_side(self.side)
+            other_side = range.get_other_side(side)
+            temp_range[side] = fx(range[side], value)
             temp_range[other_side] = range[other_side]
             return Range(**temp_range)
         else:
-            return Range(self.fx(range.min, value), self.fx(range.max, value))
+            return Range(fx(range.min, value), fx(range.max, value))

@@ -28,31 +28,19 @@ def test_relative_direction():
 def test_problem_size():
     assert d.problem_size == b_x.size
 
-
-# def test_action_direction():
-#     pu = Stretch(curr_doms)
-#     pu.get_details()
-#     pu.get_action_direction()
-#     assert pu.action_direction == Direction.EAST
-
-
 def test_stretch():
     ea = ExecuteAction(curr_doms, Action.STRETCH)
     assert ea.modified_domain.x == Range(room.x.min, room.x.max + d.problem_size)
 
 
-# def test_pull():
-#     pu = Pull(node_domain=room, problem_domain=hole)
-#     new_room = pu.execute_action()
-#     assert new_room.x == hole.x
+def test_squeeze():
+    ea = ExecuteAction(curr_doms, Action.SQUEEZE)
+    assert ea.modified_domain.x == Range(room.x.min, room.x.max - d.problem_size)
 
-# def test_push():
-#     pu = Push(node_domain=room, problem_domain=hole)
-#     new_room = pu.execute_action()
-#     assert new_room.x == Range(room.x.min - pu.dist, room.x.max - pu.dist)
+def test_push():
+    ea = ExecuteAction(curr_doms, Action.PUSH)
+    assert ea.modified_domain.x == Range(room.x.min - d.problem_size, room.x.max - d.problem_size)
 
-
-# def test_shrink():
-#     pu = Shrink(node_domain=room, problem_domain=hole)
-#     new_room = pu.execute_action()
-#     assert new_room.x == Range(room.x.min, room.x.max - pu.dist,)
+def test_pull():
+    ea = ExecuteAction(curr_doms, Action.PULL)
+    assert ea.modified_domain.x == Range(room.x.min + d.problem_size, room.x.max + d.problem_size)

@@ -9,16 +9,10 @@ from decimal import Decimal
 ReductiveCallable = Callable[[Decimal, Decimal], Decimal]
 
 
-@dataclass
+@dataclass(frozen=True)
 class CurrentDomains:
     node: Domain
     problem: Domain
-
-
-@dataclass
-class ActionProtocol:
-    is_attractive: bool
-    is_deformed: bool
 
 
 class Action(Enum):
@@ -28,6 +22,12 @@ class Action(Enum):
     SQUEEZE = 4
 
 
+@dataclass(frozen=True)
+class ActionProtocol:
+    is_attractive: bool
+    is_deformed: bool
+
+
 PROTOCOLS: Dict[Action, ActionProtocol] = {
     Action.PUSH: ActionProtocol(False, False),
     Action.PULL: ActionProtocol(True, False),
@@ -35,18 +35,18 @@ PROTOCOLS: Dict[Action, ActionProtocol] = {
     Action.SQUEEZE: ActionProtocol(False, True),
 }
 
-
-DIRECTED_ACTION_COMPONENT: Dict[Direction, tuple[str, ReductiveCallable, str]] = {
-    Direction.NORTH: ("y", add, "max"),
-    Direction.SOUTH: ("y", sub, "min"),
-    Direction.EAST: ("x", add, "max"),
-    Direction.WEST: ("x", sub, "min"),
-}
-
-
 def get_action_protocol(action_type: Action):
     return PROTOCOLS[action_type]
 
+def get_side_to_modify(direction: Direction):
+    match direction:
+        case Direction.EAST | Direction.NORTH:
+            return "min"
+        case Direction.WEST | Direction.SOUTH:
+            return "max"
+        case _:
+            raise Exception("Invalid direction")
 
-def get_components_of_action(direction: Direction):
-    return DIRECTED_ACTION_COMPONENT[direction]
+
+
+
