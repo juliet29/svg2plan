@@ -57,19 +57,9 @@ class Range:
 
 
 # TODO move to actions class probably..
-ReductiveCallable = Callable[[Decimal, Decimal], Decimal]
 
-def create_modfified_range(
-    range: Range, value: Decimal, fx: ReductiveCallable, side: str | None = None
-):
-    if side:
-        result = {}
-        other_side = range.get_other_side(side)
-        result[side] = fx(range[side], value)
-        result[other_side] = range[other_side]
-        return Range(**result)
-    else:
-        return Range(fx(range.min, value), fx(range.max, value))
+
+
 
 
 @dataclass

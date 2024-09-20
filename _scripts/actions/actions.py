@@ -1,94 +1,53 @@
-from dataclasses import dataclass
-from enum import Enum
-from typing import Protocol
-from decimal import Decimal
 from actions.details import Details
-from new_corners.range import Range, create_modfified_range
-from svg_helpers.directions import (
-    Direction,
-    get_opposite_direction,
-    DIRECTION_SIDE,
-    get_opposite_axis,
-    get_opposite_side
-)
+from new_corners.range import Range
+from svg_helpers.directions import get_opposite_direction
 from new_corners.domain import Domain
-from actions.interfaces import CurrentDomains
+from actions.interfaces import (
+    Action,
+    CurrentDomains,
+    get_action_protocol,
+    get_components_of_action,
+)
 
 
-class Magnetism(Enum):
-    ATTRACT = 0
-    REPEL = 1
-
-
-class Operation(Protocol):
-    distance: Decimal
-    direction_relative_to_problem: Direction
-    action_direction: Direction
-
-    def create_action(self): ...
-
-
-class SingleSidedOperation(Protocol):
-    distance: Decimal
-    direction_relative_to_problem: Direction
-    action_direction: Direction
-    action_side: Direction
-
-    def create_action(self): ...
-
-
-class Pull: ...
-
-
-class Shrink: ...
-
-
-class Push: ...
-
-
-def create_action_direction(direction: Direction, magnetism: Magnetism):
-    if magnetism == Magnetism.ATTRACT:
-        return get_opposite_direction(direction)
-    elif magnetism == Magnetism.REPEL:
-        return direction
-    else:
-        raise Exception("invalid magnetism")
-
-class Stretch:
-    def __init__(self, current_domains: CurrentDomains) -> None:
+class ExecuteAction:
+    def __init__(self, current_domains: CurrentDomains, action_type: Action) -> None:
         self.current_domains = current_domains
         self.node = current_domains.node
-        self.action_direction: Direction
-        self.new_room_domain: Domain
-        self.magnetism = Magnetism.ATTRACT
+        self.action = get_action_protocol(action_type)
+        self.modified_domain: Domain
+        self.run()
+
+    def run(self):
+        self.get_details()
+        self.modify_domain()
 
     def get_details(self):
         self.details = Details(self.current_domains)
-        self.details.run()
-
-    def get_action_direction(self):
-        self.action_direction = create_action_direction(
-            self.details.direction_relative_to_problem, self.magnetism
+        self.direction = (
+            get_opposite_direction(self.details.relative_direction)
+            if self.action.is_attractive
+            else self.details.relative_direction
         )
 
-    def execute_action(self):
-        temp = {}
-        temp["name"] = "new_domain"
-
-        axis, side, fx = DIRECTION_SIDE[self.action_direction]
-        temp[axis] = create_modfified_range(self.node[axis], self.details.problem_size, fx, side) 
-        
+    def modify_domain(self):
+        axis, self.fx, self.side = get_components_of_action(self.direction)
         opp_axis = self.node.get_other_axis(axis)
-        temp[opp_axis] = self.node[opp_axis]
 
-        
-        self.new_room_domain = Domain(**temp)
+        temp_domain = {}
+        temp_domain["name"] = "new_domain"
+        temp_domain[axis] = self.modify_range(self.node[axis])
+        temp_domain[opp_axis] = self.node[opp_axis]
 
+        self.modified_domain = Domain(**temp_domain)
 
-        # if both sides were changing.. 
-            # min vs max doesnt matter.. 
-            # wonder if range can return its own adjustment.. 
-
-
-
-
+    def modify_range(self, range):
+        value = self.details.problem_size
+        if self.action.is_deformed:
+            temp_range = {}
+            temp_range[self.side] = self.fx(range[self.side], value)
+            other_side = range.get_other_side(self.side)
+            temp_range[other_side] = range[other_side]
+            return Range(**temp_range)
+        else:
+            return Range(self.fx(range.min, value), self.fx(range.max, value))
