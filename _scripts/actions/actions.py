@@ -7,7 +7,7 @@ from actions.interfaces import (
     Action,
     CurrentDomains,
     get_action_protocol,
-    get_side_to_modify
+    get_fx_and_side,
 )
 
 
@@ -21,7 +21,6 @@ class ExecuteAction:
         self.action = get_action_protocol(action_type)
         self.modify_domain()
 
-
     def modify_domain(self):
         axis = get_axis(self.details.relative_direction)
         other_axis = self.node.get_other_axis(axis)
@@ -34,8 +33,7 @@ class ExecuteAction:
         self.modified_domain = Domain(**temp_domain)
 
     def modify_range(self, range):
-        fx = add if self.action.is_attractive else sub
-        side = get_side_to_modify(self.details.relative_direction)
+        fx, side = get_fx_and_side(self.details.relative_direction, self.action.is_attractive)
         value = self.details.problem_size
 
         if self.action.is_deformed:

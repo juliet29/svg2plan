@@ -1,7 +1,7 @@
 from enum import Enum
 from dataclasses import dataclass
 from new_corners.domain import Domain
-from typing import Dict, Callable
+from typing import Dict, Callable, Union
 from operator import add, sub
 from svg_helpers.directions import Direction
 from decimal import Decimal
@@ -35,18 +35,28 @@ PROTOCOLS: Dict[Action, ActionProtocol] = {
     Action.SQUEEZE: ActionProtocol(False, True),
 }
 
+
 def get_action_protocol(action_type: Action):
     return PROTOCOLS[action_type]
 
-def get_side_to_modify(direction: Direction):
+
+def is_upper(direction: Direction):
     match direction:
         case Direction.EAST | Direction.NORTH:
-            return "min"
+            return True
         case Direction.WEST | Direction.SOUTH:
-            return "max"
+            return False
+
+
+def get_fx_and_side(direction: Direction, is_attractive: bool):
+    match is_upper(direction), is_attractive:
+        case (True, True):
+            return (sub, "min")
+        case (True, False):
+            return (add, "min")
+        case (False, True):
+            return (add, "max")
+        case (False, False):
+            return (sub, "max")
         case _:
             raise Exception("Invalid direction")
-
-
-
-

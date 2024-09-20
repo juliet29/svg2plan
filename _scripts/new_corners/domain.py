@@ -47,6 +47,10 @@ class ComparedDomain:
     
     def get_key_from_domain(self, domain: Domain):
         return key_from_value(self.__dict__, domain)
+    
+    def is_empty(self):
+        if not self.NORTH and not self.SOUTH and not self.EAST and not self.WEST:
+            return True
 
 
 

@@ -19,6 +19,8 @@ class Details:
 
     def get_direction_relative_to_problem(self):
         self.cmp = self.problem.compare_domains(self.node)
+        if self.cmp.is_empty():
+            raise Exception("Domains do not have a NS or EW relationship")
         direction = self.cmp.get_key_from_domain(self.node)
         self.relative_direction = Direction[direction]
 
