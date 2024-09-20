@@ -9,7 +9,12 @@
   ],
   "settings": {
     "python.defaultInterpreterPath": "/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/gqenv/bin/python3.10",
-    "python.analysis.include": ["/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/_scripts"],
-    "python.analysis.extraPaths": ["/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/_scripts"]
+    "python.analysis.include": ["/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/", "/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/_scripts"],
+    "python.analysis.extraPaths": ["/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/", "/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/tests"],
+    "prettier.printWidth": 180,
+    "python.autoComplete.extraPaths": ["/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/"],
+    "terminal.integrated.env.linux": {
+      "PYTHONPATH": "/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/"
+    }
   }
 }

@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from decimal import Decimal
 from collections import namedtuple
+from log_setter.log_settings import logger
 
 
 @dataclass(frozen=True)
@@ -18,7 +19,7 @@ class Range:
     max: Decimal
 
     def __repr__(self) -> str:
-        return f"Range({self.min}, {self.max})"
+        return f"[{self.min}-{self.max}]"
 
     def overlaps(self, other):
         return not other.min < self.min and not other.max > self.max
@@ -33,29 +34,34 @@ class Range:
         return self.max <= other.min
     
     def compare_ranges(self, other):
-        if self.__eq__(other):
-            print(f"{self} equals {other}")
-            return 
-        if self.overlaps(other):
-            print(f"{self} overlaps {other}")
-            return 
-        if self.is_within(other):
-            print(f"{self} is within {other}")
-            return 
+        # if self.__eq__(other):
+        #     logger.debug(f"{self} equals {other}")
+        #     return ComparedRange(Lesser=None, Greater=None)
+        # if self.overlaps(other):
+        #     logger.debug(f"{self} overlaps {other}")
+        #     return ComparedRange(Lesser=None, Greater=None)
+        # if self.is_within(other):
+        #     logger.debug(f"{self} is within {other}")
+        #     return ComparedRange(Lesser=None, Greater=None)
         
         if self.is_smaller(other):
             return ComparedRange(Lesser=self, Greater=other)
-        
-        if self.is_larger(other):
+        elif self.is_larger(other):
             return ComparedRange(Lesser=other, Greater=self)
+        else:
+            return ComparedRange(Lesser=None, Greater=None)
 
 
 @dataclass
 class ComparedRange:
-    Lesser: Range
-    Greater: Range
+    Lesser: Range | None
+    Greater: Range | None
     def __repr__(self) -> str:
         return f"(Lesser={self.Lesser}, Greater={self.Greater})"
+    
+    def is_empty(self):
+        if not self.Lesser and not self.Greater:
+            return True
         
 
             

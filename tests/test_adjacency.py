@@ -1,4 +1,5 @@
 import pytest
+
 from reader.svg_reader import SVGReader
 from adjacencies.adjacency import AdjacencyGenerator
 
