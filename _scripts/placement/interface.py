@@ -1,9 +1,12 @@
-from dataclasses import dataclass
-from typing import Dict, Optional
+import logging
+from typing import Dict
 
 import networkx as nx
 from svg_helpers.domains import DomainDict
 from svg_helpers.layout import PartialLayout
+
+
+stack_logger = logging.getLogger(__name__)
 
 
 class LooperInterface:

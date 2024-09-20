@@ -7,18 +7,16 @@ from svg_helpers.directions import Direction
 from placement.finder import Finder
 from placement.updater import Updater
 from placement.placer import Placer
-from placement.interface import LooperInterface, NodeNotFoundExcepton
+from placement.interface import LooperInterface, NodeNotFoundExcepton, stack_logger
 from svg_helpers.shapely import create_box_from_decimal_corners
 from svg_helpers.layout import PartialLayout, Layout
 from svg_helpers.domains import DecimalCorners, empty_decimal_corner
 from decimal import Decimal
 
-logger = logging.getLogger(__name__)
-
-
 
 class PlacementExecuter(LooperInterface):
     def __init__(self, layout: Layout) -> None:
+        stack_logger.info("\n begining to execute stacking")
         self.G = deepcopy(layout.graph)
         self.init_layout = PartialLayout(deepcopy(layout.shapes), deepcopy(layout.corners))
 
@@ -55,7 +53,7 @@ class PlacementExecuter(LooperInterface):
             try:
                 self.finder.find_next_directed_node(Direction.EAST, west_node)
             except NodeNotFoundExcepton: 
-                logger.debug(f"{self.curr_node} has no western nbs that are unplaced")
+                stack_logger.debug(f"{self.curr_node} has no western nbs that are unplaced")
                 return
             
             self.placer.place_next_east_node(west_node)
@@ -64,7 +62,7 @@ class PlacementExecuter(LooperInterface):
             self.updater.update_unplaced()
 
             if self.is_over_ew_counter():
-                logger.warning("ew_counter > 5 .. breaking")
+                stack_logger.warning("ew_counter > 5 .. breaking")
                 return
 
     def set_relative_south_nodes(self):
@@ -75,9 +73,9 @@ class PlacementExecuter(LooperInterface):
             for column in self.tracker.values():
                 try:
                     north_node = column[self.north_node_reference]
-                    logger.debug(f"current north node: {north_node}")
+                    stack_logger.debug(f"current north node: {north_node}")
                 except IndexError:
-                    logger.debug(f"{column} < {self.north_node_reference}")
+                    stack_logger.debug(f"{column} < {self.north_node_reference}")
                     continue
 
                 try:
@@ -85,22 +83,22 @@ class PlacementExecuter(LooperInterface):
                         Direction.SOUTH, north_node
                     )
                 except NodeNotFoundExcepton:
-                    logger.debug(f"no more southern nbs for {north_node}")
+                    stack_logger.debug(f"no more southern nbs for {north_node}")
                     continue
                 
                 self.finish_setting_south_node(north_node, column)
                 
                 if len(self.unplaced) == 0:
-                    logger.debug("no more nodes to place")
+                    stack_logger.debug("no more nodes to place")
                     return
 
             self.north_node_reference += 1
-            logger.debug(
+            stack_logger.debug(
                 f"changing north node reference to {self.north_node_reference}. Number of unplaced nodes is {len(self.unplaced)}"
             )
 
             if self.is_over_ns_counter():
-                logger.warning("ns_counter > 4 .. breaking")
+                stack_logger.warning("ns_counter > 4 .. breaking")
                 break
 
     def finish_setting_south_node(self, north_node, column):

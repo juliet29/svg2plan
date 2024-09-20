@@ -8,6 +8,7 @@ from svg_helpers.layout_base import LayoutBase
 from problem_types.overlap.identifier import OverlapIdentifier
 from problem_types.hole.identifier import HoleIdentifier
 from problem_types.side_hole.identifier import SideHoleIdentifier
+from problems.fix_logger import fix_logger
 
 
 class Reporter:
@@ -70,6 +71,6 @@ class Reporter:
                     case ProblemType.SIDE_HOLE:
                         side_hole += 1
 
-        print(
+        fix_logger.debug(
             f"-- Unresolved Problems. Overlaps: {overlap}. Holes: {hole}. Sideholes: {side_hole}"
         )

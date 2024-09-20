@@ -1,11 +1,12 @@
 import logging
-from placement.interface import LooperInterface
+from placement.interface import LooperInterface, stack_logger
 from svg_helpers.constants import ROUNDING_LIM
 from svg_helpers.domains import Corners, DecimalCorners, empty_decimal_corner
 from svg_helpers.decimal_operations import decimal_mult, decimal_add, decimal_sub
 from decimal import Decimal
 
-logger = logging.getLogger(__name__)
+
+
 
 class Placer:
     def __init__(self, looper_obj: LooperInterface) -> None:
@@ -29,7 +30,7 @@ class Placer:
             if self.lo.new_domains.corners[west_node] == empty_decimal_corner:
                 xl, xr, *_ = self.lo.new_domains.corners[north_node]
                 new_x_left = round((xl + xr) / 2, ROUNDING_LIM)
-                logger.debug(
+                stack_logger.debug(
                     f"{west_node}, the east node of {self.lo.curr_node} has not yet been placed. Creating a new x_left at {new_x_left}"
                 )
             else:

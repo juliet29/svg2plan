@@ -1,5 +1,6 @@
-import os 
+import os
 import logging
+import json
 from reader.svg_reader import SVGReader
 from adjacencies.adjacency import AdjacencyGenerator
 from adjacencies.connectivity import ConnectivityGenerator
@@ -13,11 +14,12 @@ from problems.side_leveler import SideLeveler
 from svg_helpers.gplan_creator import GPLANCreator
 from svg_helpers.plotter import Plotter
 
+from log_setter.log_settings import logger
 
-logging.basicConfig(filename='test.log', encoding='utf-8', level=logging.DEBUG, format="%(levelno)s:%(module)s> %(message)s", filemode="w")
 
 class SVG2Plan:
     def __init__(self, svg_name: str, folder_name: str) -> None:
+        logger.info("Starting SVG2Plan \n ")
         self.svg_name = svg_name
         self.folder_name = folder_name
         self.prepare_folder()
@@ -41,12 +43,11 @@ class SVG2Plan:
         self.ag.run()
 
         # self.cg = ConnectivityGenerator(self.ag.positioned_graph, self.folder_name)
-        # self.cg.run() #TODO need to pause and probs make this interactive.. 
+        # self.cg.run() #TODO need to pause and probs make this interactive..
 
     def stack_rooms(self):
         self.pe = PlacementExecuter(self.ag.layout)
         self.pe.run()
-
 
     def fix_problems(self):
         self.re = Reporter(self.pe.layout)
@@ -62,12 +63,10 @@ class SVG2Plan:
         self.gp = GPLANCreator(self.sl.corners, self.folder_name)
         self.gp.run()
 
-
-    def plot_object_corners(self, corners, is_top: bool=False):
+    def plot_object_corners(self, corners, is_top: bool = False):
         if is_top:
-            yrange=[-1, 14]
+            yrange = [-1, 14]
         else:
-            yrange=[-14, 1]
+            yrange = [-14, 1]
         self.pl = Plotter(corners, yrange=yrange)
         self.pl.plot()
-        

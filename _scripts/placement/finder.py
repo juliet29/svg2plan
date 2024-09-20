@@ -1,9 +1,5 @@
-import logging
-from typing import Optional
-from placement.interface import LooperInterface, NodeNotFoundExcepton
+from placement.interface import LooperInterface, NodeNotFoundExcepton, stack_logger
 from svg_helpers.directions import Direction
-
-logger = logging.getLogger(__name__)
 
 
 class Finder:
@@ -18,14 +14,14 @@ class Finder:
         try:
             [self.lo.curr_node] = nw_nodes
         except:
-            logger.debug(f"ne_nodes: {nw_nodes}")
+            stack_logger.debug(f"ne_nodes: {nw_nodes}")
             raise NodeNotFoundExcepton("too many nw nodes!")
 
 
     def find_west_node(self):
         nbs = self.lo.G.nodes[self.lo.curr_node]["data"][Direction.WEST.name]
         if not nbs:
-            logger.debug(f"no west node for {self.lo.curr_node}")
+            stack_logger.debug(f"no west node for {self.lo.curr_node}")
             raise NodeNotFoundExcepton
         try:
             [node] = nbs
@@ -49,8 +45,8 @@ class Finder:
         difs = [abs(self.get_val(node, corner) - self.get_val(ref_node, corner)) for node in candidates]
         index_of_closest_corner = difs.index(min(difs))
 
-        logger.debug(f"finding node closest to {ref_node} in {direction.name} direction... looking for closest {corner}")
-        logger.debug(list(zip(candidates,difs)))
+        stack_logger.debug(f"finding node closest to {ref_node} in {direction.name} direction... looking for closest {corner}")
+        stack_logger.debug(list(zip(candidates,difs)))
 
         return candidates[index_of_closest_corner]
     

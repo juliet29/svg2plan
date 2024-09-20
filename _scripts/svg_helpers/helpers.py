@@ -2,6 +2,11 @@ from typing import Dict,  Union
 import json
 from svg_helpers.domains import Corners
 
+def print_hi():
+    print("hi")
+
+
+
 def key_from_value(dict:Dict, val):
     return list(dict.keys())[list(dict.values()).index(val)]
 

@@ -7,6 +7,7 @@ from problems.classes.sequence import Sequence
 from problems.action_generator import ActionGenerator
 from problems.modifier import BlockModifier
 from problems.reporter import Reporter
+from problems.fix_logger import fix_logger
 
 from svg_helpers.helpers import key_from_value
 
@@ -27,27 +28,27 @@ class SequenceRunner:
         while len(active_problems) > 0:
             self.execute_actions()
             if self.are_problems_solved:
-                print("no more problems!")
+                fix_logger.info("no more problems!")
                 break
 
             if self.limit_counter > self.LIMIT:
-                print("exceeded max iterations")
+                fix_logger.warning("exceeded max iterations")
                 break
 
     def execute_actions(self):
         if self.are_problems_solved:
-            print("no more problems!")
+            fix_logger.info("no more problems!")
             return
-        print(f"--iteration #{self.limit_counter+1}")
-        print(f"curr problem = {self.curr_problem}")
+        fix_logger.debug(f"--iteration #{self.limit_counter+1}")
+        fix_logger.debug(f"curr problem = {self.curr_problem}")
         self.limit_counter += 1
         self.decide_action()
         self.take_action()
         self.eval_action()
         if self.are_problems_solved:
-            print("no more problems!")
+            fix_logger.info("no more problems!")
             return
-        print(f"next problem = {self.curr_problem}")
+        fix_logger.debug(f"next problem = {self.curr_problem}")
 
     def decide_action(self):
         assert self.layout.graph
@@ -56,7 +57,7 @@ class SequenceRunner:
         )
         self.ag.handle_case()
         self.curr_action = self.ag.action
-        print(self.curr_action)
+        fix_logger.debug(self.curr_action)
 
     def take_action(self):
         assert self.curr_action
@@ -77,10 +78,10 @@ class SequenceRunner:
             p for p in self.re.problems if p.index == self.curr_problem.index
         ]
         if test_prob.resolved == True:
-            print("problem resolved")
+            fix_logger.debug("problem resolved")
             return True
         else:
-            print("problem not resolved")
+            fix_logger.warning("problem not resolved")
             return False
 
 
@@ -95,14 +96,14 @@ class SequenceRunner:
 
     def get_next_problem(self):
         indices = [i.index for i in self.problems if i.resolved == False]
-        print(f"indices: {indices}")
+        fix_logger.debug(f"indices: {indices}")
 
         if len(indices) == 0:
             self.are_problems_solved = True
             return
 
         if len(indices) == 1:
-            print(f"there is just one index and it is {indices}")
+            fix_logger.debug(f"there is just one index and it is {indices}")
             [self.curr_problem] = [p for p in self.problems if p.index == indices[0]]
             return
 

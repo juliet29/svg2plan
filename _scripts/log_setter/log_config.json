@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "disable_existing_loggers": false,
+  "formatters": {
+    "simple": {
+      "format": "%(module)s> %(message)s"
+    },
+    "detailed": {
+      "format": "%(levelname)s:%(module)s> %(message)s"
+    }
+  },
+  "handlers": {
+    "stdout": {
+      "class": "logging.StreamHandler",
+      "formatter": "simple",
+      "level": "WARNING",
+      "stream": "ext://sys.stdout"
+    },
+    "file": {
+      "class": "logging.FileHandler",
+      "level": "DEBUG",
+      "formatter": "detailed",
+      "filename": "log.log",
+      "mode": "w",
+      "encoding": "utf-8"
+    }
+  },
+  "loggers": {
+    "root": {
+      "level": "DEBUG",
+      "handlers": ["stdout", "file"]
+    }
+  }
+}

@@ -29,7 +29,11 @@ class SideHoleIdentifier(LayoutBase):
         self.unique_pairs: set
 
     def report_problems(self):
+        # try:
         self.find_potential_holes()
+        # except AttributeError:
+        #     return self.shapes
+
         self.search_layout()
         for ix, pair in enumerate(self.side_hole_pairs):
             self.problems.append(
@@ -46,7 +50,12 @@ class SideHoleIdentifier(LayoutBase):
         shapes = list(self.shapes.values())
         union = union_all(shapes)
         diffs = union.convex_hull.difference(union)
-        self.tree = STRtree(diffs.geoms)  # type: ignore
+        try:
+            self.tree = STRtree(diffs.geoms)  # type: ignore
+        except AttributeError:
+            print(diffs)
+            raise AttributeError("error getting side hole holes")
+
 
     def search_layout(self):
         for dir in Direction:
