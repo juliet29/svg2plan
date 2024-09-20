@@ -18,18 +18,23 @@ class Range:
     min: Decimal
     max: Decimal
 
+    # TODO check that min << max always.. ~ can use post init .. 
+
     @property
     def size(self):
         return self.max - self.min
 
     def __repr__(self) -> str:
         return f"[{self.min}-{self.max}]"
-
-    def overlaps(self, other):
-        return not other.min < self.min and not other.max > self.max
     
-    def is_within(self, other):
-        return other.min < self.min and other.max > self.max
+    def __getitem__(self, i):
+        return getattr(self, i)
+
+    # def overlaps(self, other):
+    #     return not other.min < self.min and not other.max > self.max
+    
+    # def is_within(self, other):
+    #     return other.min < self.min and other.max > self.max
     
     def is_larger(self, other):
         return self.min >= other.max

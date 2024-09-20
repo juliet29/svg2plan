@@ -1,6 +1,7 @@
 from enum import Enum
 from dataclasses import dataclass, field, fields
 from svg_helpers.helpers import toJson
+from operator import add, sub
 
 
 class Direction(Enum):
@@ -16,6 +17,12 @@ def get_opposite_direction(direction: Direction):
 def get_axis(direction: Direction):
     return DIRECTION_AXIS[direction]
 
+def get_opposite_axis(axis: str):
+    return AXIS_PAIRS[axis]
+
+def get_opposite_side(side: str):
+    return RANGE_PAIRS[side]
+
 
 DIRECTION_PAIRS = {
     Direction.NORTH: Direction.SOUTH,
@@ -29,6 +36,24 @@ DIRECTION_AXIS = {
     Direction.SOUTH: "y",
     Direction.EAST: "x",
     Direction.WEST: "x",
+}
+
+DIRECTION_SIDE = {
+    Direction.NORTH: ("y", "max", add),
+    Direction.SOUTH: ("y", "min", sub),
+    Direction.EAST: ("x", "max", add),
+    Direction.WEST: ("x", "min", sub),
+}
+
+AXIS_PAIRS = {
+    "x": "y",
+    "y": "x"
+}
+
+RANGE_PAIRS = {
+    "min": "max",
+    "max": "min"
+
 }
 
 class GeneralDirection(Enum):

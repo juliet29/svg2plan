@@ -45,11 +45,11 @@ class TestDomain:
 
 
 class TestRange:
-    def test_overlaps(self):
-        assert control.overlaps(narrower) 
+    # def test_overlaps(self):
+    #     assert control.overlaps(narrower) 
 
-    def test_is_within(self):
-        assert control.is_within(wider) 
+    # def test_is_within(self):
+    #     assert control.is_within(wider) 
 
     def test_is_smaller(self):
         assert control.is_smaller(larger) 
