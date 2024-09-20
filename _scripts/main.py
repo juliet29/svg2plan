@@ -18,7 +18,7 @@ def main():
     hole = Domain(name="hole", x=b_x, y=y)
     curr_doms = CurrentDomains(room, hole)
 
-    pu = Pull(curr_doms)
+    pu = Stretch(curr_doms)
     pu.get_details()
     pu.get_action_direction()
     pu.execute_action()

@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Protocol
 from decimal import Decimal
 from actions.details import Details
-from new_corners.range import Range
+from new_corners.range import Range, create_modfified_range
 from svg_helpers.directions import (
     Direction,
     get_opposite_direction,
@@ -72,25 +72,22 @@ class Stretch:
         )
 
     def execute_action(self):
+        temp = {}
+        temp["name"] = "new_domain"
+
         axis, side, fx = DIRECTION_SIDE[self.action_direction]
-        opp_axis = get_opposite_axis(axis)
-        opp_side = get_opposite_side(side)
-        self.range = self.node[axis]
-        self.target = self.range[side]
-        self.adjusted_target = fx(self.target, self.details.problem_size)
-        self.adjusted_range_d = {}
-        self.adjusted_range_d[side] = self.adjusted_target
-        self.adjusted_range_d[opp_side] = self.range[opp_side]
-        self.adjusted_range = Range(**self.adjusted_range_d)
+        temp[axis] = create_modfified_range(self.node[axis], self.details.problem_size, fx, side) 
+        
+        opp_axis = self.node.get_other_axis(axis)
+        temp[opp_axis] = self.node[opp_axis]
 
         
-        temp = {
-            "name": "new_domain",
-        }
-        temp[opp_axis] = self.node[opp_axis]
-        temp[axis] = self.adjusted_range
-
         self.new_room_domain = Domain(**temp)
+
+
+        # if both sides were changing.. 
+            # min vs max doesnt matter.. 
+            # wonder if range can return its own adjustment.. 
 
 
 

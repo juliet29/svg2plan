@@ -1,23 +1,9 @@
-from new_corners.range import nonDecimalRange
-from new_corners.domain import Domain
+from tests.domains_setup import *
 import pytest
+from new_corners.range import create_modfified_range
+from operator import add, sub
+from decimal import Decimal
 
-control = nonDecimalRange(10,20).toRange()
-narrower = nonDecimalRange(12, 18).toRange()
-wider = nonDecimalRange(8, 22).toRange()
-larger = nonDecimalRange(21, 23).toRange()
-smaller = nonDecimalRange(6, 7.5).toRange()
-smaller_overlap = nonDecimalRange(6, 10).toRange()
-
-
-north_domain = Domain(name="north", x=control, y=larger)
-south_domain = Domain(name="south", x=control, y=smaller)
-
-east_domain = Domain(name="east", x=larger, y=control)
-west_domain = Domain(name="west", x=smaller, y=control)
-
-east_north_domain = Domain(name="en", x=larger, y=larger)
-west_south_domain = Domain(name="ws", x=smaller, y=smaller)
 
 class TestDomain:
     def test_ns(self):
@@ -42,15 +28,12 @@ class TestDomain:
         assert res.EAST == east_north_domain
         assert res.WEST == west_south_domain
 
+    def test_get_other_axis(self):
+        assert north_domain.get_other_axis("y") == "x"
+
 
 
 class TestRange:
-    # def test_overlaps(self):
-    #     assert control.overlaps(narrower) 
-
-    # def test_is_within(self):
-    #     assert control.is_within(wider) 
-
     def test_is_smaller(self):
         assert control.is_smaller(larger) 
 
@@ -68,9 +51,25 @@ class TestRange:
         result = control.compare_ranges(smaller_overlap)
         assert result is not None and result.Lesser == smaller_overlap
 
-    def test_unomparable(self):
+    def test_uncomparable(self):
         result = control.compare_ranges(narrower)
         assert result.is_empty()
+
+    def test_other_side(self):
+        res = control.get_other_side("min")
+        assert res == "max"
+
+
+    def test_modifing_range(self):
+        mod = create_modfified_range(control, dec, sub,)
+        assert mod.min == control.min - dec
+        assert mod.max == control.max - dec 
+
+    def test_modifing_range_single_side(self):
+        mod = create_modfified_range(control, dec, add, "min")
+        assert mod.min == control.min + dec
+
+
 
 
 

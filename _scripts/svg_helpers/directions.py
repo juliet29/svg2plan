@@ -53,7 +53,6 @@ AXIS_PAIRS = {
 RANGE_PAIRS = {
     "min": "max",
     "max": "min"
-
 }
 
 class GeneralDirection(Enum):

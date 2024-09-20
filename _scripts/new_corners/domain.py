@@ -28,6 +28,11 @@ class Domain:
             EAST=xd(x_res.Greater),
             WEST=xd(x_res.Lesser),
         )
+    
+    def get_other_axis(self, axis):
+        axes = {i for i in self.__annotations__.keys() if i != "name"}
+        [other_axis] = axes.difference({axis})
+        return other_axis
 
 
 @dataclass(frozen=True)
