@@ -9,6 +9,28 @@ class Direction(Enum):
     EAST = 2
     WEST = 3
 
+
+def get_opposite_direction(direction: Direction):
+    return DIRECTION_PAIRS[direction]
+
+def get_axis(direction: Direction):
+    return DIRECTION_AXIS[direction]
+
+
+DIRECTION_PAIRS = {
+    Direction.NORTH: Direction.SOUTH,
+    Direction.SOUTH: Direction.NORTH,
+    Direction.EAST: Direction.WEST,
+    Direction.WEST: Direction.EAST,
+}
+
+DIRECTION_AXIS = {
+    Direction.NORTH: "y",
+    Direction.SOUTH: "y",
+    Direction.EAST: "x",
+    Direction.WEST: "x",
+}
+
 class GeneralDirection(Enum):
     NORTH_SOUTH = 0
     EAST_WEST = 1
@@ -23,42 +45,37 @@ class NeighborDirections:
 
     def __getitem__(self, i):
         return getattr(self, i)
-    
+
     def get_empty_directions(self):
         return [i for i in self.__annotations__ if len(self.__getitem__(i)) == 0]
-    
+
     def to_json(self):
         return {
             "NORTH": self.NORTH,
             "SOUTH": self.SOUTH,
             "EAST": self.EAST,
             "WEST": self.WEST,
-
         }
-    
 
 
 
-DIRECTION_PAIRS = {
-    Direction.NORTH: Direction.SOUTH,
-    Direction.SOUTH: Direction.NORTH,
-    Direction.EAST: Direction.WEST,
-    Direction.WEST: Direction.EAST,
-}
 
 
 @dataclass
 class DirectedPairEW:
     EAST: str
     WEST: str
+
     def __repr__(self) -> str:
         l1 = f"DirectedPair(`{self.WEST} is WEST of {self.EAST}`)"
         return l1
+
 
 @dataclass
 class DirectedPairNS:
     NORTH: str
     SOUTH: str
+
     def __repr__(self) -> str:
         l1 = f"DirectedPair(`{self.NORTH} is NORTH of {self.SOUTH}`)"
         return l1
@@ -76,6 +93,7 @@ def make_directed_pairEW(G, u, v):
 
     return d
 
+
 def make_directed_pairNS(G, u, v):
     u_data = G.nodes(data=True)[u]
     if v in u_data["data"].NORTH:
@@ -87,6 +105,7 @@ def make_directed_pairNS(G, u, v):
         return
 
     return d
+
 
 def make_directed_pair(G, u, v):
     u_data = G.nodes(data=True)[u]
@@ -101,7 +120,3 @@ def make_directed_pair(G, u, v):
         possible_pairs.append(DirectedPairNS(NORTH=u, SOUTH=v))
 
     return possible_pairs
-        
-
-
-

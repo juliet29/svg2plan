@@ -18,6 +18,10 @@ class Range:
     min: Decimal
     max: Decimal
 
+    @property
+    def size(self):
+        return self.max - self.min
+
     def __repr__(self) -> str:
         return f"[{self.min}-{self.max}]"
 
@@ -34,16 +38,6 @@ class Range:
         return self.max <= other.min
     
     def compare_ranges(self, other):
-        # if self.__eq__(other):
-        #     logger.debug(f"{self} equals {other}")
-        #     return ComparedRange(Lesser=None, Greater=None)
-        # if self.overlaps(other):
-        #     logger.debug(f"{self} overlaps {other}")
-        #     return ComparedRange(Lesser=None, Greater=None)
-        # if self.is_within(other):
-        #     logger.debug(f"{self} is within {other}")
-        #     return ComparedRange(Lesser=None, Greater=None)
-        
         if self.is_smaller(other):
             return ComparedRange(Lesser=self, Greater=other)
         elif self.is_larger(other):

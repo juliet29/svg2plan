@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from new_corners.range import Range
 from functools import partial
+from svg_helpers.helpers import key_from_value
 
 
 @dataclass(frozen=True)
@@ -38,9 +39,15 @@ class ComparedDomain:
 
     def __repr__(self) -> str:
         return f"{self.__dict__}"
+    
+    def get_key_from_domain(self, domain: Domain):
+        return key_from_value(self.__dict__, domain)
 
 
-def get_domain_from_range(  axis: str, domain_a: Domain, domain_b: Domain, range: Range | None):
+
+def get_domain_from_range(
+    axis: str, domain_a: Domain, domain_b: Domain, range: Range | None
+):
     if range == None:
         return None
     if domain_a == domain_b:
