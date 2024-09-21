@@ -22,7 +22,7 @@ class OperationLogger:
 layout = read_layout("amber_a_placed")
 problem: Problem
 # [problem]= [i for i in layout.problems if i.problem_type == ProblemType.HOLE]
-problem = layout.problems[0]
+problem = layout.problems[1]
 prob_name = "problem"
 logger.info(f"problem nbs: {problem.nbs}")
 
