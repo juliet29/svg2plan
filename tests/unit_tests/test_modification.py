@@ -8,6 +8,7 @@ from actions.interfaces import CurrentDomains, ActionType
 from operator import add, sub
 from itertools import product
 
+
 def get_operators(drn: Direction):
     return (sub, add) if drn == Direction.WEST or drn == Direction.SOUTH else (add, sub)
 
@@ -52,7 +53,7 @@ ACTNS = [i for i in ActionType]
 @pytest.mark.parametrize("drn, action", list(product(DRNS, ACTNS)))
 def test_action(drn: Direction, action: ActionType):
     node, size = generate_fixed_problem()
-    cm = CreateModifiedDomain(node, size, action, drn)
+    cm = CreateModifiedDomain(node, (size,drn), action )
     new_dom = cm.create_domain()
     axis = get_axis(drn)
     assert new_dom[axis] == expected_domain(drn, action, node, size, axis)

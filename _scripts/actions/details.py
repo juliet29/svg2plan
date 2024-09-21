@@ -9,16 +9,15 @@ class Details:
     def __init__(self, current_domains: CurrentDomains) -> None:
         self.problem = current_domains.problem
         self.node = current_domains.node
-
-        self.problem_size: Decimal
-        self.relative_direction: Direction
+        self.problem_sizes: list[Decimal] = []
         self.run()
 
     def run(self):
-        self.get_direction_relative_to_problem()
-        self.get_problem_size()
+        self.get_directions_relative_to_problem()
+        self.gather_problem_sizes()
+        self.result = list(zip(self.problem_sizes, self.relative_directions))
 
-    def get_direction_relative_to_problem(self):
+    def get_directions_relative_to_problem(self):
         self.cmp = self.node.compare_domains(self.problem, consider_overlap=True)
         if self.cmp.is_empty():
             self.cmp = self.problem.compare_domains(self.node, consider_overlap=True)
@@ -31,12 +30,17 @@ class Details:
         #     logger.warning(f"Too many directions for {self.node.name}: {directions}") # TODO try both directions later.. 
         # direction = self.cmp.get_domain_directions(self.node)[0]
 
-    def get_problem_size(self):
-        axis = get_axis(self.relative_direction)
+    def gather_problem_sizes(self):
+        for drn in self.relative_directions:
+            axis = get_axis(drn)
+            self.problem_sizes.append(self.get_problem_size(axis))
+
+
+    def get_problem_size(self, axis):
         match axis:
             case "y":
-                self.problem_size = self.problem.y.size
+                return self.problem.y.size
             case "x":
-                self.problem_size = self.problem.x.size
+                return self.problem.x.size
             case _:
                 raise Exception("Invalid axis")

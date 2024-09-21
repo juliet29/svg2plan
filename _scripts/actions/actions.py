@@ -24,9 +24,9 @@ class OperationLogger:
 
 def create_node_operations(current_domains: CurrentDomains):
     details = Details(current_domains)
-    trials = product(details.relative_directions, [i for i in ActionType])
+    trials = product(details.result, [i for i in ActionType])
     f = lambda x, y: CreateModifiedDomain(
-        current_domains.node, details.problem_size, x, y
+        current_domains.node, x, y
     )
     operations: list[OperationLogger] = [
         OperationLogger(current_domains.node, t[1], f(*t).create_domain())
@@ -37,12 +37,12 @@ def create_node_operations(current_domains: CurrentDomains):
 
 class CreateModifiedDomain:
     def __init__(
-        self, node: Domain, size: Decimal, action: ActionType, direction: Direction
+        self, node: Domain, details: tuple[Decimal, Direction], action: ActionType
     ) -> None:
         self.node = node
-        self.size = size
+        self.size = details[0]
+        self.direction = details[1]
         self.action = get_action_protocol(action)
-        self.direction = direction
 
     def create_domain(self):
         axis = get_axis(self.direction)
