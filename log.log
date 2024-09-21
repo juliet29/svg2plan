@@ -1,0 +1,11 @@
+INFO|simple_problemproblem nbs: ('m_bedroom', 'dining')
+INFO|simple_problemcurrent node: m_bedroom
+WARNING|details   Too many directions for m_bedroom: ['NORTH', 'EAST']
+WARNING|details   Too many directions for m_bedroom: ['NORTH', 'EAST']
+WARNING|details   Too many directions for m_bedroom: ['NORTH', 'EAST']
+WARNING|details   Too many directions for m_bedroom: ['NORTH', 'EAST']
+INFO|simple_problemcurrent node: dining
+WARNING|details   Too many directions for dining: ['SOUTH', 'WEST']
+WARNING|details   Too many directions for dining: ['SOUTH', 'WEST']
+WARNING|details   Too many directions for dining: ['SOUTH', 'WEST']
+WARNING|details   Too many directions for dining: ['SOUTH', 'WEST']

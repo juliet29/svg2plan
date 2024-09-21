@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from decimal import Decimal
+from log_setter.log_settings import logger
 
 
 class InvalidRangeException(Exception):

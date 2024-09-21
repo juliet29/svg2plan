@@ -19,11 +19,16 @@ class Details:
         self.get_problem_size()
 
     def get_direction_relative_to_problem(self):
-        self.cmp = self.problem.compare_domains(self.node, consider_overlap=True)
+        self.cmp = self.node.compare_domains(self.problem, consider_overlap=True)
+        if self.cmp.is_empty():
+            self.cmp = self.problem.compare_domains(self.node, consider_overlap=True)
         if self.cmp.is_empty():
             raise Exception("Invalid relationship between domains")
-        # TODO what if there are many directions.. this will error.. ?
-        direction = self.cmp.get_key_from_domain(self.node)
+
+        directions = self.cmp.get_domain_directions(self.node)
+        if len(directions) > 1:
+            logger.warning(f"Too many directions for {self.node.name}: {directions}") # TODO try both directions later.. 
+        direction = self.cmp.get_domain_directions(self.node)[0]
         self.relative_direction = Direction[direction]
 
     def get_problem_size(self):

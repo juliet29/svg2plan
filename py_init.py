@@ -6,7 +6,8 @@ from new_corners.domain import *
 from copy import deepcopy, copy
 from importlib import reload
 from pprint import pprint
-from main import main as mp
+# from main import main as mp
+from new_solutions.simple_problem import *
 
 
 

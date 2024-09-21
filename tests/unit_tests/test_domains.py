@@ -38,6 +38,12 @@ class TestRange:
     def test_is_overlapping_and_larger(self):
         assert control.is_overlapping_and_larger(overlap_smaller)
 
+    def test_is_overlapping_and_larger_edge(self):
+        assert control.is_overlapping_and_larger(overlap_smaller_edge)
+
+    def test_is_overlapping_and_smaller_edge(self):
+        assert control.is_overlapping_and_smaller(overlap_larger_edge)
+
     def test_is_overlapping_and_smaller(self):
         assert control.is_overlapping_and_smaller(overlap_larger)
 

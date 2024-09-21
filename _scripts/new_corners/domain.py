@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from new_corners.range import Range
 from functools import partial
-from svg_helpers.helpers import key_from_value
+from svg_helpers.helpers import keys_from_value
+from log_setter.log_settings import logger
 
 
 @dataclass(frozen=True)
@@ -28,7 +29,7 @@ class Domain:
             EAST=xd(x_res.Greater),
             WEST=xd(x_res.Lesser),
         )
-    
+
     def get_other_axis(self, axis):
         axes = {i for i in self.__annotations__.keys() if i != "name"}
         [other_axis] = axes.difference({axis})
@@ -43,15 +44,18 @@ class ComparedDomain:
     WEST: Domain | None
 
     def __repr__(self) -> str:
-        return f"{self.__dict__}"
-    
-    def get_key_from_domain(self, domain: Domain):
-        return key_from_value(self.__dict__, domain)
-    
+        N = self.NORTH.name if self.NORTH else None
+        S = self.SOUTH.name if self.SOUTH else None
+        E = self.EAST.name if self.EAST else None
+        W = self.WEST.name if self.WEST else None
+        return f"N={N} \n S={S} \n E={E} \n W={W}"
+
+    def get_domain_directions(self, domain: Domain):
+        return keys_from_value(self.__dict__, domain)
+
     def is_empty(self):
         if not self.NORTH and not self.SOUTH and not self.EAST and not self.WEST:
             return True
-
 
 
 def get_domain_from_range(
