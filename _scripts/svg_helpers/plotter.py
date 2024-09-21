@@ -1,9 +1,9 @@
 from typing import Dict
 from svg_helpers.plots import prepare_shape_dict, get_plotly_colors, plot_shapes
-from svg_helpers.domains import Corners
+from svg_helpers.domains import DecimalCorners
 
 class Plotter:
-    def __init__(self, corners:Dict[str, Corners], xrange=[-1, 12], yrange=[-1, 8]) -> None:
+    def __init__(self, corners:Dict[str, DecimalCorners], xrange=[-1, 12], yrange=[-1, 8]) -> None:
         self.corners = corners
         self.xrange = xrange
         self.yrange = yrange

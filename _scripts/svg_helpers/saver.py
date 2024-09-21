@@ -1,12 +1,19 @@
 from svg_helpers.layout import Layout
+from problems.reporter import Reporter
 import pickle
 import os
+from problems.classes.problem import Problem
+
+PATH_TO_SOLS = "/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/intermediate_solutions"
 
 class Saver():
     def __init__(self, layout:Layout, file_name) -> None:
         self.layout = layout
         self.file_name = file_name
-        self.path = os.path.join("../intermediate_solutions/", f"{self.file_name}.pickle")
+        self.path = os.path.join(PATH_TO_SOLS, f"{self.file_name}.pickle")
+
+    def add_problems(self, problems: list[Problem]):
+        self.layout.problems = problems # type: ignore
 
     def save(self):
         with open(self.path, 'wb') as handle:
@@ -14,7 +21,7 @@ class Saver():
 
 
 def read_layout(file_name):
-    path = os.path.join("../intermediate_solutions/", f"{file_name}.pickle")
+    path = os.path.join(PATH_TO_SOLS, f"{file_name}.pickle")
     with open(path, 'rb') as handle:
         layout = pickle.load(handle)
 

@@ -3,28 +3,31 @@ from actions.interfaces import CurrentDomains
 from runner.svg2plan import SVG2Plan
 from log_setter.log_settings import logger
 
-from new_corners.range import nonDecimalRange, Range
-from new_corners.domain import Domain
-from actions.actions import Pull, Push, Stretch, Shrink, Details
-from svg_helpers.directions import Direction
+from reader.svg_reader import SVGReader
+from adjacencies.adjacency import AdjacencyGenerator
+from placement.executer import PlacementExecuter
+from problems.reporter import Reporter
+from svg_helpers.plotter import Plotter
+from svg_helpers.saver import Saver
+from new_solutions.simple_problem import *
 
 
 def main():
-    a_x = nonDecimalRange(10,20).toRange()
-    b_x = nonDecimalRange(20, 25).toRange()
-    y = nonDecimalRange(10, 30).toRange()
-
-    room = Domain(name="room", x=a_x, y=y)
-    hole = Domain(name="hole", x=b_x, y=y)
-    curr_doms = CurrentDomains(room, hole)
-
-    pu = Stretch(curr_doms)
-    pu.get_details()
-    pu.get_action_direction()
-    pu.execute_action()
-
-    return pu
-
+    operations = execute_actions()
+    return operations
+    # sv = SVGReader("amber_a_f01.svg")
+    # sv.run()
+    # ag = AdjacencyGenerator(sv.domains)
+    # ag.run()
+    # pe = PlacementExecuter(ag.layout)
+    # pe.run()
+    # re = Reporter(pe.layout)
+    # re.run()
+    # s = Saver(re.layout, "amber_a_placed")
+    # s.add_problems(re.problems)
+    # s.save()
+    # pl = Plotter(re.layout.corners, yrange=[1, -10])
+    # pl.plot()
 
 
 if __name__=="__main__":

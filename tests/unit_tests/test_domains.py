@@ -1,8 +1,6 @@
-from tests.domains_setup import *
+from unit_tests.domains_setup import *
 import pytest
-from new_corners.range import create_modfified_range
-from operator import add, sub
-from decimal import Decimal
+from new_corners.range import InvalidRangeException
 
 
 class TestDomain:
@@ -59,15 +57,14 @@ class TestRange:
         res = control.get_other_side("min")
         assert res == "max"
 
+    def test_invalid_range(self):
+        with pytest.raises(InvalidRangeException):
+            nonDecimalRange(10, 1).toRange()
 
-    def test_modifing_range(self):
-        mod = create_modfified_range(control, dec, sub,)
-        assert mod.min == control.min - dec
-        assert mod.max == control.max - dec 
+    def test_zero_width_range(self):
+        with pytest.raises(InvalidRangeException):
+            nonDecimalRange(1, 1).toRange()
 
-    def test_modifing_range_single_side(self):
-        mod = create_modfified_range(control, dec, add, "min")
-        assert mod.min == control.min + dec
 
 
 

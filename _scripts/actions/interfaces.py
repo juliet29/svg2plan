@@ -15,7 +15,7 @@ class CurrentDomains:
     problem: Domain
 
 
-class Action(Enum):
+class ActionType(Enum):
     PUSH = 1
     PULL = 2
     STRETCH = 3
@@ -28,15 +28,15 @@ class ActionProtocol:
     is_deformed: bool
 
 
-PROTOCOLS: Dict[Action, ActionProtocol] = {
-    Action.PUSH: ActionProtocol(False, False),
-    Action.PULL: ActionProtocol(True, False),
-    Action.STRETCH: ActionProtocol(True, True),
-    Action.SQUEEZE: ActionProtocol(False, True),
+PROTOCOLS: Dict[ActionType, ActionProtocol] = {
+    ActionType.PUSH: ActionProtocol(False, False),
+    ActionType.PULL: ActionProtocol(True, False),
+    ActionType.STRETCH: ActionProtocol(True, True),
+    ActionType.SQUEEZE: ActionProtocol(False, True),
 }
 
 
-def get_action_protocol(action_type: Action):
+def get_action_protocol(action_type: ActionType):
     return PROTOCOLS[action_type]
 
 
@@ -46,6 +46,8 @@ def is_upper(direction: Direction):
             return True
         case Direction.WEST | Direction.SOUTH:
             return False
+        case _:
+            raise Exception("Invalid direction")
 
 
 def get_fx_and_side(direction: Direction, is_attractive: bool):
@@ -59,4 +61,4 @@ def get_fx_and_side(direction: Direction, is_attractive: bool):
         case (False, False):
             return (sub, "max")
         case _:
-            raise Exception("Invalid direction")
+            raise Exception("Invalid direction or attractiveness")

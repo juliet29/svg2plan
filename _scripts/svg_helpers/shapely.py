@@ -22,10 +22,6 @@ def bounds_to_corners(val: tuple):
     return Corners(minx, maxx, miny, maxy)
 
 
-# def create_box_from_decimal_corners(corners: DecimalCorners) -> Polygon:
-#     x_left, x_right, y_bottom, y_top = corners.get_float_values()
-#     return box(x_left, y_bottom, x_right, y_top)
-
 
 def bounds_to_decimal_corners(val: tuple):
     minx, miny, maxx, maxy = val

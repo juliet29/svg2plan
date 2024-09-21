@@ -4,7 +4,7 @@ from new_corners.range import Range
 from svg_helpers.directions import get_axis
 from new_corners.domain import Domain
 from actions.interfaces import (
-    Action,
+    ActionType,
     CurrentDomains,
     get_action_protocol,
     get_fx_and_side,
@@ -12,7 +12,9 @@ from actions.interfaces import (
 
 
 class ExecuteAction:
-    def __init__(self, current_domains: CurrentDomains, action_type: Action) -> None:
+    def __init__(
+        self, current_domains: CurrentDomains, action_type: ActionType
+    ) -> None:
         self.current_domains = current_domains
         self.node = current_domains.node
         self.modified_domain: Domain
@@ -33,7 +35,9 @@ class ExecuteAction:
         self.modified_domain = Domain(**temp_domain)
 
     def modify_range(self, range):
-        fx, side = get_fx_and_side(self.details.relative_direction, self.action.is_attractive)
+        fx, side = get_fx_and_side(
+            self.details.relative_direction, self.action.is_attractive
+        )
         value = self.details.problem_size
 
         if self.action.is_deformed:
