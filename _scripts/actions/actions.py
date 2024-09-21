@@ -24,6 +24,7 @@ class OperationLogger:
 
 def create_node_operations(current_domains: CurrentDomains):
     details = Details(current_domains)
+    details.run()
     trials = product(details.result, [i for i in ActionType])
     f = lambda x, y: CreateModifiedDomain(
         current_domains.node, x, y

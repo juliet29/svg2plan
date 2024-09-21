@@ -7,13 +7,14 @@ from actions.interfaces import ActionType
 from actions.details import Details
 from svg_helpers.directions import Direction
 from actions.interfaces import CurrentDomains
-from random import randrange
+from random import randrange, seed
+
+seed(2)
 
 def create_range(init_sz=2, init_start=1):
     sz = randrange(init_sz, 100)
     start = randrange(init_start, 100)
     return nonDecimalRange(start, start + sz).toRange()
-
 
 def create_domain(name: str):
     return Domain(name, create_range(), create_range())

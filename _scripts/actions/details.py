@@ -10,7 +10,6 @@ class Details:
         self.problem = current_domains.problem
         self.node = current_domains.node
         self.problem_sizes: list[Decimal] = []
-        self.run()
 
     def run(self):
         self.get_directions_relative_to_problem()
@@ -26,9 +25,6 @@ class Details:
 
         directions = self.cmp.get_domain_directions(self.node)
         self.relative_directions = [Direction[i] for i in directions]
-        # if len(directions) > 1:
-        #     logger.warning(f"Too many directions for {self.node.name}: {directions}") # TODO try both directions later.. 
-        # direction = self.cmp.get_domain_directions(self.node)[0]
 
     def gather_problem_sizes(self):
         for drn in self.relative_directions:
