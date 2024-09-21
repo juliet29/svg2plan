@@ -26,10 +26,10 @@ class Details:
             raise Exception("Invalid relationship between domains")
 
         directions = self.cmp.get_domain_directions(self.node)
-        if len(directions) > 1:
-            logger.warning(f"Too many directions for {self.node.name}: {directions}") # TODO try both directions later.. 
-        direction = self.cmp.get_domain_directions(self.node)[0]
-        self.relative_direction = Direction[direction]
+        self.relative_directions = [Direction[i] for i in directions]
+        # if len(directions) > 1:
+        #     logger.warning(f"Too many directions for {self.node.name}: {directions}") # TODO try both directions later.. 
+        # direction = self.cmp.get_domain_directions(self.node)[0]
 
     def get_problem_size(self):
         axis = get_axis(self.relative_direction)
