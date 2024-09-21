@@ -22,6 +22,7 @@ class Details:
         self.cmp = self.problem.compare_domains(self.node, consider_overlap=True)
         if self.cmp.is_empty():
             raise Exception("Invalid relationship between domains")
+        # TODO what if there are many directions.. this will error.. ?
         direction = self.cmp.get_key_from_domain(self.node)
         self.relative_direction = Direction[direction]
 

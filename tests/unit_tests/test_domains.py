@@ -30,20 +30,10 @@ class TestDomain:
 
 
 class TestRange:
-    def test_is_covering(self):
-        assert control.is_covering(narrower)
-
-    def test_is_covered_by(self):
-        assert control.is_covered_by(wider)
-
-    def test_is_partially_overlapping(self):
-        assert control.is_partially_overlapping(overlap_larger)
-
-    def test_not_partially_overlapping(self):
-        assert not control.is_partially_overlapping(narrower)
 
     def test_within_is_not_overlapping_larger(self):
         assert not control.is_overlapping_and_larger(narrower)
+        assert not control.is_overlapping_and_smaller(wider)
 
     def test_is_overlapping_and_larger(self):
         assert control.is_overlapping_and_larger(overlap_smaller)
