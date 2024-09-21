@@ -2,6 +2,7 @@ from svg_helpers.directions import Direction, get_axis
 from new_corners.domain import Domain
 from decimal import Decimal
 from actions.interfaces import CurrentDomains
+from log_setter.log_settings import logger
 
 
 class Details:
@@ -18,9 +19,9 @@ class Details:
         self.get_problem_size()
 
     def get_direction_relative_to_problem(self):
-        self.cmp = self.problem.compare_domains(self.node)
+        self.cmp = self.problem.compare_domains(self.node, consider_overlap=True)
         if self.cmp.is_empty():
-            raise Exception("Domains do not have a NS or EW relationship")
+            raise Exception("Invalid relationship between domains")
         direction = self.cmp.get_key_from_domain(self.node)
         self.relative_direction = Direction[direction]
 

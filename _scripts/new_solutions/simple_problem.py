@@ -22,7 +22,6 @@ class OperationLogger:
 layout = read_layout("amber_a_placed")
 problem: Problem
 [problem]= [i for i in layout.problems if i.problem_type == ProblemType.HOLE]
-
 prob_name = "problem"
 
 

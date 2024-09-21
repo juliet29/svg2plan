@@ -16,9 +16,9 @@ class Domain:
     def __getitem__(self, i):
         return getattr(self, i)
 
-    def compare_domains(self, other):
-        x_res = self.x.compare_ranges(other.x)
-        y_res = self.y.compare_ranges(other.y)
+    def compare_domains(self, other, consider_overlap=False):
+        x_res = self.x.compare_ranges(other.x, consider_overlap)
+        y_res = self.y.compare_ranges(other.y, consider_overlap)
         xd = partial(get_domain_from_range, "x", self, other)
         yd = partial(get_domain_from_range, "y", self, other)
 

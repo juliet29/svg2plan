@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 from decimal import Decimal
-from collections import namedtuple
-from typing import Callable
-from functools import partial
+
 
 class InvalidRangeException(Exception):
     pass
@@ -33,7 +31,7 @@ class Range:
 
     def __getitem__(self, i):
         return getattr(self, i)
-    
+
     @property
     def size(self):
         return self.max - self.min
@@ -44,12 +42,38 @@ class Range:
     def is_smaller(self, other):
         return self.max <= other.min
 
-    def compare_ranges(self, other):
+    def is_covering(self, other):
+        return self.min < other.min and self.max > other.max
+
+    def is_covered_by(self, other):
+        return other.min < self.min and other.max > self.max
+    
+    def is_sharing_space_with(self, other):
+        return other.min < self.min or  other.max > self.max
+    
+    def is_partially_overlapping(self, other):
+        return self.is_sharing_space_with(other) and not self.is_covered_by(other) and not self.is_covering(other)
+
+
+    def is_overlapping_and_larger(self, other):
+        if self.is_partially_overlapping(other):
+            return self.max > other.min
+
+    def is_overlapping_and_smaller(self, other):
+        if self.is_partially_overlapping(other):
+            return self.min < other.max
+
+    def compare_ranges(self, other, consider_overlap=False):
         if self.is_smaller(other):
             return ComparedRange(Lesser=self, Greater=other)
         elif self.is_larger(other):
             return ComparedRange(Lesser=other, Greater=self)
         else:
+            if consider_overlap:
+                if self.is_overlapping_and_smaller(other):
+                    return ComparedRange(Lesser=self, Greater=other)
+                elif self.is_overlapping_and_larger(other):
+                    return ComparedRange(Lesser=other, Greater=self)
             return ComparedRange(Lesser=None, Greater=None)
 
     def get_other_side(self, side: str):

@@ -5,6 +5,8 @@ from decimal import Decimal
 dec = Decimal(3)
 
 control = nonDecimalRange(10,20).toRange()
+overlap_larger = nonDecimalRange(8,20).toRange()
+overlap_smaller = nonDecimalRange(8,12).toRange()
 narrower = nonDecimalRange(12, 18).toRange()
 wider = nonDecimalRange(8, 22).toRange()
 larger = nonDecimalRange(21, 23).toRange()

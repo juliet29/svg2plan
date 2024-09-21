@@ -18,7 +18,6 @@ class TestDomain:
         assert res.EAST == east_domain
         assert res.WEST == west_domain
 
-
     def test_diagonal(self):
         res = east_north_domain.compare_domains(west_south_domain)
         assert res.NORTH == east_north_domain
@@ -30,13 +29,35 @@ class TestDomain:
         assert north_domain.get_other_axis("y") == "x"
 
 
-
 class TestRange:
+    def test_is_covering(self):
+        assert control.is_covering(narrower)
+
+    def test_is_covered_by(self):
+        assert control.is_covered_by(wider)
+
+    def test_is_partially_overlapping(self):
+        assert control.is_partially_overlapping(overlap_larger)
+
+    def test_not_partially_overlapping(self):
+        assert not control.is_partially_overlapping(narrower)
+
+    def test_within_is_not_overlapping_larger(self):
+        assert not control.is_overlapping_and_larger(narrower)
+
+    def test_is_overlapping_and_larger(self):
+        assert control.is_overlapping_and_larger(overlap_smaller)
+
+    def test_is_overlapping_and_smaller(self):
+        assert control.is_overlapping_and_smaller(overlap_larger)
+
+
+
     def test_is_smaller(self):
-        assert control.is_smaller(larger) 
+        assert control.is_smaller(larger)
 
     def test_is_larger(self):
-        assert control.is_larger(smaller) 
+        assert control.is_larger(smaller)
 
     def test_compared_gap(self):
         result = control.compare_ranges(larger)
@@ -64,9 +85,3 @@ class TestRange:
     def test_zero_width_range(self):
         with pytest.raises(InvalidRangeException):
             nonDecimalRange(1, 1).toRange()
-
-
-
-
-
-
