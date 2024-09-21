@@ -43,25 +43,23 @@ class Range:
         return self.max <= other.min
 
     def is_covering(self, other):
-        return self.min < other.min and self.max > other.max
+        return self.min <= other.min and self.max >= other.max
 
     def is_covered_by(self, other):
-        return other.min < self.min and other.max > self.max
+        return other.min <= self.min and other.max >= self.max
     
     def is_sharing_space_with(self, other):
-        return other.min < self.min or  other.max > self.max
+        return other.min <= self.min or  other.max >= self.max
     
     def is_partially_overlapping(self, other):
         return self.is_sharing_space_with(other) and not self.is_covered_by(other) and not self.is_covering(other)
 
 
     def is_overlapping_and_larger(self, other):
-        if self.is_partially_overlapping(other):
-            return self.max > other.min
+        return self.max > other.max and other.min <= self.min <= other.max
 
     def is_overlapping_and_smaller(self, other):
-        if self.is_partially_overlapping(other):
-            return self.min < other.max
+        return self.min < other.min and other.min <= self.max <= other.max
 
     def compare_ranges(self, other, consider_overlap=False):
         if self.is_smaller(other):

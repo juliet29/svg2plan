@@ -51,8 +51,6 @@ class TestRange:
     def test_is_overlapping_and_smaller(self):
         assert control.is_overlapping_and_smaller(overlap_larger)
 
-
-
     def test_is_smaller(self):
         assert control.is_smaller(larger)
 
@@ -61,14 +59,21 @@ class TestRange:
 
     def test_compared_gap(self):
         result = control.compare_ranges(larger)
-        assert result is not None and result.Lesser == control
+        assert result.Lesser == control
 
         result = control.compare_ranges(smaller)
-        assert result is not None and result.Lesser == smaller
+        assert result.Lesser == smaller
 
-    def test_compared_overlap(self):
-        result = control.compare_ranges(smaller_overlap)
-        assert result is not None and result.Lesser == smaller_overlap
+    def test_compared_touching(self):
+        result = control.compare_ranges(smaller_touching)
+        assert result.Lesser == smaller_touching
+
+    def test_compare_overlapping_ranges(self):
+        result = control.compare_ranges(overlap_larger, consider_overlap=True)
+        assert result.Lesser == control
+
+        result = control.compare_ranges(overlap_smaller, consider_overlap=True)
+        assert result.Lesser == overlap_smaller
 
     def test_uncomparable(self):
         result = control.compare_ranges(narrower)
