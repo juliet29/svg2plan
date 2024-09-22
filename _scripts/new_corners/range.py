@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from decimal import Decimal
 from typing import Callable
-from log_setter.log_settings import logger
+from log_setter.log_settings import svlogger
 from copy import copy, deepcopy
 
 
@@ -67,12 +67,12 @@ class Range:
     def get_other_side(self, side: str):
         [other_side] = set(self.__annotations__.keys()).difference({side})
         return other_side
-    
+
     def modify(self, fx: Callable[[Decimal], Decimal]):
-        return self.__class__(fx(self.min), fx(self.max) )
-    
+        return self.__class__(fx(self.min), fx(self.max))
+
     @classmethod
-    def create_range(cls, a:Decimal, b:Decimal):
+    def create_range(cls, a: Decimal, b: Decimal):
         return cls(a, b)
 
 
@@ -87,4 +87,3 @@ class ComparedRange:
     def is_empty(self):
         if not self.Lesser and not self.Greater:
             return True
-

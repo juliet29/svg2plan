@@ -5,7 +5,7 @@ from new_corners.range import Range
 from functools import partial
 from svg_helpers.constants import ROUNDING_LIM
 from svg_helpers.helpers import keys_from_value
-from log_setter.log_settings import logger
+from log_setter.log_settings import svlogger
 
 
 @dataclass(frozen=True)
@@ -40,19 +40,21 @@ class Domain:
 
     def modify(self, fx: Callable[[Decimal], Decimal]):
         return self.__class__(self.x.modify(fx), self.y.modify(fx), self.name)
-    
+
     def get_values(self):
         return (self.x.min, self.x.max, self.y.min, self.y.max)
 
     @classmethod
     def create_domain(cls, arr: Iterable, name=""):
         x_min, x_max, y_min, y_max = (round(Decimal(i), ROUNDING_LIM) for i in arr)
-        return cls(Range.create_range(x_min, x_max), Range.create_range(y_min, y_max), name)
-    
+        return cls(
+            Range.create_range(x_min, x_max), Range.create_range(y_min, y_max), name
+        )
+
     # @classmethod
     # def create_empty_domain(cls):
     #     return cls.create_domain([0,0.01,0,0.01])
-    
+
     # def is_empty_domain(self):
     #     return self == (0,0.01,0,0.01)
 
@@ -66,7 +68,7 @@ class ComparedDomain:
 
     def __getitem__(self, i):
         return getattr(self, i)
-    
+
     def __iter__(self):
         for name in list(self.__annotations__.keys()):
             yield (name, self[name])

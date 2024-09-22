@@ -2,7 +2,7 @@ from enum import Enum
 from dataclasses import dataclass, field, fields
 from svg_helpers.helpers import toJson
 from operator import add, sub
-from log_setter.log_settings import logger
+from log_setter.log_settings import svlogger
 
 
 class Direction(Enum):
@@ -14,6 +14,7 @@ class Direction(Enum):
 
 def get_opposite_direction(direction: Direction):
     return DIRECTION_PAIRS[direction]
+
 
 def get_axis(direction: Direction):
     return DIRECTION_AXIS[direction]
@@ -32,9 +33,6 @@ DIRECTION_AXIS = {
     Direction.EAST: "x",
     Direction.WEST: "x",
 }
-
-
-
 
 
 class GeneralDirection(Enum):
@@ -62,9 +60,6 @@ class NeighborDirections:
             "EAST": self.EAST,
             "WEST": self.WEST,
         }
-
-
-
 
 
 @dataclass

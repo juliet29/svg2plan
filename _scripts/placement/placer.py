@@ -5,7 +5,7 @@ from svg_helpers.domains import Corners, DecimalCorners, empty_decimal_corner
 from svg_helpers.decimal_operations import decimal_mult, decimal_add, decimal_sub
 from decimal import Decimal
 from new_corners.domain import Domain
-
+from log_setter.log_settings import svlogger
 
 
 class Placer:
@@ -22,19 +22,20 @@ class Placer:
         new_x_left = self.lo.new_layout.domains[west_node].x.max
         self.create_new_corners(self.lo.curr_node, new_x_left, new_y_top)
 
-    def place_next_south_node(self, north_node, west_node=None):
+    def place_next_south_node(
+        self, north_node: str, col_num: int, west_node: str | None = None
+    ):
         new_y_top = self.lo.new_layout.domains[north_node].y.min
         if not west_node:
-            new_x_left = self.lo.new_layout.domains[north_node].x.min
-        else:
-            if not self.lo.new_layout.domains[west_node]: # TODO! 
-                xl, xr, *_ = self.lo.new_layout.domains[north_node]
-                new_x_left = round((xl + xr) / 2, ROUNDING_LIM)
-                stack_logger.debug(
-                    f"{west_node}, the east node of {self.lo.curr_node} has not yet been placed. Creating a new x_left at {new_x_left}"
-                )
+            if col_num == 0:
+                new_x_left = self.lo.new_layout.domains[north_node].x.min
             else:
-                new_x_left = self.lo.new_layout.domains[west_node].x.max
+                svlogger.debug(f"No west node, and non 0 col num, North node = {north_node}")
+                xl, xr, *_ = self.lo.new_layout.domains[north_node].get_values()
+                new_x_left = round((xl + xr) / 2, ROUNDING_LIM)
+        else:
+            # svlogger.info(f"We have a west node. Its {west_node}")
+            new_x_left = self.lo.new_layout.domains[west_node].x.max
 
         self.create_new_corners(self.lo.curr_node, new_x_left, new_y_top)
 
@@ -48,7 +49,7 @@ class Placer:
             [new_x_left, new_x_max, new_y_min, new_y_top], node
         )
 
-    def calculate_domain_differences(self, node:str):
+    def calculate_domain_differences(self, node: str):
         x_min, x_max, y_min, y_max = self.lo.init_layout.domains[node].get_values()
 
         dif_x = abs(x_max - x_min)

@@ -1,3 +1,4 @@
+from typing import Dict
 from networkx import Graph
 from copy import deepcopy
 import logging
@@ -24,7 +25,7 @@ class PlacementExecuter(LooperInterface):
         )
 
         self.unplaced = list(self.G.nodes)
-        self.tracker = {}
+        self.tracker: Dict[int, list[str]] = {}
         self.tracker_column = 0
         self.curr_node = ""
 
@@ -57,7 +58,7 @@ class PlacementExecuter(LooperInterface):
                 self.finder.find_next_directed_node(Direction.EAST, west_node)
             except NodeNotFoundExcepton:
                 stack_logger.debug(
-                    f"{self.curr_node} has no western nbs that are unplaced"
+                    f"{self.curr_node} has no eastern nbs that are unplaced"
                 )
                 return
 
@@ -72,10 +73,10 @@ class PlacementExecuter(LooperInterface):
 
     def set_relative_south_nodes(self):
         self.ns_counter = 0
-        self.north_node_reference = 0
+        self.north_node_reference = 0 # row 
 
         while len(self.unplaced) > 0:
-            for column in self.tracker.values():
+            for col_num, column in self.tracker.items(): # northern most node marks beginning of a column => TODO maybe a custom data structure.. 
                 try:
                     north_node = column[self.north_node_reference]
                     stack_logger.debug(f"current north node: {north_node}")
@@ -89,7 +90,7 @@ class PlacementExecuter(LooperInterface):
                     stack_logger.debug(f"no more southern nbs for {north_node}")
                     continue
 
-                self.finish_setting_south_node(north_node, column)
+                self.finish_setting_south_node(north_node, column, col_num)
 
                 if len(self.unplaced) == 0:
                     stack_logger.debug("no more nodes to place")
@@ -104,12 +105,12 @@ class PlacementExecuter(LooperInterface):
                 stack_logger.warning("ns_counter > 4 .. breaking")
                 break
 
-    def finish_setting_south_node(self, north_node, column):
+    def finish_setting_south_node(self, north_node:str, column:list[str], col_num:int):
         try:
             west_node = self.finder.find_west_node()
-            self.placer.place_next_south_node(north_node, west_node)
+            self.placer.place_next_south_node(north_node, col_num, west_node)
         except:
-            self.placer.place_next_south_node(north_node)
+            self.placer.place_next_south_node(north_node, col_num, None)
 
         self.updater.extend_tracker_south(column)
         self.updater.update_unplaced()

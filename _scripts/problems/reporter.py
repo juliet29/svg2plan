@@ -72,6 +72,3 @@ class Reporter:
                         side_hole += 1
 
         self.txt = f"-- Unresolved Problems. Overlaps: {overlap}. Holes: {hole}. Sideholes: {side_hole}"
-        fix_logger.debug(
-            self.txt
-        )

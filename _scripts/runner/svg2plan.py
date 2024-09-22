@@ -14,12 +14,12 @@ from problems.side_leveler import SideLeveler
 from svg_helpers.gplan_creator import GPLANCreator
 from svg_helpers.plotter import Plotter
 
-from log_setter.log_settings import logger
+from log_setter.log_settings import svlogger
 
 
 class SVG2Plan:
     def __init__(self, svg_name: str, folder_name: str) -> None:
-        logger.info("Starting SVG2Plan \n ")
+        svlogger.info("Starting SVG2Plan \n ")
         self.svg_name = svg_name
         self.folder_name = folder_name
         self.prepare_folder()

@@ -4,6 +4,7 @@ from pathlib import Path
 
 LOG_CONFIG_PATH = "/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/_scripts/log_setter/log_config.json"
 
+
 def setup_logging():
     with open(LOG_CONFIG_PATH) as f_in:
         data = json.load(f_in)
@@ -12,6 +13,6 @@ def setup_logging():
         )
     logging.config.dictConfig(data)  # type: ignore
 
-setup_logging()
-logger = logging.getLogger("svg2plan")
 
+setup_logging()
+svlogger = logging.getLogger("svg2plan")

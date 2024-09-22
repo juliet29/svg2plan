@@ -2,7 +2,7 @@ from svg_helpers.directions import Direction, get_axis
 from new_corners.domain import Domain
 from decimal import Decimal
 from actions.interfaces import CurrentDomains
-from log_setter.log_settings import logger
+from log_setter.log_settings import svlogger
 
 
 class Details:
@@ -30,7 +30,6 @@ class Details:
         for drn in self.relative_directions:
             axis = get_axis(drn)
             self.problem_sizes.append(self.get_problem_size(axis))
-
 
     def get_problem_size(self, axis):
         match axis:
