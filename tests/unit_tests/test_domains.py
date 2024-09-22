@@ -28,6 +28,12 @@ class TestDomain:
     def test_get_other_axis(self):
         assert north_domain.get_other_axis("y") == "x"
 
+    def test_modification(self):
+        fx = lambda x: x + 2
+        res = north_domain.modify(fx)
+        assert res.x.min == north_domain.x.min + 2
+        assert res.y.max == north_domain.y.max + 2
+
 
 class TestRange:
 
@@ -86,3 +92,11 @@ class TestRange:
     def test_zero_width_range(self):
         with pytest.raises(InvalidRangeException):
             nonDecimalRange(1, 1).toRange()
+
+    def test_modification(self):
+        fx = lambda x: x + 2
+        res = control.modify(fx)
+        assert res.min == control.min + 2
+        assert res.max == control.max + 2
+
+

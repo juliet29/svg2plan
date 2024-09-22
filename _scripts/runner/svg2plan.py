@@ -39,7 +39,7 @@ class SVG2Plan:
         self.sv = SVGReader(self.svg_name)
         self.sv.run()
 
-        self.ag = AdjacencyGenerator(self.sv.domains, 0.4)
+        self.ag = AdjacencyGenerator(self.sv.layout, 0.4)
         self.ag.run()
 
         # self.cg = ConnectivityGenerator(self.ag.positioned_graph, self.folder_name)

@@ -44,4 +44,4 @@ class ConversionPreparer:
         assert self.ref_length.units == self.ureg.meter
 
         self.conversion_w_units = self.ref_length / self.svg_length
-        self.conversion = self.conversion_w_units.magnitude
+        self.conversion: float = self.conversion_w_units.magnitude

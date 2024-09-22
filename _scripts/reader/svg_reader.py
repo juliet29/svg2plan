@@ -1,25 +1,27 @@
 import os
 from xml.dom import minidom
 
-from shapely import LinearRing, Polygon
-
 from reader.interfaces import SVGRect
 from reader.conversion import ConversionPreparer
 from amber.details import svg_ref
 
-from svg_helpers.domains import Domain, Corners, DomainDict, DecimalCorners
-from svg_helpers.shapely import create_box_from_decimal_corners
+from svg_helpers.domains import Domain
+from svg_helpers.shapely import create_box_from_domain
 from svg_helpers.layout import PartialLayout
 from svg_helpers.constants import ROUNDING_LIM
 
-from decimal import Decimal, getcontext
+from new_corners.domain import Domain
+from new_corners.range import nonDecimalRange
+
+from decimal import Decimal
 
 PATH = "/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/svg_imports"
+
 
 class SVGReader:
     def __init__(self, svg_name) -> None:
         self.svg_path = os.path.join(PATH, svg_name)
-        self.domains = PartialLayout({}, {})
+        self.layout = PartialLayout({}, {})
 
     def run(self):
         self.get_rectangles()
@@ -60,12 +62,12 @@ class SVGReader:
 
     def convert_rectangles(self):
         for r in self.rectangles:
-            self.get_corners(r)
+            self.create_domains(r)
             self.update_dimensions()
-            self.domains.corners[r.id] = self.decimal_corners
-            self.domains.shapes[r.id] = self.polyon
+            self.layout.domains[r.id] = self.domain
+            self.layout.shapes[r.id] = self.polygon
 
-    def get_corners(self, r: SVGRect):
+    def create_domains(self, r: SVGRect):
         x_left = r.x
         y_top = r.y * (-1)  # make +y in conventional +y direction
 
@@ -75,11 +77,13 @@ class SVGReader:
         y_bottom += self.correction
         y_top += self.correction
 
-        self.corners = Corners(x_left, x_right, y_bottom, y_top)
+        self.temp_domain = Domain(
+            name=r.id,
+            x=nonDecimalRange(x_left, x_right).toRange(),
+            y=nonDecimalRange(y_bottom, y_top).toRange(),
+        )
 
     def update_dimensions(self):
-        converted_vals = (
-            round(Decimal(i * self.du.conversion), ROUNDING_LIM) for i in self.corners
-        )
-        self.decimal_corners = DecimalCorners(*converted_vals)
-        self.polyon = create_box_from_decimal_corners(self.decimal_corners)
+        fx = lambda x: round(x * Decimal(self.du.conversion), ROUNDING_LIM)
+        self.domain = self.temp_domain.modify(fx)
+        self.polygon = create_box_from_domain(self.domain)

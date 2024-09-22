@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from decimal import Decimal
-
-from matplotlib.units import DecimalConverter
+from typing import Callable
 from log_setter.log_settings import logger
+from copy import copy, deepcopy
 
 
 class InvalidRangeException(Exception):
@@ -67,6 +67,13 @@ class Range:
     def get_other_side(self, side: str):
         [other_side] = set(self.__annotations__.keys()).difference({side})
         return other_side
+    
+    def modify(self, fx: Callable[[Decimal], Decimal]):
+        return self.__class__(fx(self.min), fx(self.max) )
+    
+    @classmethod
+    def create_range(cls, a:float, b:float):
+        return cls(Decimal(a), Decimal(b))
 
 
 @dataclass
@@ -80,3 +87,4 @@ class ComparedRange:
     def is_empty(self):
         if not self.Lesser and not self.Greater:
             return True
+

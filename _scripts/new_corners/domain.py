@@ -1,4 +1,6 @@
 from dataclasses import dataclass
+from decimal import Decimal
+from typing import Callable
 from new_corners.range import Range
 from functools import partial
 from svg_helpers.helpers import keys_from_value
@@ -34,6 +36,16 @@ class Domain:
         axes = {i for i in self.__annotations__.keys() if i != "name"}
         [other_axis] = axes.difference({axis})
         return other_axis
+
+    def modify(self, fx: Callable[[Decimal], Decimal]):
+        return self.__class__(self.name, self.x.modify(fx), self.y.modify(fx))
+    
+    def get_values(self):
+        return (self.x.min, self.x.max, self.y.min, self.y.max)
+
+    @classmethod
+    def create_domain(cls, name, x_min: float, x_max: float, y_min: float, y_max: float):
+        return cls(name, Range.create_range(x_min, x_max), Range.create_range(y_min, y_max))
 
 
 @dataclass(frozen=True)
