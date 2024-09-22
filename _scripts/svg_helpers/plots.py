@@ -1,10 +1,11 @@
-from svg_helpers.domains import Domain, Corners
+# from svg_helpers.domains import Domain, Corners
+from new_corners.domain import Domain
 import plotly.express as px
 import plotly.graph_objects as go
 
 
 def prepare_shape_dict(
-    corners: Corners,
+    domain: Domain,
     type="rect",
     color="blue",
     label="",
@@ -14,10 +15,10 @@ def prepare_shape_dict(
         xref="x",
         yref="y",
         fillcolor=color,
-        x0=corners.x_left,
-        y0=corners.y_bottom,
-        x1=corners.x_right,
-        y1=corners.y_top,
+        x0=domain.x.min,
+        y0=domain.y.min,
+        x1=domain.x.max,
+        y1=domain.y.max,
         label=dict(text=label),
         opacity=0.5,
     )

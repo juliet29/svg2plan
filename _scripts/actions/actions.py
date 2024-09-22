@@ -9,29 +9,20 @@ from actions.interfaces import (
     ActionProtocol,
     ActionType,
     CurrentDomains,
+    OperationLog,
     get_action_protocol,
     get_fx_and_side,
 )
 from itertools import product
 
 
-@dataclass
-class OperationLogger:
-    node: Domain
-    action_type: ActionType
-    modified_domain: Domain | None
-
-
 def create_node_operations(current_domains: CurrentDomains):
     details = Details(current_domains)
     details.run()
     trials = product(details.result, [i for i in ActionType])
-    f = lambda x, y: CreateModifiedDomain(
-        current_domains.node, x, y
-    )
-    operations: list[OperationLogger] = [
-        OperationLogger(current_domains.node, t[1], f(*t).create_domain())
-        for t in trials
+    f = lambda x, y: CreateModifiedDomain(current_domains.node, x, y)
+    operations: list[OperationLog] = [
+        OperationLog(current_domains.node, t[1], f(*t).create_domain()) for t in trials
     ]
     return operations
 
@@ -50,7 +41,7 @@ class CreateModifiedDomain:
         other_axis = self.node.get_other_axis(axis)
 
         temp_domain = {}
-        temp_domain["name"] = "new_domain"
+        temp_domain["name"] = self.node.name
         temp_domain[axis] = self.modify_range(self.node[axis])
         temp_domain[other_axis] = self.node[other_axis]
 

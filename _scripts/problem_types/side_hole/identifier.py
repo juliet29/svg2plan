@@ -4,6 +4,7 @@ from svg_helpers.layout import Layout
 from svg_helpers.directions import Direction, make_directed_pairEW
 from svg_helpers.layout_base import LayoutBase
 from problems.classes.problem import Problem, ProblemType
+from log_setter.log_settings import logger
 
 SIDE_HOLE_PAIRS = {
     Direction.NORTH: [Direction.EAST, Direction.WEST],
@@ -52,7 +53,7 @@ class SideHoleIdentifier(LayoutBase):
         try:
             self.tree = STRtree(diffs.geoms)  # type: ignore
         except AttributeError:
-            print(diffs)
+            logger.warning(diffs)
             raise AttributeError("error getting side hole holes")
 
 
@@ -101,7 +102,7 @@ class SideHoleIdentifier(LayoutBase):
             assert self.EW_pair
             return True
         except:
-            print("This is not an EW side hole")
+            logger.debug("This is not an EW side hole")
             return False
 
     def find_pair_geom(self):

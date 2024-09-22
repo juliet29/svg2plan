@@ -62,3 +62,10 @@ def get_fx_and_side(direction: Direction, is_attractive: bool):
             return (sub, "max")
         case _:
             raise Exception("Invalid direction or attractiveness")
+
+
+@dataclass
+class OperationLog:
+    node: Domain
+    action_type: ActionType
+    modified_domain: Domain | None

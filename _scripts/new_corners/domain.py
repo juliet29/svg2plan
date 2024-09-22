@@ -46,8 +46,8 @@ class Domain:
 
     @classmethod
     def create_domain(cls, arr: Iterable, name=""):
-        x_min, x_max, x_min, x_max = (round(Decimal(i), ROUNDING_LIM) for i in arr)
-        return cls(Range.create_range(x_min, x_max), Range.create_range(x_min, x_max), name)
+        x_min, x_max, y_min, y_max = (round(Decimal(i), ROUNDING_LIM) for i in arr)
+        return cls(Range.create_range(x_min, x_max), Range.create_range(y_min, y_max), name)
     
     # @classmethod
     # def create_empty_domain(cls):

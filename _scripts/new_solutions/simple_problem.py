@@ -1,69 +1,76 @@
+from copy import deepcopy
 from typing import Dict
 from new_corners.domain import Domain
-from new_corners.range import Range, InvalidRangeException
-from svg_helpers.domains import DecimalCorners
+from actions.actions import create_node_operations
+from svg_helpers.layout import Layout
 from svg_helpers.saver import read_layout
 from problems.classes.problem import Problem, ProblemType
-from svg_helpers.shapely import shape_to_decimal_corners
-from actions.actions import ProcessNodeOperations
-from actions.interfaces import ActionType
+from actions.interfaces import OperationLog
 from actions.interfaces import CurrentDomains
 from log_setter.log_settings import logger
 from dataclasses import dataclass
 
+from problems.reporter import Reporter
 
-@dataclass
-class OperationLogger:
-    node: Domain
-    action_type: ActionType
-    modified_domain: Domain | None
+from svg_helpers.shapely import domain_to_shape, shape_to_domain
 
 
-layout = read_layout("amber_a_placed")
+layout= read_layout("amber_a_placed")
 problem: Problem
-# [problem]= [i for i in layout.problems if i.problem_type == ProblemType.HOLE]
+[problem] = [i for i in layout.problems if i.problem_type == ProblemType.HOLE]
 problem = layout.problems[1]
 prob_name = "problem"
 logger.info(f"problem nbs: {problem.nbs}")
 
 
-def corner_to_domain(name: str, corner: DecimalCorners):
-    x_range = Range(corner.x_left, corner.x_right)
-    y_range = Range(corner.y_bottom, corner.y_top)
-    return Domain(name, x_range, y_range)
 
 
-def create_domains():
-    domains: Dict[str, Domain] = {}
-    for name, corner in layout.corners.items():
-        domains[name] = corner_to_domain(name, corner)
-    assert problem.geometry
-    problem_corner = shape_to_decimal_corners(problem.geometry)
-    domains[prob_name] = corner_to_domain(prob_name, problem_corner)
+@dataclass
+class ResultsLog:
+    operations: OperationLog
+    results: str  # Reporter.txt
+    problems: list[Problem]
+    domains: Dict[str, Domain]
 
-    return domains
+    @property
+    def num_unresolved_problems(self):
+        return len([i for i in self.problems if not i.resolved])
+
+    def __repr__(self) -> str:
+        return f"node: {self.operations.node.name}, action: {self.operations.action_type.name}, results: {self.results}, # unres probs: {self.num_unresolved_problems}"
+
 
 
 def execute_actions():
-    domains = create_domains()
-    operations: list[OperationLogger] = []
+    domains = layout.domains
+    operations: list[OperationLog] = []
     for name in problem.nbs:
+        logger.info(f"studying operations for node: {name}")
         node = domains[name]
-        prob = domains[prob_name]
-        logger.info(f"current node: {name}")
-        for action in ActionType:
-            try:
-                ea = ProcessNodeOperations(CurrentDomains(node, prob), action)
-                res = ea.modified_domain
-            except InvalidRangeException:
-                logger.warning(
-                    f"{action.name} operation on {node.name} produced invalid range"
-                )
-                res = None
-
-            operations.append(OperationLogger(node, action, res))
+        assert problem.geometry
+        prob = shape_to_domain(problem.geometry, "problem")
+        operations.extend(create_node_operations(CurrentDomains(node, prob)))
 
     return operations
 
+
+def study_operation(op: OperationLog):
+    # make a copy of layout
+    name = op.node.name
+    tmp_layout: Layout  = deepcopy(layout)
+
+    if op.modified_domain:
+        tmp_layout.domains[name] = op.modified_domain
+        tmp_layout.shapes[name] = domain_to_shape(op.modified_domain)
+
+    re = Reporter(tmp_layout)
+    re.run()
+
+    return ResultsLog(op, re.txt, re.problems, tmp_layout.domains)
+
+
+def conduct_study():
+    ops = execute_actions()
+    return [study_operation(i) for i in ops]
 
 # operations = execute_actions()

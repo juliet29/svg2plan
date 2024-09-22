@@ -34,6 +34,12 @@ class TestDomain:
         assert res.x.min == north_domain.x.min + 2
         assert res.y.max == north_domain.y.max + 2
 
+    def test_creation(self):
+        d = Domain.create_domain([1.1, 2.1, 3, 4])
+        assert d.x.min.as_integer_ratio() == (11,10)
+        assert d.y.min.as_integer_ratio() == (3,1)
+
+
 
 class TestRange:
 

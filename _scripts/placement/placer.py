@@ -27,7 +27,7 @@ class Placer:
         if not west_node:
             new_x_left = self.lo.new_layout.domains[north_node].x.min
         else:
-            if self.lo.new_layout.domains[west_node] == None: # TODO! 
+            if not self.lo.new_layout.domains[west_node]: # TODO! 
                 xl, xr, *_ = self.lo.new_layout.domains[north_node]
                 new_x_left = round((xl + xr) / 2, ROUNDING_LIM)
                 stack_logger.debug(
@@ -45,10 +45,10 @@ class Placer:
         new_y_min = new_y_top - dif_y
 
         self.lo.new_layout.domains[node] = Domain.create_domain(
-            [new_x_left, new_x_max, new_y_min, new_y_top]
+            [new_x_left, new_x_max, new_y_min, new_y_top], node
         )
 
-    def calculate_domain_differences(self, node):
+    def calculate_domain_differences(self, node:str):
         x_min, x_max, y_min, y_max = self.lo.init_layout.domains[node].get_values()
 
         dif_x = abs(x_max - x_min)

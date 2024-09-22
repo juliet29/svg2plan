@@ -6,7 +6,7 @@ from reader.conversion import ConversionPreparer
 from amber.details import svg_ref
 
 from svg_helpers.domains import Domain
-from svg_helpers.shapely import create_box_from_domain
+from svg_helpers.shapely import domain_to_shape
 from svg_helpers.layout import PartialLayout
 from svg_helpers.constants import ROUNDING_LIM
 
@@ -86,4 +86,4 @@ class SVGReader:
     def update_dimensions(self):
         fx = lambda x: round(x * Decimal(self.du.conversion), ROUNDING_LIM)
         self.domain = self.temp_domain.modify(fx)
-        self.polygon = create_box_from_domain(self.domain)
+        self.polygon = domain_to_shape(self.domain)

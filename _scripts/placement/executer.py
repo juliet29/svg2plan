@@ -8,7 +8,7 @@ from placement.finder import Finder
 from placement.updater import Updater
 from placement.placer import Placer
 from placement.interface import LooperInterface, NodeNotFoundExcepton, stack_logger
-from svg_helpers.shapely import  create_box_from_domain
+from svg_helpers.shapely import domain_to_shape
 from svg_helpers.layout import PartialLayout, Layout
 from svg_helpers.domains import DecimalCorners, empty_decimal_corner
 from decimal import Decimal
@@ -40,10 +40,8 @@ class PlacementExecuter(LooperInterface):
         self.prepare_data_for_export()
 
     def init_new_layout(self):
-        empty_domains = {
-            k: None for k in self.init_layout.domains.keys()
-        }
-        self.new_layout = PartialLayout({}, empty_domains) # type: ignore
+        empty_domains = {k: None for k in self.init_layout.domains.keys()}
+        self.new_layout = PartialLayout({}, empty_domains)  # type: ignore
 
     def set_north_west_node(self):
         self.finder.find_north_west_node()
@@ -130,5 +128,5 @@ class PlacementExecuter(LooperInterface):
     def prepare_data_for_export(self):
         self.shapes = {}
         for name, domain in self.new_layout.domains.items():
-            self.shapes[name] = create_box_from_domain(domain)
+            self.shapes[name] = domain_to_shape(domain)
         self.layout = Layout(self.shapes, self.new_layout.domains, self.G)

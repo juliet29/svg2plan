@@ -5,7 +5,6 @@ from problems.classes.problem import Problem, ProblemType
 from problems.classes.actions import Action, ActionType
 from svg_helpers.decimal_operations import decimal_sub
 
-from svg_helpers.shapely import shape_to_decimal_corners
 
 
 

@@ -9,7 +9,7 @@ from importlib import reload
 from pprint import pprint
 from unit_tests.domains_setup import *
 # from main import main as mp
-# from new_solutions.simple_problem import *
+from new_solutions.simple_problem import *
 
 
 

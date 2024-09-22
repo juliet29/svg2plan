@@ -2,6 +2,7 @@ from enum import Enum
 from dataclasses import dataclass, field, fields
 from svg_helpers.helpers import toJson
 from operator import add, sub
+from log_setter.log_settings import logger
 
 
 class Direction(Enum):
@@ -93,7 +94,7 @@ def make_directed_pairEW(G, u, v):
     elif v in u_data["data"].WEST:
         d = DirectedPairEW(EAST=u, WEST=v)
     else:
-        print("No EW relation")
+        # print("No EW relation")
         return
 
     return d
