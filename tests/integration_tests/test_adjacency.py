@@ -14,12 +14,11 @@ def runner(request):
 
 
 def test_for_complete_layout_object(runner):
-    assert runner.layout.shapes and runner.layout.corners and runner.layout.graph
+    assert runner.layout.shapes and runner.layout.domains and runner.layout.graph
 
 
 def test_num_graph_nodes_equals_num_corners(runner):
     assert len(runner.layout.shapes) == len(runner.layout.graph.nodes)
-
 
 def test_some_edges_exist(runner):
     assert len(runner.layout.graph.edges) > 0
@@ -31,4 +30,15 @@ def test_neighbors_are_directed(runner):
         assert len(attrs["data"]["NORTH"]) >= 0
 
 
-# TODO set up actual test cases ! 
+
+def test_x(runner):
+    G = runner.layout.graph
+    if "wic" in runner.layout.domains:
+        print(runner.layout.domains.keys())
+    else:
+        assert G.nodes["bedroom_1"]["data"]["NORTH"] == []
+        assert G.nodes["bedroom_1"]["data"]["WEST"] == []
+        assert G.nodes["bath"]["data"]["NORTH"] == ["m_bath"]
+
+        
+

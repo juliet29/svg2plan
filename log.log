@@ -1,0 +1,176 @@
+INFO|executer  
+ begining to execute stacking
+DEBUG|finder    finding node closest to bedroom_1 in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('transit_space', Decimal('1.90')), ('laundry', Decimal('0.03'))]
+DEBUG|finder    finding node closest to laundry in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('m_bath', Decimal('0.03')), ('bath', Decimal('1.48'))]
+DEBUG|executer  m_bedroom has no western nbs that are unplaced
+DEBUG|executer  current north node: bedroom_1
+DEBUG|finder    no west node for bedroom_2
+DEBUG|executer  current north node: laundry
+DEBUG|finder    finding node closest to transit_space in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('bedroom_1', Decimal('1.90')), ('bedroom_2', Decimal('1.04'))]
+DEBUG|executer  current north node: m_bath
+DEBUG|finder    finding node closest to bath in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('transit_space', Decimal('0.39')), ('laundry', Decimal('1.48'))]
+DEBUG|executer  current north node: m_bedroom
+DEBUG|finder    finding node closest to m_bedroom in SOUTH direction... looking for closest ('x', 'min')
+DEBUG|finder    [('dining', Decimal('2.38')), ('m_closet', Decimal('1.13'))]
+DEBUG|executer  changing north node reference to 1. Number of unplaced nodes is 3
+DEBUG|executer  current north node: bedroom_2
+DEBUG|executer  no more southern nbs for bedroom_2
+DEBUG|executer  current north node: transit_space
+DEBUG|executer  current north node: bath
+DEBUG|finder    finding node closest to dining in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('kitchen', Decimal('0.91')), ('transit_space', Decimal('1.04'))]
+DEBUG|executer  current north node: m_closet
+DEBUG|executer  no more nodes to place
+INFO|executer  
+ begining to execute stacking
+DEBUG|executer  m_bath has no western nbs that are unplaced
+DEBUG|executer  current north node: m_bedroom
+DEBUG|finder    finding node closest to m_bedroom in SOUTH direction... looking for closest ('x', 'min')
+DEBUG|finder    [('transit_1', Decimal('2.03')), ('wic', Decimal('0.00'))]
+DEBUG|finder    no west node for wic
+DEBUG|executer  current north node: m_bath
+DEBUG|executer  changing north node reference to 1. Number of unplaced nodes is 4
+DEBUG|executer  current north node: wic
+DEBUG|finder    no west node for kitchen
+DEBUG|executer  current north node: transit_1
+DEBUG|executer  changing north node reference to 2. Number of unplaced nodes is 2
+DEBUG|executer  current north node: kitchen
+DEBUG|finder    no west node for dining
+DEBUG|executer  current north node: stair_bottom
+DEBUG|executer  no more nodes to place
+INFO|executer  
+ begining to execute stacking
+DEBUG|finder    finding node closest to bedroom_1 in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('transit_space', Decimal('1.90')), ('laundry', Decimal('0.03'))]
+DEBUG|finder    finding node closest to laundry in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('m_bath', Decimal('0.03')), ('bath', Decimal('1.48'))]
+DEBUG|executer  m_bedroom has no western nbs that are unplaced
+DEBUG|executer  current north node: bedroom_1
+DEBUG|finder    no west node for bedroom_2
+DEBUG|executer  current north node: laundry
+DEBUG|finder    finding node closest to transit_space in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('bedroom_1', Decimal('1.90')), ('bedroom_2', Decimal('1.04'))]
+DEBUG|executer  current north node: m_bath
+DEBUG|finder    finding node closest to bath in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('transit_space', Decimal('0.39')), ('laundry', Decimal('1.48'))]
+DEBUG|executer  current north node: m_bedroom
+DEBUG|finder    finding node closest to m_bedroom in SOUTH direction... looking for closest ('x', 'min')
+DEBUG|finder    [('dining', Decimal('2.38')), ('m_closet', Decimal('1.13'))]
+DEBUG|executer  changing north node reference to 1. Number of unplaced nodes is 3
+DEBUG|executer  current north node: bedroom_2
+DEBUG|executer  no more southern nbs for bedroom_2
+DEBUG|executer  current north node: transit_space
+DEBUG|executer  current north node: bath
+DEBUG|finder    finding node closest to dining in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('kitchen', Decimal('0.91')), ('transit_space', Decimal('1.04'))]
+DEBUG|executer  current north node: m_closet
+DEBUG|executer  no more nodes to place
+INFO|executer  
+ begining to execute stacking
+DEBUG|executer  m_bath has no western nbs that are unplaced
+DEBUG|executer  current north node: m_bedroom
+DEBUG|finder    finding node closest to m_bedroom in SOUTH direction... looking for closest ('x', 'min')
+DEBUG|finder    [('transit_1', Decimal('2.03')), ('wic', Decimal('0.00'))]
+DEBUG|finder    no west node for wic
+DEBUG|executer  current north node: m_bath
+DEBUG|executer  changing north node reference to 1. Number of unplaced nodes is 4
+DEBUG|executer  current north node: wic
+DEBUG|finder    no west node for kitchen
+DEBUG|executer  current north node: transit_1
+DEBUG|executer  changing north node reference to 2. Number of unplaced nodes is 2
+DEBUG|executer  current north node: kitchen
+DEBUG|finder    no west node for dining
+DEBUG|executer  current north node: stair_bottom
+DEBUG|executer  no more nodes to place
+INFO|executer  
+ begining to execute stacking
+DEBUG|finder    finding node closest to bedroom_1 in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('transit_space', Decimal('1.90')), ('laundry', Decimal('0.03'))]
+DEBUG|finder    finding node closest to laundry in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('m_bath', Decimal('0.03')), ('bath', Decimal('1.48'))]
+DEBUG|executer  m_bedroom has no western nbs that are unplaced
+DEBUG|executer  current north node: bedroom_1
+DEBUG|finder    no west node for bedroom_2
+DEBUG|executer  current north node: laundry
+DEBUG|finder    finding node closest to transit_space in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('bedroom_1', Decimal('1.90')), ('bedroom_2', Decimal('1.04'))]
+DEBUG|executer  current north node: m_bath
+DEBUG|finder    finding node closest to bath in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('transit_space', Decimal('0.39')), ('laundry', Decimal('1.48'))]
+DEBUG|executer  current north node: m_bedroom
+DEBUG|finder    finding node closest to m_bedroom in SOUTH direction... looking for closest ('x', 'min')
+DEBUG|finder    [('dining', Decimal('2.38')), ('m_closet', Decimal('1.13'))]
+DEBUG|executer  changing north node reference to 1. Number of unplaced nodes is 3
+DEBUG|executer  current north node: bedroom_2
+DEBUG|executer  no more southern nbs for bedroom_2
+DEBUG|executer  current north node: transit_space
+DEBUG|executer  current north node: bath
+DEBUG|finder    finding node closest to dining in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('kitchen', Decimal('0.91')), ('transit_space', Decimal('1.04'))]
+DEBUG|executer  current north node: m_closet
+DEBUG|executer  no more nodes to place
+INFO|executer  
+ begining to execute stacking
+DEBUG|executer  m_bath has no western nbs that are unplaced
+DEBUG|executer  current north node: m_bedroom
+DEBUG|finder    finding node closest to m_bedroom in SOUTH direction... looking for closest ('x', 'min')
+DEBUG|finder    [('transit_1', Decimal('2.03')), ('wic', Decimal('0.00'))]
+DEBUG|finder    no west node for wic
+DEBUG|executer  current north node: m_bath
+DEBUG|executer  changing north node reference to 1. Number of unplaced nodes is 4
+DEBUG|executer  current north node: wic
+DEBUG|finder    no west node for kitchen
+DEBUG|executer  current north node: transit_1
+DEBUG|executer  changing north node reference to 2. Number of unplaced nodes is 2
+DEBUG|executer  current north node: kitchen
+DEBUG|finder    no west node for dining
+DEBUG|executer  current north node: stair_bottom
+DEBUG|executer  no more nodes to place
+INFO|executer  
+ begining to execute stacking
+DEBUG|finder    finding node closest to bedroom_1 in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('transit_space', Decimal('1.90')), ('laundry', Decimal('0.03'))]
+DEBUG|finder    finding node closest to laundry in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('m_bath', Decimal('0.03')), ('bath', Decimal('1.48'))]
+DEBUG|executer  m_bedroom has no western nbs that are unplaced
+DEBUG|executer  current north node: bedroom_1
+DEBUG|finder    no west node for bedroom_2
+DEBUG|executer  current north node: laundry
+DEBUG|finder    finding node closest to transit_space in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('bedroom_1', Decimal('1.90')), ('bedroom_2', Decimal('1.04'))]
+DEBUG|executer  current north node: m_bath
+DEBUG|finder    finding node closest to bath in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('transit_space', Decimal('0.39')), ('laundry', Decimal('1.48'))]
+DEBUG|executer  current north node: m_bedroom
+DEBUG|finder    finding node closest to m_bedroom in SOUTH direction... looking for closest ('x', 'min')
+DEBUG|finder    [('dining', Decimal('2.38')), ('m_closet', Decimal('1.13'))]
+DEBUG|executer  changing north node reference to 1. Number of unplaced nodes is 3
+DEBUG|executer  current north node: bedroom_2
+DEBUG|executer  no more southern nbs for bedroom_2
+DEBUG|executer  current north node: transit_space
+DEBUG|executer  current north node: bath
+DEBUG|finder    finding node closest to dining in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('kitchen', Decimal('0.91')), ('transit_space', Decimal('1.04'))]
+DEBUG|executer  current north node: m_closet
+DEBUG|executer  no more nodes to place
+INFO|executer  
+ begining to execute stacking
+DEBUG|executer  m_bath has no western nbs that are unplaced
+DEBUG|executer  current north node: m_bedroom
+DEBUG|finder    finding node closest to m_bedroom in SOUTH direction... looking for closest ('x', 'min')
+DEBUG|finder    [('transit_1', Decimal('2.03')), ('wic', Decimal('0.00'))]
+DEBUG|finder    no west node for wic
+DEBUG|executer  current north node: m_bath
+DEBUG|executer  changing north node reference to 1. Number of unplaced nodes is 4
+DEBUG|executer  current north node: wic
+DEBUG|finder    no west node for kitchen
+DEBUG|executer  current north node: transit_1
+DEBUG|executer  changing north node reference to 2. Number of unplaced nodes is 2
+DEBUG|executer  current north node: kitchen
+DEBUG|finder    no west node for dining
+DEBUG|executer  current north node: stair_bottom
+DEBUG|executer  no more nodes to place

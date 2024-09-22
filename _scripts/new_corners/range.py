@@ -72,8 +72,8 @@ class Range:
         return self.__class__(fx(self.min), fx(self.max) )
     
     @classmethod
-    def create_range(cls, a:float, b:float):
-        return cls(Decimal(a), Decimal(b))
+    def create_range(cls, a:Decimal, b:Decimal):
+        return cls(a, b)
 
 
 @dataclass

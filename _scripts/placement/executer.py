@@ -8,17 +8,20 @@ from placement.finder import Finder
 from placement.updater import Updater
 from placement.placer import Placer
 from placement.interface import LooperInterface, NodeNotFoundExcepton, stack_logger
-from svg_helpers.shapely import create_box_from_decimal_corners
+from svg_helpers.shapely import  create_box_from_domain
 from svg_helpers.layout import PartialLayout, Layout
 from svg_helpers.domains import DecimalCorners, empty_decimal_corner
 from decimal import Decimal
+from new_corners.domain import Domain
 
 
 class PlacementExecuter(LooperInterface):
     def __init__(self, layout: Layout) -> None:
         stack_logger.info("\n begining to execute stacking")
         self.G = deepcopy(layout.graph)
-        self.init_layout = PartialLayout(deepcopy(layout.shapes), deepcopy(layout.corners))
+        self.init_layout = PartialLayout(
+            deepcopy(layout.shapes), deepcopy(layout.domains)
+        )
 
         self.unplaced = list(self.G.nodes)
         self.tracker = {}
@@ -30,15 +33,17 @@ class PlacementExecuter(LooperInterface):
         self.placer = Placer(self)
 
     def run(self):
-        self.init_new_domains()
+        self.init_new_layout()
         self.set_north_west_node()
         self.set_remaining_north_nodes()
         self.set_relative_south_nodes()
         self.prepare_data_for_export()
 
-    def init_new_domains(self):
-        empty_corner = {k: empty_decimal_corner for k in self.init_layout.corners.keys()}
-        self.new_domains = PartialLayout({}, empty_corner)
+    def init_new_layout(self):
+        empty_domains = {
+            k: None for k in self.init_layout.domains.keys()
+        }
+        self.new_layout = PartialLayout({}, empty_domains) # type: ignore
 
     def set_north_west_node(self):
         self.finder.find_north_west_node()
@@ -52,10 +57,12 @@ class PlacementExecuter(LooperInterface):
             west_node = self.tracker[self.tracker_column][0]
             try:
                 self.finder.find_next_directed_node(Direction.EAST, west_node)
-            except NodeNotFoundExcepton: 
-                stack_logger.debug(f"{self.curr_node} has no western nbs that are unplaced")
+            except NodeNotFoundExcepton:
+                stack_logger.debug(
+                    f"{self.curr_node} has no western nbs that are unplaced"
+                )
                 return
-            
+
             self.placer.place_next_east_node(west_node)
             self.tracker_column += 1
             self.updater.update_tracker()
@@ -79,15 +86,13 @@ class PlacementExecuter(LooperInterface):
                     continue
 
                 try:
-                    self.finder.find_next_directed_node(
-                        Direction.SOUTH, north_node
-                    )
+                    self.finder.find_next_directed_node(Direction.SOUTH, north_node)
                 except NodeNotFoundExcepton:
                     stack_logger.debug(f"no more southern nbs for {north_node}")
                     continue
-                
+
                 self.finish_setting_south_node(north_node, column)
-                
+
                 if len(self.unplaced) == 0:
                     stack_logger.debug("no more nodes to place")
                     return
@@ -102,7 +107,7 @@ class PlacementExecuter(LooperInterface):
                 break
 
     def finish_setting_south_node(self, north_node, column):
-        try: 
+        try:
             west_node = self.finder.find_west_node()
             self.placer.place_next_south_node(north_node, west_node)
         except:
@@ -110,7 +115,6 @@ class PlacementExecuter(LooperInterface):
 
         self.updater.extend_tracker_south(column)
         self.updater.update_unplaced()
-
 
     # TODO make ns and ew counter a class argument
     def is_over_ns_counter(self):
@@ -125,7 +129,6 @@ class PlacementExecuter(LooperInterface):
 
     def prepare_data_for_export(self):
         self.shapes = {}
-        for name, corner in self.new_domains.corners.items():
-            self.shapes[name] = create_box_from_decimal_corners(corner)
-        self.layout = Layout(self.shapes, self.new_domains.corners, self.G)
-
+        for name, domain in self.new_layout.domains.items():
+            self.shapes[name] = create_box_from_domain(domain)
+        self.layout = Layout(self.shapes, self.new_layout.domains, self.G)

@@ -51,7 +51,7 @@ class Finder:
         return candidates[index_of_closest_corner]
     
     def get_val(self, node, corner):
-        return self.lo.init_layout.corners[node][corner]
+        return self.lo.init_layout.domains[node][corner[0]][corner[1]]
     
 
 
@@ -59,8 +59,8 @@ class Finder:
 def match_corner(direction: Direction):
     match direction:
         case Direction.EAST:
-            return "y_top"
+            return ("y", "max")
         case Direction.SOUTH:
-            return "x_left"
+            return ("x", "min")
         case _:
             raise Exception("Invalid direction for matching a corner")

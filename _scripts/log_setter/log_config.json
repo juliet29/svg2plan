@@ -13,7 +13,7 @@
     "stdout": {
       "class": "logging.StreamHandler",
       "formatter": "simple",
-      "level": "DEBUG",
+      "level": "INFO",
       "stream": "ext://sys.stdout"
     },
     "file": {

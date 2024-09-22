@@ -1,28 +1,19 @@
-import networkx as nx
-from typing import Dict
-import math
-
-from svg_helpers.domains import DomainDict
-from svg_helpers.directions import Direction, DIRECTION_PAIRS
-from svg_helpers.layout import PartialLayout
-from graphtype import Graph, GraphData, NodeData, EdgeData, validate
-
-class DirectedAdjacencyGenerator:
-    # TODO rfactor this. 
-    def __init__(self, layout: PartialLayout, graph: nx.Graph, node_a, node_b) -> None:
-        self.layout = layout
-        self.G = graph
-        self.node_a = node_a
-        self.node_b = node_b
-        self.TOLERANCE = 0.01  # percent
-
-    def get_domains(self):
-        self.domains_a = self.layout.domains[self.node_a]
-        self.domains_b = self.layout.domains[self.node_b]
-        self.cmp = self.domains_a.compare_domains(self.domains_b)
-
-        for drn, domain in self.cmp:
-            if domain: 
-                self.G.nodes[domain.name][drn].append(domain.name)
+from networkx import Graph
+from new_corners.domain import Domain
+from svg_helpers.directions import Direction, get_opposite_direction
 
 
+def generate_directed_adjacencies(G: Graph, domain_a: Domain, domain_b: Domain):
+    cmp = domain_a.compare_domains(domain_b)
+    for drn in [Direction.NORTH, Direction.EAST]:
+        opp_drn = get_opposite_direction(drn)
+        if cmp[drn.name]:
+            d1, d2 = (
+                (domain_a, domain_b)
+                if cmp[drn.name] == domain_a
+                else (domain_b, domain_a)
+            )
+            G.nodes[d1.name]["data"][opp_drn.name].append(d2.name)
+            G.nodes[d2.name]["data"][drn.name].append(d1.name)
+
+    return G

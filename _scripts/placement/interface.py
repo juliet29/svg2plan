@@ -16,7 +16,7 @@ class LooperInterface:
     tracker: Dict
     tracker_column: int
     curr_node: str
-    new_domains: PartialLayout
+    new_layout: PartialLayout
 
 
 class NodeNotFoundExcepton(Exception):
