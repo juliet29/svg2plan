@@ -2,7 +2,6 @@ import pytest
 from reader.svg_reader import SVGReader
 from adjacencies.adjacency import AdjacencyGenerator
 from placement.executer import PlacementExecuter
-# from integration_tests.test_reader import test_shapes_are_all_rectangles, test_precision_of_domains
 
 
 @pytest.fixture(params=["amber_a_f01.svg", "amber_b_f01.svg"])

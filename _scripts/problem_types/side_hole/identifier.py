@@ -45,7 +45,6 @@ class SideHoleIdentifier(LayoutBase):
                     geometry=pair.geometry,
                 )
             )
-
     def find_potential_holes(self):
         shapes = list(self.shapes.values())
         union = union_all(shapes)
@@ -55,6 +54,7 @@ class SideHoleIdentifier(LayoutBase):
         except AttributeError:
             print(diffs)
             raise AttributeError("error getting side hole holes")
+
 
 
     def search_layout(self):
@@ -112,6 +112,6 @@ class SideHoleIdentifier(LayoutBase):
     def create_test_line(self):
         assert self.EW_pair
         y = self.shapes[self.EW_pair.WEST].centroid.y
-        x_right = self.corners[self.EW_pair.WEST].x_right
-        x_left = self.corners[self.EW_pair.EAST].x_left
+        x_right = self.domains[self.EW_pair.WEST].x.max
+        x_left = self.domains[self.EW_pair.EAST].x.min
         self.test_line = LineString([[x_right, y], [x_left, y]])
