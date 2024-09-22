@@ -17,8 +17,8 @@ from adjacencies.directed_adjacency import DirectedAdjacencyGenerator
 
 
 class AdjacencyGenerator:
-    def __init__(self, domains:PartialLayout, buffer_size=BUFFER_SIZE) -> None:
-        self.domains = domains
+    def __init__(self, layout:PartialLayout, buffer_size=BUFFER_SIZE) -> None:
+        self.partial_layout = layout
         self.buffer_size = buffer_size
 
     def run(self):
@@ -32,15 +32,15 @@ class AdjacencyGenerator:
         self.G = nx.Graph()
         nodes = [(domain, 
                   {"data": NeighborDirections()}) 
-                  for domain in self.domains.shapes]
+                  for domain in self.partial_layout.domains]
         self.G.add_nodes_from(nodes)
 
     def create_adjacencies(self):
-        self.pairs = list(combinations(self.domains.shapes.keys(), 2))
+        self.pairs = list(combinations(self.partial_layout.shapes.keys(), 2))
         for a, b in self.pairs:
-            if self.check_adjacency(self.domains.shapes[a], self.domains.shapes[b]):
+            if self.check_adjacency(self.partial_layout.shapes[a], self.partial_layout.shapes[b]):
                 self.G.add_edge(a, b)
-                self.DAG = DirectedAdjacencyGenerator(self.domains, self.G, a, b)
+                self.DAG = DirectedAdjacencyGenerator(self.partial_layout, self.G, a, b)
 
 
     def check_adjacency(self, a:Polygon, b:Polygon):
@@ -48,14 +48,14 @@ class AdjacencyGenerator:
         return a.buffer(sz).intersects(b.buffer(sz))
     
     def create_layout(self):
-        self.layout = Layout(self.domains.shapes, self.domains.corners, self.G)
+        self.layout = Layout(self.layout.shapes, self.layout.domains, self.G)
 
 
     ## display... 
 
     def get_fp_layout(self):
         self.fp_layout = {}
-        for k, v in self.domains.shapes.items():
+        for k, v in self.partial_layout.shapes.items():
             top_right_corner = list_coords(v.exterior.coords)[2]
             self.fp_layout[k] = top_right_corner
     

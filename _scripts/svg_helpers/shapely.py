@@ -83,5 +83,5 @@ def shape_to_domain(shape: Polygon):
 
     x_left, x_right = min(xs), max(xs)
     y_bottom, y_top = min(ys), max(ys)
-    return Domain.create_domain("", x_left, x_right, y_bottom, y_top)
+    return Domain.create_domain(x_left, x_right, y_bottom, y_top)
 

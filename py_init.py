@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 import sys
 sys.path.append("/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/_scripts")
+sys.path.append("/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/tests")
 from new_corners.range import *
 from new_corners.domain import *
 from copy import deepcopy, copy

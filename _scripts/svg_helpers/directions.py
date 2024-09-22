@@ -43,10 +43,10 @@ class GeneralDirection(Enum):
 
 @dataclass
 class NeighborDirections:
-    NORTH: list = field(default_factory=list)
-    SOUTH: list = field(default_factory=list)
-    EAST: list = field(default_factory=list)
-    WEST: list = field(default_factory=list)
+    NORTH: list[str] = field(default_factory=list)
+    SOUTH: list[str] = field(default_factory=list)
+    EAST: list[str] = field(default_factory=list)
+    WEST: list[str] = field(default_factory=list)
 
     def __getitem__(self, i):
         return getattr(self, i)

@@ -9,9 +9,9 @@ from log_setter.log_settings import logger
 
 @dataclass(frozen=True)
 class Domain:
-    name: str
     x: Range
     y: Range
+    name: str = ""
 
     def __repr__(self) -> str:
         return f"Domain({self.name}, x={self.x}, y={self.y})"
@@ -38,14 +38,14 @@ class Domain:
         return other_axis
 
     def modify(self, fx: Callable[[Decimal], Decimal]):
-        return self.__class__(self.name, self.x.modify(fx), self.y.modify(fx))
+        return self.__class__(self.x.modify(fx), self.y.modify(fx), self.name)
     
     def get_values(self):
         return (self.x.min, self.x.max, self.y.min, self.y.max)
 
     @classmethod
-    def create_domain(cls, name, x_min: float, x_max: float, y_min: float, y_max: float):
-        return cls(name, Range.create_range(x_min, x_max), Range.create_range(y_min, y_max))
+    def create_domain(cls, x_min: float, x_max: float, y_min: float, y_max: float, name=""):
+        return cls(Range.create_range(x_min, x_max), Range.create_range(y_min, y_max), name)
 
 
 @dataclass(frozen=True)
@@ -54,6 +54,13 @@ class ComparedDomain:
     SOUTH: Domain | None
     EAST: Domain | None
     WEST: Domain | None
+
+    def __getitem__(self, i):
+        return getattr(self, i)
+    
+    def __iter__(self):
+        for name in list(self.__annotations__.keys()):
+            yield (name, self[name])
 
     def __repr__(self) -> str:
         N = self.NORTH.name if self.NORTH else None

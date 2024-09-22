@@ -8,8 +8,9 @@ from svg_helpers.layout import PartialLayout
 
 
 class DirectedAdjacencyGenerator:
-    def __init__(self, domains: PartialLayout, graph: nx.Graph, node_a, node_b) -> None:
-        self.domains = domains
+    # TODO rfactor this. 
+    def __init__(self, layout: PartialLayout, graph: nx.Graph, node_a, node_b) -> None:
+        self.layout = layout
         self.G = graph
         self.node_a = node_a
         self.node_b = node_b
@@ -17,14 +18,14 @@ class DirectedAdjacencyGenerator:
         self.run()
 
     def run(self):
-        self.get_corners()
+        self.get_domains()
         self.make_horizontal_relation()
         self.make_vertical_relation()
 
     def update_nodes(self, direction):
-        self.G.nodes[self.node_b]["data"][direction.name].append(self.node_a)
+        self.G.nodes[self.node_b]["nb_dirs"][direction.name].append(self.node_a)
 
-        self.G.nodes[self.node_a]["data"][DIRECTION_PAIRS[direction].name].append(
+        self.G.nodes[self.node_a]["nb_dirs"][DIRECTION_PAIRS[direction].name].append(
             self.node_b
         )
 
@@ -51,19 +52,19 @@ class DirectedAdjacencyGenerator:
         elif self.is_greater_than("y_bottom", "y_top"):
             self.update_nodes(Direction.NORTH)
 
-    def get_corners(self):
-        self.corners_a = self.domains.corners[self.node_a]
-        self.corners_b = self.domains.corners[self.node_b]
+    def get_domains(self):
+        self.domains_a = self.layout.domains[self.node_a]
+        self.domains_b = self.layout.domains[self.node_b]
 
     def is_equal(self):
         return math.isclose(
-            self.corners_a[self.current_corner],
-            self.corners_b[self.current_corner],
+            self.domains_a[self.current_corner],
+            self.domains_b[self.current_corner],
             rel_tol=self.TOLERANCE,
         )
 
     def is_less_than(self, a, b):
-        return self.corners_a[a] < self.corners_b[b]
+        return self.domains_a[a] < self.domains_b[b]
 
     def is_greater_than(self, a, b):
-        return self.corners_a[a] > self.corners_b[b]
+        return self.domains_a[a] > self.domains_b[b]
