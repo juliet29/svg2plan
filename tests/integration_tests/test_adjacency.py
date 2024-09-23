@@ -1,6 +1,6 @@
 import pytest
 
-from reader.svg_reader import SVGReader
+from read.svg_reader import SVGReader
 from adjacencies.adjacency import AdjacencyGenerator
 
 
@@ -20,6 +20,7 @@ def test_for_complete_layout_object(runner):
 def test_num_graph_nodes_equals_num_corners(runner):
     assert len(runner.layout.shapes) == len(runner.layout.graph.nodes)
 
+
 def test_some_edges_exist(runner):
     assert len(runner.layout.graph.edges) > 0
 
@@ -30,7 +31,6 @@ def test_neighbors_are_directed(runner):
         assert len(attrs["data"]["NORTH"]) >= 0
 
 
-
 def test_x(runner):
     G = runner.layout.graph
     if "wic" in runner.layout.domains:
@@ -39,6 +39,3 @@ def test_x(runner):
         assert G.nodes["bedroom_1"]["data"]["NORTH"] == []
         assert G.nodes["bedroom_1"]["data"]["WEST"] == []
         assert G.nodes["bath"]["data"]["NORTH"] == ["m_bath"]
-
-        
-

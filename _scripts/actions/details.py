@@ -1,8 +1,8 @@
-from svg_helpers.directions import Direction, get_axis
+from helpers.directions import Direction, get_axis
 from new_corners.domain import Domain
 from decimal import Decimal
 from actions.interfaces import CurrentDomains
-from log_setter.log_settings import svlogger
+from svg_logger.settings import svlogger
 
 
 class Details:

@@ -3,9 +3,9 @@ from decimal import Decimal
 from typing import Callable, Iterable
 from new_corners.range import Range
 from functools import partial
-from svg_helpers.constants import ROUNDING_LIM
-from svg_helpers.helpers import keys_from_value
-from log_setter.log_settings import svlogger
+from constants import ROUNDING_LIM
+from helpers.helpers import keys_from_value
+from svg_logger.settings import svlogger
 
 
 @dataclass(frozen=True)

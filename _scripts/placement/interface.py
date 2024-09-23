@@ -2,8 +2,7 @@ import logging
 from typing import Dict
 
 import networkx as nx
-from svg_helpers.domains import DomainDict
-from svg_helpers.layout import PartialLayout
+from helpers.layout import PartialLayout
 
 
 stack_logger = logging.getLogger(__name__)

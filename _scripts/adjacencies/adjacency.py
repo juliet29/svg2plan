@@ -4,15 +4,13 @@ from itertools import combinations
 from shapely import Polygon
 import networkx as nx
 
-from adjacencies.dir_adj import generate_directed_adjacencies
-from svg_helpers.graph_viz import draw_spring, draw_planar
-from svg_helpers.shapely import list_coords
-from svg_helpers.positioned_graph import PositionedGraph
-from svg_helpers.domains import Domain
-from svg_helpers.directions import NeighborDirections
-from svg_helpers.layout import PartialLayout, Layout
-from svg_helpers.constants import BUFFER_SIZE
-from adjacencies.directed_adjacency import DirectedAdjacencyGenerator
+from adjacencies.directed_adjacency import generate_directed_adjacencies
+from visuals.graph_viz import draw_spring, draw_planar
+from helpers.shapely import list_coords
+from adjacencies.positioned_graph import PositionedGraph
+from helpers.directions import NeighborDirections
+from helpers.layout import PartialLayout, Layout
+from constants import BUFFER_SIZE
 
 
 class AdjacencyGenerator:
@@ -52,7 +50,9 @@ class AdjacencyGenerator:
         return a.buffer(sz).intersects(b.buffer(sz))
 
     def create_layout(self):
-        self.layout = Layout(self.partial_layout.shapes, self.partial_layout.domains, self.G)
+        self.layout = Layout(
+            self.partial_layout.shapes, self.partial_layout.domains, self.G
+        )
 
     ## display...
 

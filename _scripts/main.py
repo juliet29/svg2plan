@@ -1,13 +1,11 @@
 from __init__ import *
-from actions.interfaces import CurrentDomains
-from log_setter.log_settings import svlogger
-
-from reader.svg_reader import SVGReader
+from svg_logger.settings import svlogger
+from read.svg_reader import SVGReader
 from adjacencies.adjacency import AdjacencyGenerator
 from placement.executer import PlacementExecuter
-from problems.reporter import Reporter
-from svg_helpers.plotter import Plotter
-from svg_helpers.saver import Saver
+from fixes.reporter import Reporter
+from visuals.plotter import Plotter
+from export.saver import Saver
 from new_solutions.simple_problem import *
 
 
@@ -37,7 +35,8 @@ def plot(re):
 
 
 if __name__ == "__main__":
-    re = run_new_layout()
-    save_new_layout(re)
+    re = run()
+    # re = run_new_layout()
+    # save_new_layout(re)
     # plot(re)
 

@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from new_corners.domain import Domain
 from typing import Dict, Callable, Union
 from operator import add, sub
-from svg_helpers.directions import Direction
+from helpers.directions import Direction
 from decimal import Decimal
 
 ReductiveCallable = Callable[[Decimal, Decimal], Decimal]

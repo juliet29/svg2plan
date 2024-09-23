@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from decimal import Decimal
 from typing import Callable
-from log_setter.log_settings import svlogger
+from svg_logger.settings import svlogger
 from copy import copy, deepcopy
 
 

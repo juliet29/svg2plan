@@ -3,17 +3,13 @@ from networkx import Graph
 from copy import deepcopy
 import logging
 
-from svg_helpers.domains import DomainDict
-from svg_helpers.directions import Direction
+from helpers.directions import Direction
 from placement.finder import Finder
 from placement.updater import Updater
 from placement.placer import Placer
 from placement.interface import LooperInterface, NodeNotFoundExcepton, stack_logger
-from svg_helpers.shapely import domain_to_shape
-from svg_helpers.layout import PartialLayout, Layout
-from svg_helpers.domains import DecimalCorners, empty_decimal_corner
-from decimal import Decimal
-from new_corners.domain import Domain
+from helpers.shapely import domain_to_shape
+from helpers.layout import PartialLayout, Layout
 
 
 class PlacementExecuter(LooperInterface):
@@ -73,10 +69,15 @@ class PlacementExecuter(LooperInterface):
 
     def set_relative_south_nodes(self):
         self.ns_counter = 0
-        self.north_node_reference = 0 # row 
+        self.north_node_reference = 0  # row
 
         while len(self.unplaced) > 0:
-            for col_num, column in self.tracker.items(): # northern most node marks beginning of a column => TODO maybe a custom data structure.. 
+            for (
+                col_num,
+                column,
+            ) in (
+                self.tracker.items()
+            ):  # northern most node marks beginning of a column => TODO maybe a custom data structure..
                 try:
                     north_node = column[self.north_node_reference]
                     stack_logger.debug(f"current north node: {north_node}")
@@ -105,7 +106,9 @@ class PlacementExecuter(LooperInterface):
                 stack_logger.warning("ns_counter > 4 .. breaking")
                 break
 
-    def finish_setting_south_node(self, north_node:str, column:list[str], col_num:int):
+    def finish_setting_south_node(
+        self, north_node: str, column: list[str], col_num: int
+    ):
         try:
             west_node = self.finder.find_west_node()
             self.placer.place_next_south_node(north_node, col_num, west_node)

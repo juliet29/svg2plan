@@ -1,5 +1,5 @@
 import pytest
-from reader.svg_reader import SVGReader
+from read.svg_reader import SVGReader
 from adjacencies.adjacency import AdjacencyGenerator
 from placement.executer import PlacementExecuter
 
@@ -33,11 +33,12 @@ def test_shapes_are_all_rectangles(runner):
     for shape in sv.layout.shapes.values():
         assert len([i for i in shape.exterior.coords]) == 5
 
+
 def test_precision_of_domains(runner):
     for domain in runner.layout.domains.values():
         for num in domain.get_values():
             assert num.is_finite()
             if num >= 10 or num <= -10:
                 assert len(num.as_tuple().digits) <= 4
-            elif -10 < num < 10: 
+            elif -10 < num < 10:
                 assert len(num.as_tuple().digits) <= 3

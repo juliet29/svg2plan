@@ -1,26 +1,26 @@
 from copy import deepcopy
 from actions.actions import create_node_operations
 from new_solutions.interfaces import ResultsLog, ProblemResults
-from svg_helpers.layout import Layout
-from svg_helpers.plots import make_subplot_for_results
-from svg_helpers.saver import read_layout
-from problems.classes.problem import Problem, ProblemType
+from helpers.layout import Layout
+from visuals.plots import make_subplot_for_results
+from export.saver import read_layout
+from fixes.interfaces import Problem, ProblemType
 from actions.interfaces import OperationLog
 from actions.interfaces import CurrentDomains
-from log_setter.log_settings import svlogger
-from svg_helpers.plotter import Plotter
+from svg_logger.settings import svlogger
+from visuals.plotter import Plotter
 from plotly.subplots import make_subplots
 
 
-from problems.reporter import Reporter
+from fixes.reporter import Reporter
 
-from svg_helpers.shapely import domain_to_shape, shape_to_domain
+from helpers.shapely import domain_to_shape, shape_to_domain
 
 
 layout = read_layout("amber_a_placed")
 problem: Problem
-[problem] = [i for i in layout.problems if i.problem_type == ProblemType.HOLE]
-problem = layout.problems[1]
+# [problem] = [i for i in layout.problems if i.problem_type == ProblemType.HOLE]
+problem = layout.problems[3]
 prob_name = "problem"
 
 

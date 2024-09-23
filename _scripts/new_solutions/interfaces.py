@@ -3,13 +3,13 @@
 
 from actions.interfaces import OperationLog
 from new_corners.domain import Domain
-from problems.classes.problem import Problem
+from fixes.interfaces import Problem
 
 
 from dataclasses import dataclass
 from typing import Dict
 
-from svg_helpers.layout import Layout
+from helpers.layout import Layout
 
 
 @dataclass
@@ -25,7 +25,7 @@ class ResultsLog:
 
     def __repr__(self) -> str:
         return f"node: {self.operations.node.name}, action: {self.operations.action_type.name}, summary: {self.results}, # unres probs: {self.num_unresolved_problems}"
-    
+
     def short_message(self):
         return f"{self.operations.node.name}-{self.operations.action_type.name}-{self.num_unresolved_problems}"
 

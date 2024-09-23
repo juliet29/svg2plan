@@ -1,3 +1,4 @@
+from decimal import Decimal
 import os
 from typing import Dict, Callable
 from dataclasses import dataclass
@@ -7,17 +8,19 @@ import json
 
 import networkx as nx
 
-from svg_helpers.directions import Direction
-from svg_helpers.positioned_graph import PositionedGraph
-from svg_helpers.helpers import get_bounds_of_layout
-from svg_helpers.constants import BUFFER_SIZE
+from helpers.directions import Direction
+from adjacencies.positioned_graph import PositionedGraph
+from helpers.layout import get_bounds_of_layout
+from constants import BUFFER_SIZE
 
 # todo for amber plan 01
 LINKED_EDGES = [0, 3, 6, 10, 12, 16, 18, 19, 20, 21]
 
+
 class SubsurfaceObjectType(Enum):
     DOOR = 0
     WINDOW = 1
+
 
 @dataclass
 class Subsurface:
@@ -25,11 +28,8 @@ class Subsurface:
     id: int
 
     def to_json(self):
-        return {
-            "door_or_window": self.door_or_window.name,
-            "id": self.id
-        }
-    
+        return {"door_or_window": self.door_or_window.name, "id": self.id}
+
 
 @dataclass
 class Edge:
@@ -38,7 +38,7 @@ class Edge:
 
 
 class ConnectivityGenerator:
-    def __init__(self, pos_graph: PositionedGraph,  folder:str = "amber_a") -> None:
+    def __init__(self, pos_graph: PositionedGraph, folder: str = "amber_a") -> None:
         self.G_init = pos_graph.G
         self.layout = deepcopy(pos_graph.layout)
         self.G = deepcopy(pos_graph.G)
@@ -59,15 +59,17 @@ class ConnectivityGenerator:
 
         self.G_rooms = nx.subgraph_view(self.G, filter_node=self.filter_direction_nodes)
 
-
     def add_windows(self):
         # TODO this may change for other floor plans..
         for key, data in self.G_rooms.nodes(data=True):
             empty_dir = data["data"].get_empty_directions()
             for d in empty_dir:
                 if d == Direction.NORTH.name or d == Direction.SOUTH.name:
-                    self.G.add_edge(key, Direction[d].name, data=Subsurface(SubsurfaceObjectType.WINDOW, 1))
-
+                    self.G.add_edge(
+                        key,
+                        Direction[d].name,
+                        data=Subsurface(SubsurfaceObjectType.WINDOW, 1),
+                    )
 
     def create_connectivity_template(self):
         self.conn: Dict[int, Edge] = {}
@@ -94,25 +96,22 @@ class ConnectivityGenerator:
             except KeyError:
                 print(f"invalid edge - {e}")
                 pass
-            
 
     def draw_graph(self):
         nx.draw(self.G, self.layout, with_labels=True)
-
 
     def write_to_file(self):
         self.jsonify_graph()
         path = os.path.join("../outputs", self.folder, "graph.json")
         with open(path, "w+") as file:
             json.dump(self.G_json, default=str, fp=file)
-        
+
     def jsonify_graph(self):
         self.G_json = nx.node_link_data(self.G)
         for d in self.G_json["links"]:
             d["data"] = d["data"].to_json()
 
-
-######## direction stuff
+    ######## direction stuff
 
     def filter_direction_nodes(self, node):
         try:
@@ -120,16 +119,16 @@ class ConnectivityGenerator:
             return False
         except:
             return True
-        
 
     def update_layout_for_direction_nodes(self):
         c = get_bounds_of_layout(self.layout)
-        mid_x = ((c.x_right - c.x_left)/2) + c.x_left
-        mid_y = ((c.y_top - c.y_bottom)/2) + c.y_bottom
+        mid_x = ((c.x.max - c.x.min) / 2) + c.x.min
+        mid_y = ((c.y.max - c.y.min) / 2) + c.y.min
 
-        PAD = BUFFER_SIZE*4
+        PAD = Decimal(BUFFER_SIZE * 4)
 
-        self.layout[Direction.NORTH.name] = (mid_x, c.y_top+PAD)
-        self.layout[Direction.SOUTH.name] = (mid_x, c.y_bottom-PAD)
-        self.layout[Direction.EAST.name] = (c.x_left-PAD,mid_y)
-        self.layout[Direction.WEST.name] = (c.x_right+PAD,mid_y)
+
+        self.layout[Direction.NORTH.name] = (mid_x, c.y.max + PAD)
+        self.layout[Direction.SOUTH.name] = (mid_x, c.y.min - PAD)
+        self.layout[Direction.EAST.name] = (c.x.min - PAD, mid_y)
+        self.layout[Direction.WEST.name] = (c.x.max + PAD, mid_y)

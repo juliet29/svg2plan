@@ -1,11 +1,9 @@
 import logging
 from placement.interface import LooperInterface, stack_logger
-from svg_helpers.constants import ROUNDING_LIM
-from svg_helpers.domains import Corners, DecimalCorners, empty_decimal_corner
-from svg_helpers.decimal_operations import decimal_mult, decimal_add, decimal_sub
+from constants import ROUNDING_LIM
 from decimal import Decimal
 from new_corners.domain import Domain
-from log_setter.log_settings import svlogger
+from svg_logger.settings import svlogger
 
 
 class Placer:

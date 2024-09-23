@@ -1,20 +1,20 @@
 import os
 import logging
 import json
-from reader.svg_reader import SVGReader
+from read.svg_reader import SVGReader
 from adjacencies.adjacency import AdjacencyGenerator
 from adjacencies.connectivity import ConnectivityGenerator
 from placement.executer import PlacementExecuter
 
-from problems.reporter import Reporter
-from problems.classes.sequence import Sequence
-from problems.sequence_runner import SequenceRunner
-from problems.side_leveler import SideLeveler
+from fixes.reporter import Reporter
+# from problems.classes.sequence import Sequence
+# from problems.sequence_runner import SequenceRunner
+# from problems.side_leveler import SideLeveler
 
-from svg_helpers.gplan_creator import GPLANCreator
-from svg_helpers.plotter import Plotter
+from export.gplan_creator import GPLANCreator
+from visuals.plotter import Plotter
 
-from log_setter.log_settings import svlogger
+from svg_logger.settings import svlogger
 
 
 class SVG2Plan:
@@ -28,7 +28,7 @@ class SVG2Plan:
         self.read_in_svg()
         self.stack_rooms()
         self.fix_problems()
-        self.save_plan()
+        # self.save_plan()
 
     def prepare_folder(self):
         self.path = path = os.path.join("../outputs/", self.folder_name)
@@ -50,23 +50,24 @@ class SVG2Plan:
         self.pe.run()
 
     def fix_problems(self):
-        self.re = Reporter(self.pe.layout)
-        self.re.run()
-        self.seq = Sequence(0, self.pe.layout, self.re.problems, [])
-        self.sr = SequenceRunner(self.seq, self.re.problems[0])
-        self.sr.run()
+        pass
+        # self.re = Reporter(self.pe.layout)
+        # self.re.run()
+        # self.seq = Sequence(0, self.pe.layout, self.re.problems, [])
+        # self.sr = SequenceRunner(self.seq, self.re.problems[0])
+        # self.sr.run()
 
-        self.sl = SideLeveler(self.sr.layout)
-        self.sl.run()
+        # self.sl = SideLeveler(self.sr.layout)
+        # self.sl.run()
 
-    def save_plan(self):
-        self.gp = GPLANCreator(self.sl.corners, self.folder_name)
-        self.gp.run()
+    # def save_plan(self):
+    #     self.gp = GPLANCreator(self.sl.corners, self.folder_name)
+    #     self.gp.run()
 
-    def plot_object_corners(self, corners, is_top: bool = False):
-        if is_top:
-            yrange = [-1, 14]
-        else:
-            yrange = [-14, 1]
-        self.pl = Plotter(corners, yrange=yrange)
-        self.pl.plot()
+    # def plot_object_corners(self, corners, is_top: bool = False):
+    #     if is_top:
+    #         yrange = [-1, 14]
+    #     else:
+    #         yrange = [-14, 1]
+    #     self.pl = Plotter(corners, yrange=yrange)
+    #     self.pl.plot()

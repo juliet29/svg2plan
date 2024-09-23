@@ -1,16 +1,22 @@
 from adjacencies.connectivity import ConnectivityGenerator
-from svg_helpers.directions import Direction
+from helpers.directions import Direction
 from pint import UnitRegistry
-from reader.interfaces import SVGReference
+from read.interfaces import SVGReference
 
 # windows
-id3 = [('m_bath', Direction.NORTH.name),  
-       ('m_bedroom', Direction.NORTH.name),]
-id11 = [('kitchen', Direction.SOUTH.name),  ]
+id3 = [
+    ("m_bath", Direction.NORTH.name),
+    ("m_bedroom", Direction.NORTH.name),
+]
+id11 = [
+    ("kitchen", Direction.SOUTH.name),
+]
 
 # doors
-id8 = [('m_bath', "m_bedroom"),  
-       ('bath', "transit_space"),]
+id8 = [
+    ("m_bath", "m_bedroom"),
+    ("bath", "transit_space"),
+]
 id100 = [("kitchen", "dining")]
 
 
@@ -23,8 +29,8 @@ def update_surface_types(cg: ConnectivityGenerator):
     return cg
 
 
-# reference length 
-REF_LENGTH_FT = 10 
+# reference length
+REF_LENGTH_FT = 10
 REF_LENGTH_IN = 6.75
-# TODO put some checks on this! 
+# TODO put some checks on this!
 svg_ref = SVGReference("bedroom_1", "width")
