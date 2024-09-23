@@ -38,5 +38,6 @@ def plot(re):
 
 if __name__ == "__main__":
     re = run_new_layout()
-    plot(re)
+    save_new_layout(re)
+    # plot(re)
 

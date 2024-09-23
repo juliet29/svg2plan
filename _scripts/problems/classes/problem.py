@@ -51,6 +51,9 @@ class Problem:
         # else:
         #     txt2 = ")"
         # return txt + txt2
+
+    def short_message(self):
+        return f"{self.problem_type}-{self.nbs}"
         
     
     

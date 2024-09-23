@@ -9,6 +9,8 @@ from problems.classes.problem import Problem
 from dataclasses import dataclass
 from typing import Dict
 
+from svg_helpers.layout import Layout
+
 
 @dataclass
 class ResultsLog:
@@ -22,4 +24,14 @@ class ResultsLog:
         return len([i for i in self.problems if not i.resolved])
 
     def __repr__(self) -> str:
-        return f"node: {self.operations.node.name}, action: {self.operations.action_type.name}, results: {self.results}, # unres probs: {self.num_unresolved_problems}"
+        return f"node: {self.operations.node.name}, action: {self.operations.action_type.name}, summary: {self.results}, # unres probs: {self.num_unresolved_problems}"
+    
+    def short_message(self):
+        return f"{self.operations.node.name}-{self.operations.action_type.name}-{self.num_unresolved_problems}"
+
+
+@dataclass
+class ProblemResults:
+    problem: Problem
+    original_layout: Layout
+    results: list[ResultsLog]

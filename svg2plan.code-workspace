@@ -15,6 +15,7 @@
     "python.autoComplete.extraPaths": ["/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/"],
     "terminal.integrated.env.linux": {
       "PYTHONPATH": "/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/"
-    }
+    },
+    "workbench.settings.openDefaultKeybindings": false
   }
 }

@@ -2,13 +2,16 @@
 from ast import Index
 from itertools import product
 import math
+from re import sub
 from typing import Dict
 from new_corners.domain import Domain
 import plotly.express as px
 import plotly.graph_objects as go
 
-from new_solutions.interfaces import ResultsLog
+from new_solutions.interfaces import ProblemResults
 from plotly.subplots import make_subplots
+
+from problems.classes.problem import Problem
 
 
 def prepare_shape_dict(
@@ -67,14 +70,23 @@ def plot_shapes(plot_dict, x_range=[-10, 300], y_range=[-300, 10]):
 
 
 def subplot_layout(
-    fig, domains: Dict[str, Domain], row, col, xrange=[-1, 12], yrange=[-10, 1]
+    fig,
+    domains: Dict[str, Domain],
+    row: int,
+    col: int,
+    label: str,
+    xrange=[-1, 12],
+    yrange=[-10, 1],
+    label_shapes=False
 ):
     colors, _ = get_plotly_colors(n_colors=len(domains))
     plot_dict = {}
     for ix, (k, v) in enumerate(domains.items()):
         plot_dict[k] = prepare_shape_dict(v, color=colors[ix])  # type: ignore
+        if label_shapes:
+            plot_dict[k]["label"] = dict(text=k)
 
-    fig.update_xaxes(range=xrange, row=row, col=col)
+    fig.update_xaxes(range=xrange, title_text=label, row=row, col=col)
     fig.update_yaxes(range=yrange, row=row, col=col)
     for d in plot_dict.values():
         fig.add_shape(**d, row=row, col=col)
@@ -82,27 +94,32 @@ def subplot_layout(
     return fig
 
 
-def get_subplot_index(num_sols):
+def make_subplot_indices(num_sols):
     n_rows = math.ceil(math.sqrt(num_sols))
-    range_rows = list(range(n_rows))
+    range_rows = list(range(1, n_rows+1))
     indices = list(product(range_rows, range_rows))
+    
+    assert len(indices) >= num_sols
+    print(f"len sols = {num_sols}. Len indices = {len(indices)}")
 
     return indices, n_rows
 
 
-def make_subplot_for_results(results: list[ResultsLog]):
-    num_sols = len(results)
-    indices, n_rows = get_subplot_index(num_sols)
-    assert len(indices) >= num_sols
-    print(f"len sols = {num_sols}. Len indices = {len(indices)}")
+def make_subplot_for_results(pr: ProblemResults):
+    indices, n_rows = make_subplot_indices(len(pr.results))
 
     fig = make_subplots(rows=n_rows, cols=n_rows)
-    for ix, (row, col) in enumerate(indices):
-        # print(ix, (row, col))
+    fig = subplot_layout(fig, pr.original_layout.domains, 1, 1, "Init Layout", label_shapes=True)
+
+    for ix, (row, col) in enumerate(indices[1:]):
         try:
-            fig = subplot_layout(fig, results[ix].domains, row + 1, col + 1)
+            res = pr.results[ix]
+            fig = subplot_layout(
+                fig, res.domains, row , col, res.short_message()
+            )
         except IndexError:
-            # out of solutions to print...
-            pass
+            # out of solutions
+            break
+    fig.update_layout(title_text=pr.problem.short_message())
 
     return fig

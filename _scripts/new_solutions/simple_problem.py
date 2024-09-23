@@ -1,6 +1,6 @@
 from copy import deepcopy
 from actions.actions import create_node_operations
-from new_solutions.interfaces import ResultsLog
+from new_solutions.interfaces import ResultsLog, ProblemResults
 from svg_helpers.layout import Layout
 from svg_helpers.plots import make_subplot_for_results
 from svg_helpers.saver import read_layout
@@ -68,7 +68,8 @@ def plot_index(results: list[ResultsLog], ix: int):
 
 
 def plot_results(results: list[ResultsLog]):
-    fig = make_subplot_for_results(results)
+    p = ProblemResults(problem, layout, results)
+    fig = make_subplot_for_results(p)
 
     fig.show()
 
@@ -77,8 +78,12 @@ def plot_results(results: list[ResultsLog]):
 
 def run():
     res = conduct_study()
-    good_res = [i for i in res if i and i.num_unresolved_problems <=3]
-    f = plot_results(good_res)
+    good_res = [i for i in res if i and i.num_unresolved_problems <= 3]
+    plot_results(good_res)
+    print("num res:", len(res))
+    print("prob count:", [i.num_unresolved_problems for i in res if i])
+
+    return res, good_res
 
 
 # operations = execute_actions()
