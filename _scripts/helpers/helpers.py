@@ -1,3 +1,4 @@
+from itertools import tee
 from typing import Dict,  Union
 import json
 
@@ -19,3 +20,15 @@ def compare_sequences(t1: Union[tuple, list], t2: Union[tuple, list]):
 
 def toJson(obj):
         return json.dumps(obj, default=lambda o: o.__dict__)
+
+
+
+def pairwise(iterable):
+    ''' 
+    >>> xs = [0, 2, 4, 6, 8]
+    >>> [i for i in pairwise(xs)]
+    [(0, 2), (2, 4), (4, 6), (6, 8)]
+    '''
+    a, b = tee(iterable)
+    next(b, None)
+    return zip(a, b)

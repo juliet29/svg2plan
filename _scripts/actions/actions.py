@@ -2,9 +2,9 @@ from dataclasses import dataclass
 from decimal import Decimal
 from operator import add, sub
 from actions.details import Details
-from new_corners.range import Range
+from domains.range import Range
 from helpers.directions import Direction, get_axis
-from new_corners.domain import Domain
+from domains.domain import Domain
 from actions.interfaces import (
     ActionProtocol,
     ActionType,

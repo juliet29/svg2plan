@@ -1,5 +1,5 @@
 from helpers.directions import Direction, get_axis
-from new_corners.domain import Domain
+from domains.domain import Domain
 from decimal import Decimal
 from actions.interfaces import CurrentDomains
 from svg_logger.settings import svlogger

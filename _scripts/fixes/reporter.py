@@ -28,6 +28,7 @@ class Reporter:
         self.summarize()
 
     def find_new(self):
+        # create a tree and pass it in so dont need to recreate so much..~ temp update to layout object => Layout w Tree..
         for identifier in [OverlapIdentifier, HoleIdentifier, SideHoleIdentifier]:
             self.identifier = identifier(self.layout)
             self.identifier.report_problems()
@@ -37,12 +38,12 @@ class Reporter:
         new_probs = set(self.candidates)
         old_probs = set(self.problems)
 
-        self.old_and_unresolved = old_probs.intersection(new_probs)
-        self.old_and_resolved = old_probs.difference(new_probs)
+        self.old_not_resolved = old_probs.intersection(new_probs)
+        self.old_resolved = old_probs.difference(new_probs)
         self.new = new_probs.difference(old_probs)
 
     def handle_resolved(self):
-        for p in self.old_and_resolved:
+        for p in self.old_resolved:
             p.resolved = True
 
     def update_indices_of_new(self):

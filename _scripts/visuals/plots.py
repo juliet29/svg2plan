@@ -1,10 +1,9 @@
-
 from ast import Index
 from itertools import product
 import math
 from re import sub
 from typing import Dict
-from new_corners.domain import Domain
+from domains.domain import Domain
 import plotly.express as px
 import plotly.graph_objects as go
 

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from decimal import Decimal
 from typing import Callable, Iterable
-from new_corners.range import Range
+from domains.range import Range
 from functools import partial
 from constants import ROUNDING_LIM
 from helpers.helpers import keys_from_value
@@ -46,7 +46,8 @@ class Domain:
 
     @classmethod
     def create_domain(cls, arr: Iterable, name=""):
-        x_min, x_max, y_min, y_max = (round(Decimal(i), ROUNDING_LIM) for i in arr)
+        assert len(list(arr)) == 4
+        x_min, x_max, y_min, y_max = arr
         return cls(
             Range.create_range(x_min, x_max), Range.create_range(y_min, y_max), name
         )

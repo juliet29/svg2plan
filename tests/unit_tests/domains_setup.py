@@ -1,5 +1,5 @@
-from new_corners.domain import Domain
-from new_corners.range import nonDecimalRange
+from domains.domain import Domain
+from domains.range import nonDecimalRange
 from decimal import Decimal
 
 dec = Decimal(3)

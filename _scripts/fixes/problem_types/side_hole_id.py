@@ -30,11 +30,7 @@ class SideHoleIdentifier(LayoutBase):
         self.unique_pairs: set
 
     def report_problems(self):
-        # try:
         self.find_potential_holes()
-        # except AttributeError:
-        #     return self.shapes
-
         self.search_layout()
         for ix, pair in enumerate(self.side_hole_pairs):
             self.problems.append(
@@ -72,6 +68,7 @@ class SideHoleIdentifier(LayoutBase):
     def find_nonadjacent_nbs(self):
         nbs = self.find_nbs_in_direction()
         for nb in nbs:
+            # TODO -> can change to if touching or if overlapping, do nothing. otherwise, append.. better yet=> compare if ranges are larger or smaller.. 
             if not self.shapes[self.node].touches(self.shapes[nb]):
                 if not self.shapes[self.node].overlaps(self.shapes[nb]):
                     self.possible_pairs.append([self.node, nb])

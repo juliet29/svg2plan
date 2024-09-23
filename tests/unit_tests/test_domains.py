@@ -1,6 +1,6 @@
 from unit_tests.domains_setup import *
 import pytest
-from new_corners.range import InvalidRangeException
+from domains.range import InvalidRangeException
 
 
 class TestDomain:
@@ -36,9 +36,8 @@ class TestDomain:
 
     def test_creation(self):
         d = Domain.create_domain([1.1, 2.1, 3, 4])
-        assert d.x.min.as_integer_ratio() == (11,10)
-        assert d.y.min.as_integer_ratio() == (3,1)
-
+        assert d.x.min.as_integer_ratio() == (11, 10)
+        assert d.y.min.as_integer_ratio() == (3, 1)
 
 
 class TestRange:
@@ -104,5 +103,3 @@ class TestRange:
         res = control.modify(fx)
         assert res.min == control.min + 2
         assert res.max == control.max + 2
-
-

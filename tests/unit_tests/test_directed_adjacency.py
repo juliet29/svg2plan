@@ -1,10 +1,10 @@
 from pprint import pprint
 import numpy as np
-from svg_helpers.directions import Direction, NeighborDirections, get_opposite_direction
+from helpers.directions import Direction, NeighborDirections, get_opposite_direction
 
 from adjacencies.directed_adjacency import generate_directed_adjacencies
 
-from new_corners.domain import Domain
+from domains.domain import Domain
 import networkx as nx
 from itertools import combinations
 

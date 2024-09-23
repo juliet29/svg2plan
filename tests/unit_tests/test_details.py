@@ -1,7 +1,7 @@
 from decimal import Decimal
 import pytest
-from new_corners.range import nonDecimalRange, Range
-from new_corners.domain import Domain
+from domains.range import nonDecimalRange, Range
+from domains.domain import Domain
 from actions.actions import create_node_operations
 from actions.interfaces import ActionType
 from actions.details import Details
@@ -11,19 +11,24 @@ from random import randrange, seed
 
 seed(2)
 
+
 def create_range(init_sz=2, init_start=1):
     sz = randrange(init_sz, 100)
     start = randrange(init_start, 100)
     return nonDecimalRange(start, start + sz).toRange()
 
+
 def create_domain(name: str):
     return Domain(name, create_range(), create_range())
+
 
 def create_test_cases(val: Decimal, dist: Decimal):
     return [val - dist, val, val + dist]
 
+
 def rval():
     return randrange(1, 100)
+
 
 def create_directed_domain(drn: Direction):
     prob = create_domain("prob")
@@ -49,16 +54,18 @@ def create_directed_domain(drn: Direction):
         case Direction.NORTH | Direction.SOUTH:
             domains = [Domain(name, x=prob.x, y=i) for i in ranges]
         case Direction.EAST | Direction.WEST:
-            domains =  [Domain(name, y=prob.y, x=i) for i in ranges]
+            domains = [Domain(name, y=prob.y, x=i) for i in ranges]
     return (prob, domains)
-            
+
 
 DRNS = [i for i in Direction]
+
+
 @pytest.mark.parametrize("drn", DRNS)
 def test_relative_direction(drn):
     prob, nodes = create_directed_domain(drn)
     for node in nodes:
         d = Details(CurrentDomains(node, prob))
         d.run()
-        [res_drn]=  d.relative_directions
+        [res_drn] = d.relative_directions
         assert res_drn == drn

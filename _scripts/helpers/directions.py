@@ -1,5 +1,6 @@
 from enum import Enum
 from dataclasses import dataclass, field, fields
+from typing import Literal
 from helpers.helpers import toJson
 from operator import add, sub
 from svg_logger.settings import svlogger
@@ -27,7 +28,9 @@ DIRECTION_AXIS = {
 }
 
 
-def get_opposite_direction(direction: Direction):
+
+
+def get_opposite_direction(direction: Direction) :
     return DIRECTION_PAIRS[direction]
 
 
@@ -50,7 +53,7 @@ class NeighborDirections:
     def __getitem__(self, i):
         return getattr(self, i)
 
-    def get_empty_directions(self):
+    def get_empty_directions(self) -> list[str]:
         return [i for i in self.__annotations__ if len(self.__getitem__(i)) == 0]
 
     def to_json(self):

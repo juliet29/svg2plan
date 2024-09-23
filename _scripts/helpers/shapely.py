@@ -1,6 +1,6 @@
 from shapely import Point, Polygon, box, from_wkt, geometry, to_wkt
 from shapely.coords import CoordinateSequence
-from new_corners.domain import Domain
+from domains.domain import Domain
 from constants import ROUNDING_LIM
 
 

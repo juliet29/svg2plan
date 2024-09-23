@@ -2,7 +2,7 @@ import logging
 from placement.interface import LooperInterface, stack_logger
 from constants import ROUNDING_LIM
 from decimal import Decimal
-from new_corners.domain import Domain
+from domains.domain import Domain
 from svg_logger.settings import svlogger
 
 
@@ -28,7 +28,9 @@ class Placer:
             if col_num == 0:
                 new_x_left = self.lo.new_layout.domains[north_node].x.min
             else:
-                svlogger.debug(f"No west node, and non 0 col num, North node = {north_node}")
+                svlogger.debug(
+                    f"No west node, and non 0 col num, North node = {north_node}"
+                )
                 xl, xr, *_ = self.lo.new_layout.domains[north_node].get_values()
                 new_x_left = round((xl + xr) / 2, ROUNDING_LIM)
         else:

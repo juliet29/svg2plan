@@ -2,11 +2,11 @@ import json
 import os
 from typing import Dict, TypedDict, Optional
 
-from new_corners.domain import Domain
-
+from domains.domain import Domain
 
 
 # final json format is [[{obj}, {obj}...]]
+
 
 class GPLANRoomType(TypedDict):
     label: str
@@ -19,7 +19,7 @@ class GPLANRoomType(TypedDict):
 
 
 class GPLANCreator:
-    def __init__(self, corners: Dict[str, Domain], folder:str = "amber_a") -> None:
+    def __init__(self, corners: Dict[str, Domain], folder: str = "amber_a") -> None:
         self.corners = corners
         self.rooms = []
         self.plan = []
@@ -29,12 +29,11 @@ class GPLANCreator:
         self.create_rooms()
         self.write_to_file()
 
-
     def create_rooms(self):
         for ix, (room, data) in enumerate(self.corners.items()):
             width = float(abs(data.x.max - data.x.min))
             height = float(abs(data.y.max - data.y.min))
-            # TODO 
+            # TODO
             data.modify()
             data.y.max *= -1  # flipped in y direction -> distance from top
             g_room: GPLANRoomType = {
@@ -50,7 +49,7 @@ class GPLANCreator:
         self.plan.append(self.rooms)
 
     def write_to_file(self):
-        name = "gplan.json" 
-        path = os.path.join("../outputs", self.folder, name )
+        name = "gplan.json"
+        path = os.path.join("../outputs", self.folder, name)
         with open(path, "w+") as file:
             json.dump(self.plan, default=str, fp=file)

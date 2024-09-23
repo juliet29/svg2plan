@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 from decimal import Decimal
 from typing import Callable
-from svg_logger.settings import svlogger
-from copy import copy, deepcopy
+
+from constants import ROUNDING_LIM
+
 
 
 class InvalidRangeException(Exception):
@@ -50,6 +51,10 @@ class Range:
 
     def is_overlapping_and_smaller(self, other):
         return self.min < other.min and other.min <= self.max <= other.max
+    
+    def __lt__(self, other):
+        return self.is_overlapping_and_smaller(other)
+
 
     def compare_ranges(self, other, consider_overlap=False):
         if self.is_smaller(other):
@@ -72,8 +77,9 @@ class Range:
         return self.__class__(fx(self.min), fx(self.max))
 
     @classmethod
-    def create_range(cls, a: Decimal, b: Decimal):
-        return cls(a, b)
+    def create_range(cls, a: float, b: float):
+        fx =lambda x: round(Decimal(x), ROUNDING_LIM)
+        return cls(fx(a), fx(b))
 
 
 @dataclass

@@ -1,8 +1,5 @@
-# svlogger.info(f"problem nbs: {problem.nbs}")
-
-
 from actions.interfaces import OperationLog
-from new_corners.domain import Domain
+from domains.domain import Domain
 from fixes.interfaces import Problem
 
 

@@ -1,5 +1,5 @@
 from networkx import Graph
-from new_corners.domain import Domain
+from domains.domain import Domain
 from helpers.directions import Direction, get_opposite_direction
 
 

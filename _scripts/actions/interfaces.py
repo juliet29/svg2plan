@@ -1,6 +1,6 @@
 from enum import Enum
 from dataclasses import dataclass
-from new_corners.domain import Domain
+from domains.domain import Domain
 from typing import Dict, Callable, Union
 from operator import add, sub
 from helpers.directions import Direction

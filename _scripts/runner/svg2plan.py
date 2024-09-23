@@ -5,6 +5,7 @@ from read.svg_reader import SVGReader
 from adjacencies.adjacency import AdjacencyGenerator
 from adjacencies.connectivity import ConnectivityGenerator
 from placement.executer import PlacementExecuter
+from export.saver import Saver
 
 from fixes.reporter import Reporter
 # from problems.classes.sequence import Sequence
@@ -15,6 +16,35 @@ from export.gplan_creator import GPLANCreator
 from visuals.plotter import Plotter
 
 from svg_logger.settings import svlogger
+
+
+def run_new_layout():
+    sv = SVGReader("amber_a_f01.svg")
+    sv.run()
+    ag = AdjacencyGenerator(sv.layout)
+    ag.run()
+    pe = PlacementExecuter(ag.layout)
+    pe.run()
+    re = Reporter(pe.layout)
+    re.run()
+    return re
+
+
+def save_new_layout(re):
+    s = Saver(re.layout, "amber_a_placed")
+    s.add_problems(re.problems)
+    s.save()
+
+def plot(re):
+    plt = Plotter(re.layout.domains)
+    plt.plot()
+
+def semi_run():
+    re = run_new_layout()
+    re = save_new_layout(re)
+
+
+
 
 
 class SVG2Plan:

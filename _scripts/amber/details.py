@@ -1,7 +1,9 @@
 from adjacencies.connectivity import ConnectivityGenerator
 from helpers.directions import Direction
-from pint import UnitRegistry
 from read.interfaces import SVGReference
+
+
+# TODO -> move outside of scripts!!!
 
 # windows
 id3 = [
