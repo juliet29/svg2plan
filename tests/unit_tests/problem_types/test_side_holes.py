@@ -5,7 +5,7 @@ from sympy import Polygon
 from adjacencies.adjacency import AdjacencyGenerator
 from domains.domain import Domain
 from domains.range import Range
-from fixes.problem_types.side_hole_id2 import check_for_side_holes, create_test_line, find_geometric_holes
+from fixes.problem_types.side_hole_id2 import *
 from helpers.helpers import pairwise
 from helpers.layout import Layout, PartialLayout
 from helpers.shapely import domain_to_shape
@@ -40,7 +40,7 @@ def test_one_hole():
     domain_to_shape(domain) for domain in t.hole_dict.values()
     ]
     res = find_geometric_holes(edited_shapes)
-    assert res.exterior
+    assert res.exterior.coords
 
 def test_many_holes():
     t = SideHoleSetup()
@@ -69,8 +69,26 @@ def test_create_test_line_y():
     l = create_test_line(a, b, axis)
     assert abs(round(sub(*l.xy[0]), 2)) == float(gap)
 
+def test_create_problem_one_hole():
+    t = SideHoleSetup()
+    t.run()
+    edited_shapes = {domain.name:
+    domain_to_shape(domain) for domain in t.hole_dict.values()
+    }
+    t.test_layout.shapes = edited_shapes
+    [p] = get_side_hole_problems(t.test_layout)
+    assert len(list(p.geometry.exterior.coords)) > 2
 
-
+def test_create_problem_two_holes():
+    t = SideHoleSetup()
+    t.run()
+    further_filtering = list(filterfalse(lambda i: i.x.min == 2 and i.y.min == 1, t.hole_domains))
+    edited_shapes = {domain.name:
+        domain_to_shape(domain) for domain in t.hole_dict.values()
+    }
+    t.test_layout.shapes = edited_shapes
+    [p] = get_side_hole_problems(t.test_layout)
+    assert len(list(p.geometry.exterior.coords)) > 2
 
 
 
@@ -119,7 +137,8 @@ class SideHoleSetup:
         self.test_layout = Layout(self.shapes, self.hole_dict, self.G)
 
     def check_for_holes(self):
-        self.pairs = list(check_for_side_holes(self.test_layout))
+        pairs, _, _ = check_for_side_holes(self.test_layout)
+        self.pairs = list(pairs)
         self.res = [(int(i[0].name), int(i[1].name)) for i in self.pairs]
 
 
