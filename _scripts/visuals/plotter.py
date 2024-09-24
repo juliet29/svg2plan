@@ -21,3 +21,8 @@ class Plotter:
         fig = plot_shapes(plot_dict, self.xrange, self.yrange)
 
         fig.show()
+
+
+def plot_general(domains: Dict[str, Domain]):
+    plt = Plotter(domains)
+    plt.plot()

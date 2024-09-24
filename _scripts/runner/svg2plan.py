@@ -18,8 +18,8 @@ from visuals.plotter import Plotter
 from svg_logger.settings import svlogger
 
 
-def run_new_layout():
-    sv = SVGReader("amber_a_f01.svg")
+def run_new_layout(case="amber_a_f01.svg"):
+    sv = SVGReader(case)
     sv.run()
     ag = AdjacencyGenerator(sv.layout)
     ag.run()

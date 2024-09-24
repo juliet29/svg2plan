@@ -1,3 +1,4 @@
+from collections import Counter, namedtuple
 from copy import deepcopy
 from icecream import ic
 
@@ -27,6 +28,8 @@ class Reporter:
         self.merge_new_and_old()
         self.summarize()
 
+        self.output = (self.layout, self.summary, self.problems)
+
     def find_new(self):
         # create a tree and pass it in so dont need to recreate so much..~ temp update to layout object => Layout w Tree..
         for identifier in [OverlapIdentifier, HoleIdentifier, SideHoleIdentifier]:
@@ -40,7 +43,7 @@ class Reporter:
 
         self.old_not_resolved = old_probs.intersection(new_probs)
         self.old_resolved = old_probs.difference(new_probs)
-        self.new = new_probs.difference(old_probs)
+        self.new = list(new_probs.difference(old_probs))
 
     def handle_resolved(self):
         for p in self.old_resolved:
@@ -67,5 +70,9 @@ class Reporter:
                         hole += 1
                     case ProblemType.SIDE_HOLE:
                         side_hole += 1
+        self.summary = Counter([i.problem_type.name for i in self.problems])
 
         self.txt = f"-- Unresolved Problems. Overlaps: {overlap}. Holes: {hole}. Sideholes: {side_hole}"
+
+
+# ProblemSummary = namedtuple("ProblemSummary", [i.name for i in ProblemType])

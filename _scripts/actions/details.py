@@ -24,6 +24,8 @@ class Details:
             raise Exception("Invalid relationship between domains")
 
         directions = self.cmp.get_domain_directions(self.node)
+        # if len(directions) > 1:
+        #     raise Exception("")
         self.relative_directions = [Direction[i] for i in directions]
 
     def gather_problem_sizes(self):

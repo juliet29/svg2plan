@@ -3,7 +3,7 @@ from decimal import Decimal
 from domains.domain import Domain
 from actions.actions import CreateModifiedDomain
 from domains.range import Range, nonDecimalRange
-from svg_helpers.directions import Direction
+from helpers.directions import Direction
 from actions.interfaces import CurrentDomains, ActionType
 from operator import add, sub
 from itertools import product
@@ -43,7 +43,7 @@ def expected_domain(
 def generate_fixed_problem() -> tuple[Domain, Decimal]:
     return (
         Domain(
-            "test", nonDecimalRange(2, 10).toRange(), nonDecimalRange(2, 10).toRange()
+             nonDecimalRange(2, 10).toRange(), nonDecimalRange(2, 10).toRange(), "test",
         ),
         Decimal(3),
     )

@@ -68,4 +68,4 @@ def get_fx_and_side(direction: Direction, is_attractive: bool):
 class OperationLog:
     node: Domain
     action_type: ActionType
-    modified_domain: Domain | None
+    modified_domain: Domain | None # action produced an invalid domain 

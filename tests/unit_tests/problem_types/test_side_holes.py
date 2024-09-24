@@ -27,7 +27,7 @@ sols = {
     "n": (n_hole, (3, 7)),
 }
 
-def test_side_holes():
+def test_finding_side_holes_in_all_directions():
     for k,v in sols.items():
         sh = SideHoleSetup(k)
         sh.run()
@@ -40,7 +40,7 @@ def test_one_hole():
     domain_to_shape(domain) for domain in t.hole_dict.values()
     ]
     res = find_geometric_holes(edited_shapes)
-    assert res.exterior.coords
+    assert res.exterior.coords # type: ignore
 
 def test_many_holes():
     t = SideHoleSetup()
@@ -49,7 +49,7 @@ def test_many_holes():
     edited_shapes = [domain_to_shape(domain) for domain in further_filtering
     ]
     res = find_geometric_holes(edited_shapes)
-    assert len(res.geometries) >= 2
+    assert len(res.geometries) >= 2 # type: ignore
 
 
 def test_create_test_line_x():
@@ -77,7 +77,7 @@ def test_create_problem_one_hole():
     }
     t.test_layout.shapes = edited_shapes
     [p] = get_side_hole_problems(t.test_layout)
-    assert len(list(p.geometry.exterior.coords)) > 2
+    assert len(list(p.geometry.exterior.coords)) > 2 # type: ignore
 
 def test_create_problem_two_holes():
     t = SideHoleSetup()
@@ -88,7 +88,7 @@ def test_create_problem_two_holes():
     }
     t.test_layout.shapes = edited_shapes
     [p] = get_side_hole_problems(t.test_layout)
-    assert len(list(p.geometry.exterior.coords)) > 2
+    assert len(list(p.geometry.exterior.coords)) > 2 # type: ignore
 
 
 

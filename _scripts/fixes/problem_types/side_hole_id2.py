@@ -68,10 +68,10 @@ def find_geometric_holes(shapes: list[Polygon]):
     if not difference:  # type: ignore
         raise Exception("Invalid geometry for difference")
     try:
-        difference.exterior
+        difference.exterior # type: ignore
         return difference
     except:
-        return STRtree(difference.geoms)
+        return STRtree(difference.geoms) # type: ignore
 
 
 def create_test_line(domain_a: Domain, domain_b: Domain, axis):
@@ -114,19 +114,19 @@ def get_side_hole_problems(layout: Layout):
     geoms = find_geometric_holes(list(layout.shapes.values()))
     try:
         [pair] = pairs
-        assert geoms.exterior
+        assert geoms.exterior # type: ignore
         return [
             Problem(
                 0,
                 ProblemType.SIDE_HOLE,
                 nbs=get_pair_names(pair),
                 direction=Direction.NORTH,
-                geometry=geoms,
+                geometry=geoms, # type: ignore
             )
         ]
     except:
         axis = [get_axis_for_pair(drns, grouped_nodes, pair) for pair in pairs]
-        matched_geoms = [match_geomety(*pair, axis, geoms) for axis, pair in zip(axis,pairs)]
+        matched_geoms = [match_geomety(*pair, axis, geoms) for axis, pair in zip(axis,pairs)] # type: ignore
         return [
             Problem(
                 ix,
@@ -137,5 +137,3 @@ def get_side_hole_problems(layout: Layout):
             )
             for ix, (pair, g) in enumerate(zip(pairs, matched_geoms))
         ]
-
-    # for pair in pairs:

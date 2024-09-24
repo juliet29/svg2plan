@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Optional
 from enum import Enum
 from shapely import Polygon
+from sympy import Poly
 from helpers.directions import Direction
 from helpers.layout import Layout
 
@@ -17,7 +18,7 @@ class Problem:
     index: int
     problem_type: ProblemType  # Frozen!
     nbs: list[str]  # Frozen!
-    geometry: Optional[Polygon] = None  # Frozen!
+    geometry: Polygon # Frozen!
     direction: Optional[Direction] = None  # Frozen!
     resolved: bool = False
 

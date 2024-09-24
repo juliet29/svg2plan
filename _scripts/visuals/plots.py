@@ -115,7 +115,7 @@ def make_subplot_for_results(pr: ProblemResults):
     for ix, (row, col) in enumerate(indices[1:]):
         try:
             res = pr.results[ix]
-            fig = subplot_layout(fig, res.domains, row, col, res.short_message())
+            fig = subplot_layout(fig, res.layout.domains, row, col, res.short_message())
         except IndexError:
             # out of solutions
             break

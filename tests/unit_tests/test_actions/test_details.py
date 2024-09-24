@@ -5,7 +5,7 @@ from domains.domain import Domain
 from actions.actions import create_node_operations
 from actions.interfaces import ActionType
 from actions.details import Details
-from svg_helpers.directions import Direction
+from helpers.directions import Direction
 from actions.interfaces import CurrentDomains
 from random import randrange, seed
 
@@ -19,7 +19,7 @@ def create_range(init_sz=2, init_start=1):
 
 
 def create_domain(name: str):
-    return Domain(name, create_range(), create_range())
+    return Domain(create_range(), create_range(), name)
 
 
 def create_test_cases(val: Decimal, dist: Decimal):
