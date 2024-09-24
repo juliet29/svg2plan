@@ -1,8 +1,7 @@
 from itertools import chain, groupby, pairwise, combinations
-from math import comb
 from typing import Callable, Dict, Iterable
-
-from torch import layout
+from numpy import diff
+from shapely import LineString, STRtree, union_all, Polygon
 from domains.domain import Domain
 from helpers.helpers import pairwise
 from helpers.directions import (
@@ -12,6 +11,7 @@ import networkx as nx
 
 
 from helpers.layout import Layout
+
 
 
 def axis_for_action(drn: Direction):
@@ -46,6 +46,7 @@ def group_nodes_on_edge(G: nx.Graph):
 def sort_domains(
     domains: Dict[str, Domain], drn: Direction, nodes_along_drn: Iterable[str]
 ):
+    # TODO change to get opp axis
     axis = axis_for_action(drn)
     node_domains = [domains[node] for node in nodes_along_drn]
     return sorted(node_domains, key=lambda d: d[axis].min), axis
@@ -66,7 +67,36 @@ def check_for_side_holes(layout: Layout):
 
     return pairs
 
+## ---- shapely geom 
 
-## test 4 by 4 grid, with one missing..
+def find_geometric_holes(shapes: list[Polygon]):
+    union = union_all(shapes)
+    difference = union.convex_hull.difference(union)
+    if not difference: # type: ignore
+        raise Exception("Invalid geometry for difference")
+    if isinstance(difference, Polygon):
+        return Polygon
+    return STRtree(difference.geoms)
 
+def create_test_line(domain_a: Domain, domain_b: Domain, axis):
+    a, b = sorted([domain_a,domain_b], key=lambda d: d[axis].min)
+    print(a.name, b.name)
+    # f1 = lambda domain: [domain.x.max, domain.y.min]
+    # f2 = lambda domain: [domain.x.min, domain.y.max]
 
+    if axis == "x":
+        pt1 = [a.x.max, a.y.min] # f1(a)
+        pt2 = [b.x.min, b.y.max] # f2(b)
+    else:
+        pt1 = [a.x.min, a.y.max] # f2(a)
+        pt2 = [b.x.max, b.y.min] # f1(b)
+
+    return LineString([pt1, pt2])
+
+def match_geomety(domain_a: Domain, domain_b: Domain, axis: str, tree: STRtree):
+    test_line = create_test_line(domain_a, domain_b, axis)
+    ix = tree.nearest(test_line)
+    return Polygon(tree.geometries.take(ix))
+
+    
+    

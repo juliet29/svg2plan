@@ -1,7 +1,11 @@
+from operator import sub
+from numpy import isin
+from shapely import STRtree, union_all
+from sympy import Polygon
 from adjacencies.adjacency import AdjacencyGenerator
 from domains.domain import Domain
 from domains.range import Range
-from fixes.problem_types.side_hole_id2 import check_for_side_holes
+from fixes.problem_types.side_hole_id2 import check_for_side_holes, create_test_line, find_geometric_holes
 from helpers.helpers import pairwise
 from helpers.layout import Layout, PartialLayout
 from helpers.shapely import domain_to_shape
@@ -9,6 +13,7 @@ from helpers.shapely import domain_to_shape
 from decimal import Decimal
 from itertools import chain, filterfalse, pairwise, product
 
+gap = Decimal("0.2")
 s_hole = lambda i: (i.x.min == 1 and i.y.min == 0)
 n_hole = lambda i: (i.x.min == 1 and i.y.min == 3)
 e_hole = lambda i: (i.x.min == 3 and i.y.min == 1)
@@ -27,6 +32,47 @@ def test_side_holes():
         sh = SideHoleSetup(k)
         sh.run()
         assert sh.res[0] == v[1]
+
+def test_one_hole():
+    t = SideHoleSetup()
+    t.run()
+    edited_shapes = [
+    domain_to_shape(domain) for domain in t.hole_dict.values()
+    ]
+    res = find_geometric_holes(edited_shapes)
+    assert res.exterior
+
+def test_many_holes():
+    t = SideHoleSetup()
+    t.run()
+    further_filtering = list(filterfalse(lambda i: i.x.min == 2 and i.y.min == 1, t.hole_domains))
+    edited_shapes = [domain_to_shape(domain) for domain in further_filtering
+    ]
+    res = find_geometric_holes(edited_shapes)
+    assert len(res.geometries) >= 2
+
+
+def test_create_test_line_x():
+    t = SideHoleSetup()
+    t.run()
+    a,b = (t.hole_domains[0], t.hole_domains[-1])
+    axis = "y"
+    l = create_test_line(a, b, axis)
+    assert abs(round(sub(*l.xy[1]), 2))  == float(gap)
+
+def test_create_test_line_y():
+    t = SideHoleSetup("n")
+    t.run()
+    a,b = (t.hole_domains[3], t.hole_domains[-1])
+    axis = "x"
+
+    l = create_test_line(a, b, axis)
+    assert abs(round(sub(*l.xy[0]), 2)) == float(gap)
+
+
+
+
+
 
 
 class SideHoleSetup:
@@ -62,7 +108,6 @@ class SideHoleSetup:
 
     def create_filtered_layout(self):
         self.hole_domains = list(filterfalse(self.filter_fx, self.domains))
-        gap = Decimal("0.2")
         odd: Domain = list(filter(self.filter_fx, self.domains))[0]
         rep_domain = Domain(
             Range(odd.x.min + gap, odd.x.max),
@@ -76,5 +121,7 @@ class SideHoleSetup:
     def check_for_holes(self):
         self.pairs = list(check_for_side_holes(self.test_layout))
         self.res = [(int(i[0].name), int(i[1].name)) for i in self.pairs]
+
+
 
 

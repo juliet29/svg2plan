@@ -12,6 +12,7 @@ from visuals.plotter import Plotter
 from typing import Dict
 
 from fixes.problem_types.side_hole_id2 import *
+from unit_tests.problem_types.test_side_holes import *
 
 
 def plot_general(domains: Dict[str, Domain]):

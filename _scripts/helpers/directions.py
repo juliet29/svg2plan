@@ -28,14 +28,15 @@ DIRECTION_AXIS = {
 }
 
 
-
-
 def get_opposite_direction(direction: Direction) :
     return DIRECTION_PAIRS[direction]
 
 
 def get_axis(direction: Direction):
     return DIRECTION_AXIS[direction]
+
+def get_opposite_axis(axis: str):
+    return "x" if axis== "y" else "y"
 
 
 class GeneralDirection(Enum):
