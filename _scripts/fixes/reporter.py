@@ -34,7 +34,11 @@ class Reporter:
         # create a tree and pass it in so dont need to recreate so much..~ temp update to layout object => Layout w Tree..
         for identifier in [OverlapIdentifier, HoleIdentifier, SideHoleIdentifier]:
             self.identifier = identifier(self.layout)
-            self.identifier.report_problems()
+            try:
+                self.identifier.report_problems()
+            except:
+                svlogger.warning("Couldn't identify problems.. ")
+                pass
             self.candidates.extend(self.identifier.problems)
 
     def compare_new_and_old(self):
@@ -70,7 +74,7 @@ class Reporter:
                         hole += 1
                     case ProblemType.SIDE_HOLE:
                         side_hole += 1
-        self.summary = Counter([i.problem_type.name for i in self.problems])
+        self.summary = Counter([i.problem_type.name for i in self.problems if i.resolved == False])
 
         self.txt = f"-- Unresolved Problems. Overlaps: {overlap}. Holes: {hole}. Sideholes: {side_hole}"
 

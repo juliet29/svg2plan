@@ -1,5 +1,4 @@
 from helpers.layout import Layout
-from fixes.reporter import Reporter
 import pickle
 import os
 from fixes.interfaces import Problem

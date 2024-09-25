@@ -20,12 +20,12 @@ from fixes.reporter import Reporter
 from helpers.shapely import domain_to_shape, shape_to_domain
 
 
-
 # layout = read_layout("amber_a_placed")
 # problem: Problem
 # # [problem] = [i for i in layout.problems if i.problem_type == ProblemType.HOLE]
 # problem = layout.problems[3]
 # prob_name = "problem"
+
 
 def compare_nbs(nbs: List[str], nbs_to_find: List[str]):
     if nbs_to_find == []:
@@ -35,26 +35,40 @@ def compare_nbs(nbs: List[str], nbs_to_find: List[str]):
             return True
     return False
 
+
 def filter_problems(problems: List[Problem], type: ProblemType, nbs: List[str]):
-    fx: Callable[[Problem], bool] = lambda p : p.problem_type == type and compare_nbs(p.nbs, nbs)
+    fx: Callable[[Problem], bool] = lambda p: p.problem_type == type and compare_nbs(
+        p.nbs, nbs
+    )
     return list(filter(fx, problems))[0]
+
 
 description = tuple[Layout, Counter[str], list[Problem]]
 FilterDesc = namedtuple("FilterDesc", ["problem_type", "nbs"])
 
+
 def select_next_problem_by_x(problems: list[Problem]):
-    return sorted(problems,  key=lambda x: x.geometry.bounds[0])[0]
+    return sorted(problems, key=lambda x: x.geometry.bounds[0])[0]
+
 
 class StudyOneProblem:
-    def __init__(self, layout: Layout, summary: Counter, problems: List[Problem], filter_desc: Optional[FilterDesc] = None) -> None:
+    def __init__(
+        self,
+        layout: Layout,
+        summary: Counter,
+        problems: List[Problem],
+        filter_desc: Optional[FilterDesc] = None,
+        problem: Optional[Problem] = None,
+    ) -> None:
         self.layout = layout
         self.init_problems = problems
+        if problem:
+            self.problem = problem
         if filter_desc:
             self.problem = filter_problems(problems, *filter_desc)
         else:
             self.problem = select_next_problem_by_x(problems)
         self.init_summary = summary
-
 
     def run(self):
         ops = self.execute_actions()
@@ -62,19 +76,16 @@ class StudyOneProblem:
         self.problem_results = ProblemResults(self.problem, self.layout, self.results)
         # make_subplot_for_results(p)
 
-
     def execute_actions(self):
         domains = self.layout.domains
         operations: list[OperationLog] = []
         for name in self.problem.nbs:
-            svlogger.info(f"studying operations for node: {name}")
             node = domains[name]
             assert self.problem.geometry
             prob = shape_to_domain(self.problem.geometry, "problem")
             operations.extend(create_node_operations(CurrentDomains(node, prob)))
 
         return operations
-
 
     def study_operation(self, op: OperationLog):
         name = op.node.name
@@ -86,12 +97,22 @@ class StudyOneProblem:
         try:
             re = Reporter(tmp_layout, self.init_problems)
             re.run()
-            return ResultsLog(op, re.summary, re.problems, re.new, tmp_layout)
+            return ResultsLog(op, re.summary, re.problems, re.new, tmp_layout, self.problem)
         except AssertionError:
-            svlogger.warning(f"Could not report on problems for {op.action_type} on {op.node.name}")
+            svlogger.warning(
+                f"Could not report on problems for {op.action_type} on {op.node.name}"
+            )
             pass
 
 
+def study_many_problems(layout: Layout, summary: Counter, problems: List[Problem]):
+    results: list[ResultsLog] = []
+    valid_probs = [p for p in problems if p.resolved == False]
+    for curr_prob in valid_probs:
+        s = StudyOneProblem(layout, summary, valid_probs, problem=curr_prob)
+        s.run()
+        results.extend(s.results)
+    return results
 
 
 # def plot_index(results: list[ResultsLog], ix: int):
@@ -110,13 +131,13 @@ class StudyOneProblem:
 
 
 # def run():
-    # res = conduct_study()
-    # good_res = [i for i in res if i and i.num_unresolved_problems <= 3]
-    # plot_results(good_res)
-    # print("num res:", len(res))
-    # print("prob count:", [i.num_unresolved_problems for i in res if i])
+# res = conduct_study()
+# good_res = [i for i in res if i and i.num_unresolved_problems <= 3]
+# plot_results(good_res)
+# print("num res:", len(res))
+# print("prob count:", [i.num_unresolved_problems for i in res if i])
 
-    # return res, good_res
+# return res, good_res
 
 
 # operations = execute_actions()

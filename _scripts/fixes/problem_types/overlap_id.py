@@ -30,6 +30,7 @@ class OverlapIdentifier(LayoutBase):
         for edge in self.G.edges:
             u, v = edge
             if self.shapes[u].overlaps(self.shapes[v]):
+                # if not self.is_local_corner_overlap([u,v]):
                 geometry = intersection(self.shapes[u], self.shapes[v])
                 assert isinstance(geometry, Polygon)
                 p = OverlapData(
@@ -37,3 +38,13 @@ class OverlapIdentifier(LayoutBase):
                     edge,
                 )
                 self.overlaps.append(p)
+
+    # def is_local_corner_overlap(self, pair):
+    #     a,b  = [self.domains[i] for i in pair]
+    #     cmp = a.compare_domains(b, consider_overlap=True)
+    #     if cmp.is_empty():
+    #         cmp = b.compare_domains(a, consider_overlap=True)
+    #     directions = cmp.get_domain_directions(a)
+    #     if len(directions) > 1:
+    #         print(f"{pair} have overlapping corner")
+    #         return True
