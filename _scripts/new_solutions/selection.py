@@ -217,5 +217,5 @@ class Cook:
         self.bl_hist.append(self.bl)
 
     def plot(self, ix):
-        plot_general(self.history[ix])
+        plot_general(self.history[ix], f"iteration {ix}")
 

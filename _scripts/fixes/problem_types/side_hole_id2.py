@@ -1,5 +1,5 @@
 from itertools import chain, groupby, pairwise
-from typing import Dict, Iterable
+from typing import Dict, Iterable, List
 from shapely import LineString, STRtree, union_all, Polygon
 from domains.domain import Domain
 from fixes.interfaces import Problem, ProblemType
@@ -24,14 +24,15 @@ def group_nodes_on_edge(G: nx.Graph):
     filtered_res = (r for r in res if r[1] != [])
     split_res = chain.from_iterable(split(*i) for i in filtered_res)
     sorted_res = sorted(split_res, key=lambda x: x[1])
+    # print("hi")
 
-    nodes_along_drn: Iterable[Iterable[str]] = []
-    drns: list[Direction] = []
+    keys_and_groups: List[tuple[Direction, Iterable[str]]] = []
     for k, g in groupby(sorted_res, key=lambda x: x[1]):
-        nodes_along_drn.append(list((i[0] for i in g)))
-        drns.append(Direction[k])
+        key = Direction[k]
+        group = list((i[0] for i in g))
+        keys_and_groups.append((key, group))
 
-    return (drns, nodes_along_drn)
+    return keys_and_groups
 
 
 def sort_domains(
@@ -44,19 +45,26 @@ def sort_domains(
 
 def check_adjacencies(
     sorted_domains: list[Domain], axis: str
-) -> list[tuple[Domain, Domain]]:
-    return [(a, b) for a, b in pairwise(sorted_domains) if a[axis].max != b[axis].min]
+) -> list[tuple[Domain, Domain, str]]:
+    return [
+        (a, b, axis) for a, b in pairwise(sorted_domains) if a[axis].max != b[axis].min
+    ]
 
 
-def check_for_side_holes(layout: Layout):
-    drns, grouped_nodes = group_nodes_on_edge(layout.graph)
-    pairs = chain.from_iterable(
-        [
-            check_adjacencies(*(sort_domains(layout.domains, Direction(drn), nodes)))
-            for drn, nodes in zip(drns, grouped_nodes)
-        ]
-    )
-    return pairs, drns, grouped_nodes
+# def get_axes(drns: List[Direction]):
+#     return [get_opposite_axis(get_axis(drn)) for drn in drns]
+
+
+def chain_flatten(lst: List[List]):
+    return list(chain.from_iterable(lst))
+
+
+def check_for_side_holes(layout: Layout) -> List[tuple[Domain, Domain, str]]:
+    drns_and_grouped_nodes = group_nodes_on_edge(layout.graph)
+    sorted_domains_and_axes = [
+        sort_domains(layout.domains, *i) for i in drns_and_grouped_nodes
+    ]
+    return chain_flatten([check_adjacencies(*i) for i in sorted_domains_and_axes])
 
 
 ## ---- shapely geom
@@ -69,10 +77,10 @@ def find_geometric_holes(shapes: list[Polygon]):
         print("Invalid geometry for difference in sidehole!")
         raise Exception("Invalid geometry for difference")
     try:
-        difference.exterior # type: ignore
-        return difference
+        assert difference.exterior  # type: ignore
+        return Polygon(difference)
     except:
-        return STRtree(difference.geoms) # type: ignore
+        return STRtree(difference.geoms)  # type: ignore
 
 
 def create_test_line(domain_a: Domain, domain_b: Domain, axis):
@@ -90,10 +98,18 @@ def create_test_line(domain_a: Domain, domain_b: Domain, axis):
     return LineString([pt1, pt2])
 
 
-def match_geomety(domain_a: Domain, domain_b: Domain, axis: str, tree: STRtree):
-    test_line = create_test_line(domain_a, domain_b, axis)
-    ix = tree.nearest(test_line)
-    return Polygon(tree.geometries.take(ix))
+def match_geometry(
+    domain_a: Domain, domain_b: Domain, axis: str, geom: STRtree | Polygon
+):
+    try:
+        assert not isinstance(geom, STRtree)
+        assert geom.exterior
+        return Polygon(geom)
+    except:
+        assert not isinstance(geom, Polygon)
+        test_line = create_test_line(domain_a, domain_b, axis)
+        ix = geom.nearest(test_line)
+        return Polygon(geom.geometries.take(ix))
 
 
 ## integrate ---
@@ -111,44 +127,32 @@ def get_axis_for_pair(drns, grouped_nodes, pair):
 
 
 def get_side_hole_problems(layout: Layout):
-    pairs, drns, grouped_nodes = check_for_side_holes(layout)
-    geoms = find_geometric_holes(list(layout.shapes.values()))
-    try:
-        print("one problem")
-        [pair] = pairs
-        assert geoms.exterior # type: ignore
-        return [
-            Problem(
-                0,
-                ProblemType.SIDE_HOLE,
-                nbs=get_pair_names(pair),
-                direction=Direction.NORTH,
-                geometry=geoms, # type: ignore
-            )
-        ]
-    except:
-        print("many problem")
-        axis = [get_axis_for_pair(drns, grouped_nodes, pair) for pair in pairs]
-        matched_geoms = [match_geomety(*pair, axis, geoms) for axis, pair in zip(axis,pairs)] # type: ignore
-        return [
-            Problem(
-                ix,
-                ProblemType.SIDE_HOLE,
-                nbs=get_pair_names(pair),
-                direction=Direction.NORTH,
-                geometry=g,
-            )
-            for ix, (pair, g) in enumerate(zip(pairs, matched_geoms))
-        ]
+    pairs_and_axes = check_for_side_holes(layout)
+    geom = find_geometric_holes(list(layout.shapes.values()))
+    matched_geoms = [match_geometry(*p, geom) for p in pairs_and_axes]
+    probs = []
+    for ix, (pair_and_axis, geom) in enumerate(zip(pairs_and_axes, matched_geoms)):
+        u, v, ax = pair_and_axis
+        prob = Problem(
+            ix,
+            ProblemType.SIDE_HOLE,
+            nbs=get_pair_names((u, v)),
+            direction=Direction.NORTH,
+            geometry=geom,
+        )
+        probs.append(prob)
+
+    return probs
 
 
 class SideHoleIdentifier:
     def __init__(self, layout: Layout) -> None:
         self.layout = layout
         self.problems = []
+        self.problem_type = "side_hole"
 
     def report_problems(self):
         try:
-            self.problems =  get_side_hole_problems(self.layout)
+            self.problems = get_side_hole_problems(self.layout)
         except:
             self.problems = []
