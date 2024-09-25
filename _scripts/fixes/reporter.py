@@ -8,7 +8,7 @@ from fixes.interfaces import LayoutBase
 
 from fixes.problem_types.overlap_id import OverlapIdentifier
 from fixes.problem_types.hole_id import HoleIdentifier
-from fixes.problem_types.side_hole_id import SideHoleIdentifier
+from fixes.problem_types.side_hole_id2 import SideHoleIdentifier
 from svg_logger.settings import svlogger
 
 
@@ -34,11 +34,7 @@ class Reporter:
         # create a tree and pass it in so dont need to recreate so much..~ temp update to layout object => Layout w Tree..
         for identifier in [OverlapIdentifier, HoleIdentifier, SideHoleIdentifier]:
             self.identifier = identifier(self.layout)
-            try:
-                self.identifier.report_problems()
-            except:
-                svlogger.warning("Couldn't identify problems.. ")
-                pass
+            self.identifier.report_problems()
             self.candidates.extend(self.identifier.problems)
 
     def compare_new_and_old(self):

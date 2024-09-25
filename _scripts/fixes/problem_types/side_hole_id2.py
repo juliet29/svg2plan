@@ -66,6 +66,7 @@ def find_geometric_holes(shapes: list[Polygon]):
     union = union_all(shapes)
     difference = union.convex_hull.difference(union)
     if not difference:  # type: ignore
+        print("Invalid geometry for difference in sidehole!")
         raise Exception("Invalid geometry for difference")
     try:
         difference.exterior # type: ignore
@@ -113,6 +114,7 @@ def get_side_hole_problems(layout: Layout):
     pairs, drns, grouped_nodes = check_for_side_holes(layout)
     geoms = find_geometric_holes(list(layout.shapes.values()))
     try:
+        print("one problem")
         [pair] = pairs
         assert geoms.exterior # type: ignore
         return [
@@ -125,6 +127,7 @@ def get_side_hole_problems(layout: Layout):
             )
         ]
     except:
+        print("many problem")
         axis = [get_axis_for_pair(drns, grouped_nodes, pair) for pair in pairs]
         matched_geoms = [match_geomety(*pair, axis, geoms) for axis, pair in zip(axis,pairs)] # type: ignore
         return [
@@ -137,3 +140,15 @@ def get_side_hole_problems(layout: Layout):
             )
             for ix, (pair, g) in enumerate(zip(pairs, matched_geoms))
         ]
+
+
+class SideHoleIdentifier:
+    def __init__(self, layout: Layout) -> None:
+        self.layout = layout
+        self.problems = []
+
+    def report_problems(self):
+        try:
+            self.problems =  get_side_hole_problems(self.layout)
+        except:
+            self.problems = []
