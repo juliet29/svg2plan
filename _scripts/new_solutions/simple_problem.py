@@ -83,7 +83,7 @@ class StudyOneProblem:
             node = domains[name]
             assert self.problem.geometry
             prob = shape_to_domain(self.problem.geometry, "problem")
-            operations.extend(create_node_operations(CurrentDomains(node, prob)))
+            operations.extend(create_node_operations(CurrentDomains(node, prob), self.problem.problem_type))
 
         return operations
 
