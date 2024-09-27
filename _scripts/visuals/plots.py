@@ -2,12 +2,12 @@ from ast import Index
 from itertools import product
 import math
 from re import sub
-from typing import Dict
+from typing import Dict, List
 from domains.domain import Domain
 import plotly.express as px
 import plotly.graph_objects as go
 
-from new_solutions.interfaces import ProblemResults
+from new_solutions.interfaces import ProblemResults, ResultsLog
 from plotly.subplots import make_subplots
 
 from fixes.interfaces import Problem
@@ -85,7 +85,7 @@ def subplot_layout(
         if label_shapes:
             plot_dict[k]["label"] = dict(text=k)
 
-    fig.update_xaxes(range=xrange, title_text=label, row=row, col=col)
+    fig.update_xaxes(range=xrange, title_text=label, title_font=dict(size=10), row=row, col=col, )
     fig.update_yaxes(range=yrange, row=row, col=col)
     for d in plot_dict.values():
         fig.add_shape(**d, row=row, col=col)
@@ -104,21 +104,26 @@ def make_subplot_indices(num_sols):
     return indices, n_rows
 
 
-def make_subplot_for_results(pr: ProblemResults):
-    indices, n_rows = make_subplot_indices(len(pr.results))
+
+def make_subplot_for_all_probs(init_domains, results: List[ResultsLog]):
+    indices, n_rows = make_subplot_indices(len(results))
 
     fig = make_subplots(rows=n_rows, cols=n_rows)
     fig = subplot_layout(
-        fig, pr.original_layout.domains, 1, 1, "Init Layout", label_shapes=True
+        fig, init_domains, 1, 1, "Init Layout", label_shapes=True
     )
 
     for ix, (row, col) in enumerate(indices[1:]):
         try:
-            res = pr.results[ix]
-            fig = subplot_layout(fig, res.layout.domains, row, col, res.short_message())
+            res = results[ix]
+            label = f"{ix}.-{res.short_message()}"
+            fig = subplot_layout(fig, res.layout.domains, row, col, label)
         except IndexError:
             # out of solutions
             break
-    fig.update_layout(title_text=pr.problem.short_message())
+    # fig.update_layout(title_text=pr.problem.short_message())
 
     return fig
+
+
+

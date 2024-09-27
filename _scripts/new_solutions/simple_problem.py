@@ -4,7 +4,6 @@ from typing import Callable, Counter, List, Optional
 from actions.actions import create_node_operations
 from new_solutions.interfaces import ResultsLog, ProblemResults
 from helpers.layout import Layout
-from visuals.plots import make_subplot_for_results
 from export.saver import read_layout
 from fixes.interfaces import Problem, ProblemType
 from actions.interfaces import OperationLog

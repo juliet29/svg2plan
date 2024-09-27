@@ -17,6 +17,7 @@ from new_solutions.simple_problem import (
     StudyOneProblem,
     study_many_problems,
 )
+from visuals.plots import make_subplot_for_all_probs
 from visuals.plotter import plot_general
 from svg_logger.settings import svlogger
 
@@ -80,15 +81,14 @@ def is_domain_in_history(curr_dom, hist: list):
 
 class Cook:
     def __init__(self, init_report: Reporter) -> None:
-        self.history = []
         self.res_hist = []
         self.bl_hist = []
-        self.history.append(init_report.layout.domains)
+        self.history = [init_report.layout.domains]
         self.results = study_many_problems(*init_report.output)
         
         self.count = 0
+        print(f"initializing.. {self.count}")
         self.handle()
-        print(self.count)
 
     def run_again(self):
         self.results = study_many_problems(
@@ -113,4 +113,11 @@ class Cook:
 
     def plot(self, ix):
         plot_general(self.history[ix], f"iteration {ix}")
+
+    def plot_all(self):
+        make_subplot_for_all_probs(self.history[0], self.bl_hist)
+
+    def show_results_at_ix(self, ix):
+        [i.short_message() for i in self.res_hist[ix]]
+
 

@@ -2,6 +2,7 @@ from itertools import chain, groupby, pairwise
 from typing import Dict, Iterable, List
 from shapely import LineString, STRtree, union_all, Polygon
 from domains.domain import Domain
+from domains.range import Range
 from fixes.interfaces import Problem, ProblemType
 from helpers.helpers import pairwise
 from helpers.directions import (
@@ -11,6 +12,7 @@ from helpers.directions import (
 )
 import networkx as nx
 from helpers.layout import Layout
+from helpers.shapely import domain_to_shape
 
 
 def split(name: str, drns: list[str]):
@@ -97,6 +99,18 @@ def create_test_line(domain_a: Domain, domain_b: Domain, axis):
 
     return LineString([pt1, pt2])
 
+def create_between_geom(domain_a: Domain, domain_b: Domain, axis):
+    a, b = sorted([domain_a, domain_b], key=lambda d: d[axis].min)
+
+    if axis == "x":
+        d = Domain(Range(a.x.max, b.x.min), Range(a.y.min, b.y.max), "problem")
+        
+    else:
+        d = Domain(Range(a.x.min, b.x.max), Range(a.y.max, b.y.min), "problem")
+
+        # TODO should just return domains from problems.. bc flip it on the other side anyway (in StudyOneProbkem)
+    return domain_to_shape(d)
+
 
 def match_geometry(
     domain_a: Domain, domain_b: Domain, axis: str, geom: STRtree | Polygon
@@ -128,11 +142,10 @@ def get_axis_for_pair(drns, grouped_nodes, pair):
 
 def get_side_hole_problems(layout: Layout):
     pairs_and_axes = check_for_side_holes(layout)
-    geom = find_geometric_holes(list(layout.shapes.values()))
-    matched_geoms = [match_geometry(*p, geom) for p in pairs_and_axes]
+    geoms = [create_between_geom(*p) for p in pairs_and_axes]
     probs = []
-    for ix, (pair_and_axis, geom) in enumerate(zip(pairs_and_axes, matched_geoms)):
-        u, v, ax = pair_and_axis
+    for ix, (pair_and_axis, geom) in enumerate(zip(pairs_and_axes, geoms)):
+        u, v, _ = pair_and_axis
         prob = Problem(
             ix,
             ProblemType.SIDE_HOLE,
@@ -145,6 +158,7 @@ def get_side_hole_problems(layout: Layout):
     return probs
 
 
+# TODO simplify to functions.. 
 class SideHoleIdentifier:
     def __init__(self, layout: Layout) -> None:
         self.layout = layout
