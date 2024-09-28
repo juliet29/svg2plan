@@ -1,5 +1,5 @@
-from itertools import tee
-from typing import Dict,  Union
+from itertools import groupby, tee
+from typing import Any, Callable, Dict, List, TypeVar,  Union
 import json
 
 def key_from_value(dict:Dict, val):
@@ -32,3 +32,11 @@ def pairwise(iterable):
     a, b = tee(iterable)
     next(b, None)
     return zip(a, b)
+
+
+T = TypeVar("T")
+
+
+def sort_and_group_objects(lst: List[T], fx: Callable[[T], Any]) -> List[List[T]]:
+    sorted_objs = sorted(lst, key=fx)
+    return [list(g) for _, g in groupby(sorted_objs, fx)]

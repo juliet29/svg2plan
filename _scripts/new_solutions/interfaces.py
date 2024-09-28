@@ -7,12 +7,12 @@ from fixes.interfaces import Problem
 
 
 from dataclasses import dataclass
-from typing import Dict
+from decimal import Decimal
 
 from helpers.layout import Layout
 
-N_PROBS_WEIGHT = 0.5
-SIZE_PROBS_WEIGHT = 0.5
+N_PROBS_WEIGHT = Decimal(0.5)
+SIZE_PROBS_WEIGHT = Decimal(0.5)
 
 
 @dataclass
@@ -43,9 +43,3 @@ class ResultsLog:
     def short_message(self):
         return f"{self.operation.node.name}-{self.operation.action_type.name}-for-{self.problem_being_addressed.problem_type.name} near {self.problem_being_addressed.nbs[:2]}{self.num_unresolved_problems}-PS:{self.problem_size:.2f}-S:{self.score:.2f}"
 
-
-# @dataclass
-# class ProblemResults:
-#     problem: Problem
-#     original_layout: Layout
-#     results: list[ResultsLog]

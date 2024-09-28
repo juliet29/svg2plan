@@ -48,7 +48,7 @@ def check_adjacencies(
     sorted_domains: list[Domain], axis: str
 ) -> list[tuple[Domain, Domain, str]]:
     return [
-        (a, b, axis) for a, b in pairwise(sorted_domains) if a[axis].max != b[axis].min
+        (a, b, axis) for a, b in pairwise(sorted_domains) if a[axis].max < b[axis].min
     ]
 
 
@@ -63,6 +63,8 @@ def check_for_side_holes(layout: Layout) -> List[tuple[Domain, Domain, str]]:
 def create_hole_geom(domain_a: Domain, domain_b: Domain, axis):
     a, b = sorted([domain_a, domain_b], key=lambda d: d[axis].min)
     if axis == "x":
+    #    print("a:", a)
+    #    print("b:", b)
        return Domain(Range(a.x.max, b.x.min), Range(a.y.min, b.y.max), "problem")
     else:
         return Domain(Range(a.x.min, b.x.max), Range(a.y.max, b.y.min), "problem")

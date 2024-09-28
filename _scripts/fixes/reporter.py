@@ -8,7 +8,7 @@ from fixes.interfaces import LayoutBase
 
 from fixes.problem_types.overlap_id import create_overlap_problems
 from fixes.problem_types.hole_id import create_hole_problems
-from fixes.problem_types.side_hole_id2 import create_side_hole_problems
+from fixes.problem_types.side_hole_id import create_side_hole_problems
 from svg_logger.settings import svlogger
 
 
