@@ -20,6 +20,10 @@ class Domain:
 
     def __getitem__(self, i):
         return getattr(self, i)
+    
+    @property
+    def area(self):
+        return self.x.size * self.y.size
 
     def compare_domains(self, other, consider_overlap=False):
         x_res = self.x.compare_ranges(other.x, consider_overlap)
@@ -74,6 +78,7 @@ class ComparedDomain:
     def __iter__(self):
         for name in list(self.__annotations__.keys()):
             yield (name, self[name])
+
 
     def __repr__(self) -> str:
         N = self.NORTH.name if self.NORTH else None

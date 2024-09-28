@@ -15,10 +15,10 @@ def get_problem_size(prob_domain: Domain, drn: Direction) -> Decimal:
         case _:
             raise Exception("Invalid axis")
         
-def get_domain_directions(a: Domain, b: Domain):
-    cmp = a.compare_domains(b, consider_overlap=True)
+def get_domain_directions(a: Domain, b: Domain, consider_overlap=True):
+    cmp = a.compare_domains(b, consider_overlap)
     if cmp.is_empty():
-        cmp = b.compare_domains(a, consider_overlap=True)
+        cmp = b.compare_domains(a, consider_overlap)
     if cmp.is_empty():
-        raise Exception("Overlapping domains should have a relationship!")
+        raise Exception("Problem domains should have a relationship!")
     return cmp

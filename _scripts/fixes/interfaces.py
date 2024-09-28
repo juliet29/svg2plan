@@ -3,7 +3,7 @@ from decimal import Decimal
 from typing import Optional
 from enum import Enum
 from shapely import Polygon
-from actions.interfaces import ActionType
+from actions.interfaces import ActionType, get_action_protocol
 from helpers.directions import Direction
 from helpers.layout import Layout
 from domains.domain import Domain
@@ -66,3 +66,5 @@ class Problem:
     def short_message(self):
         return f"{self.problem_type}-{self.nbs}"
 
+OVERLAP_ACTIONS = [a for a in ActionType if not get_action_protocol(a).is_attractive]
+SIDEHOLE_ACTIONS = [a for a in ActionType if get_action_protocol(a).is_attractive]

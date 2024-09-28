@@ -3,16 +3,14 @@ from actions.interfaces import ActionType, get_action_protocol
 from domains.domain import Domain
 from helpers.layout import Layout
 from fixes.interfaces import ActionDetails
-from shapely import Polygon, intersection
-from fixes.interfaces import Problem, ProblemType
+from shapely import Polygon, intersection 
+from fixes.interfaces import Problem, ProblemType, OVERLAP_ACTIONS
 import networkx as nx
 from helpers.shapely import shape_to_domain
-from itertools import chain
 from fixes.id_helpers import chain_flatten, get_domain_directions, get_problem_size
 
 Overlap = tuple[tuple[str, str], Domain]
 
-OVERLAP_ACTIONS = [a for a in ActionType if not get_action_protocol(a).is_attractive]
 
 
 def find_overlaps(G: nx.Graph, shapes: Dict[str, Polygon]) -> list[Overlap]:

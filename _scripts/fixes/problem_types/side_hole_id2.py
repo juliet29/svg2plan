@@ -4,7 +4,7 @@ from actions.interfaces import ActionType, get_action_protocol
 from domains.domain import Domain
 from domains.range import Range
 from fixes.id_helpers import chain_flatten, get_domain_directions, get_problem_size
-from fixes.interfaces import ActionDetails, Problem, ProblemType
+from fixes.interfaces import ActionDetails, Problem, ProblemType, SIDEHOLE_ACTIONS
 from helpers.helpers import pairwise
 from helpers.directions import (
     Direction,
@@ -14,7 +14,7 @@ from helpers.directions import (
 import networkx as nx
 from helpers.layout import Layout
 
-SIDEHOLE_ACTIONS = [a for a in ActionType if get_action_protocol(a).is_attractive]
+
 
 def split(name: str, drns: list[str]):
     return ((name, drn) for drn in drns)
