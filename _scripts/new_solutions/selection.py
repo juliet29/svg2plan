@@ -118,3 +118,9 @@ class Cook:
         [i.short_message() for i in self.res_hist[ix]]
 
 
+
+
+# report = run_new_layout()
+# c = Cook(report)
+# c.run_again()
+# make_subplot_for_all_probs(c.history[0], c.bl_hist)

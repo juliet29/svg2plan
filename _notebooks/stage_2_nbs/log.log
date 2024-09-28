@@ -9,7 +9,7 @@ INFO|executer
 DEBUG|finder    finding node closest to bedroom_1 in EAST direction... looking for closest ('y', 'max')
 DEBUG|finder    [('transit_space', Decimal('1.90')), ('laundry', Decimal('0.03'))]
 DEBUG|finder    finding node closest to laundry in EAST direction... looking for closest ('y', 'max')
-DEBUG|finder    [('bath', Decimal('1.48')), ('m_bath', Decimal('0.03'))]
+DEBUG|finder    [('m_bath', Decimal('0.03')), ('bath', Decimal('1.48'))]
 DEBUG|executer  m_bedroom has no eastern nbs that are unplaced
 DEBUG|executer  current north node: bedroom_1
 DEBUG|finder    no west node for bedroom_2

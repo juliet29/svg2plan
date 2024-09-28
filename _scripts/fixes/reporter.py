@@ -6,9 +6,9 @@ from helpers.layout import Layout
 from fixes.interfaces import Problem, ProblemType
 from fixes.interfaces import LayoutBase
 
-from fixes.problem_types.overlap_id import OverlapIdentifier
+from fixes.problem_types.overlap_id import create_overlap_problems
 from fixes.problem_types.hole_id import HoleIdentifier
-from fixes.problem_types.side_hole_id2 import SideHoleIdentifier
+from fixes.problem_types.side_hole_id2 import create_side_hole_problems
 from svg_logger.settings import svlogger
 
 
@@ -31,11 +31,10 @@ class Reporter:
         self.output = (self.layout, self.summary, self.problems)
 
     def find_new(self):
-        # create a tree and pass it in so dont need to recreate so much..~ temp update to layout object => Layout w Tree..
-        for identifier in [OverlapIdentifier, HoleIdentifier, SideHoleIdentifier]:
-            self.identifier = identifier(self.layout)
-            self.identifier.report_problems()
-            self.candidates.extend(self.identifier.problems)
+        for identifier in [create_side_hole_problems, create_overlap_problems]:
+            probs = identifier(self.layout)
+            if probs:
+                self.candidates.extend(probs)
 
     def compare_new_and_old(self):
         new_probs = set(self.candidates)
@@ -58,21 +57,4 @@ class Reporter:
         self.problems.extend(self.new)
 
     def summarize(self):
-        overlap = 0
-        hole = 0
-        side_hole = 0
-        for p in self.problems:
-            if p.resolved == False:
-                match p.problem_type:
-                    case ProblemType.OVERLAP:
-                        overlap += 1
-                    case ProblemType.HOLE:
-                        hole += 1
-                    case ProblemType.SIDE_HOLE:
-                        side_hole += 1
         self.summary = Counter([i.problem_type.name for i in self.problems if i.resolved == False])
-
-        self.txt = f"-- Unresolved Problems. Overlaps: {overlap}. Holes: {hole}. Sideholes: {side_hole}"
-
-
-# ProblemSummary = namedtuple("ProblemSummary", [i.name for i in ProblemType])

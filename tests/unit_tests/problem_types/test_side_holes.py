@@ -27,70 +27,75 @@ sols = {
     "n": (n_hole, (3, 7)),
 }
 
+
 def test_finding_side_holes_in_all_directions():
-    for k,v in sols.items():
+    for k, v in sols.items():
         sh = SideHoleSetup(k)
         sh.run()
         assert sh.res[0] == v[1]
 
+
 def test_one_hole():
     t = SideHoleSetup()
     t.run()
-    edited_shapes = [
-    domain_to_shape(domain) for domain in t.hole_dict.values()
-    ]
+    edited_shapes = [domain_to_shape(domain) for domain in t.hole_dict.values()]
     res = find_geometric_holes(edited_shapes)
-    assert res.exterior.coords # type: ignore
+    assert res.exterior.coords  # type: ignore
+
 
 def test_many_holes():
     t = SideHoleSetup()
     t.run()
-    further_filtering = list(filterfalse(lambda i: i.x.min == 2 and i.y.min == 1, t.hole_domains))
-    edited_shapes = [domain_to_shape(domain) for domain in further_filtering
-    ]
+    further_filtering = list(
+        filterfalse(lambda i: i.x.min == 2 and i.y.min == 1, t.hole_domains)
+    )
+    edited_shapes = [domain_to_shape(domain) for domain in further_filtering]
     res = find_geometric_holes(edited_shapes)
-    assert len(res.geometries) >= 2 # type: ignore
+    assert len(res.geometries) >= 2  # type: ignore
 
 
 def test_create_test_line_x():
     t = SideHoleSetup()
     t.run()
-    a,b = (t.hole_domains[0], t.hole_domains[-1])
+    a, b = (t.hole_domains[0], t.hole_domains[-1])
     axis = "y"
     l = create_test_line(a, b, axis)
-    assert abs(round(sub(*l.xy[1]), 2))  == float(gap)
+    assert abs(round(sub(*l.xy[1]), 2)) == float(gap)
+
 
 def test_create_test_line_y():
     t = SideHoleSetup("n")
     t.run()
-    a,b = (t.hole_domains[3], t.hole_domains[-1])
+    a, b = (t.hole_domains[3], t.hole_domains[-1])
     axis = "x"
 
     l = create_test_line(a, b, axis)
     assert abs(round(sub(*l.xy[0]), 2)) == float(gap)
 
+
 def test_create_problem_one_hole():
     t = SideHoleSetup()
     t.run()
-    edited_shapes = {domain.name:
-    domain_to_shape(domain) for domain in t.hole_dict.values()
+    edited_shapes = {
+        domain.name: domain_to_shape(domain) for domain in t.hole_dict.values()
     }
     t.test_layout.shapes = edited_shapes
-    [p] = get_side_hole_problems(t.test_layout)
-    assert len(list(p.geometry.exterior.coords)) > 2 # type: ignore
+    [p] = create_side_hole_problems(t.test_layout)
+    assert len(list(p.geometry.exterior.coords)) > 2  # type: ignore
+
 
 def test_create_problem_two_holes():
     t = SideHoleSetup()
     t.run()
-    further_filtering = list(filterfalse(lambda i: i.x.min == 2 and i.y.min == 1, t.hole_domains))
-    edited_shapes = {domain.name:
-        domain_to_shape(domain) for domain in t.hole_dict.values()
+    further_filtering = list(
+        filterfalse(lambda i: i.x.min == 2 and i.y.min == 1, t.hole_domains)
+    )
+    edited_shapes = {
+        domain.name: domain_to_shape(domain) for domain in t.hole_dict.values()
     }
     t.test_layout.shapes = edited_shapes
-    [p] = get_side_hole_problems(t.test_layout)
-    assert len(list(p.geometry.exterior.coords)) > 2 # type: ignore
-
-
+    [p] = create_side_hole_problems(t.test_layout)
+    assert len(list(p.geometry.exterior.coords)) > 2  # type: ignore
 
 
 class SideHoleSetup:
@@ -99,7 +104,7 @@ class SideHoleSetup:
         self.filter_fx = prob[0]
 
     def run(self):
-        # TODO -> first two are the same for all cases 
+        # TODO -> first two are the same for all cases
         self.begin()
         self.create_graph()
         self.create_filtered_layout()
@@ -113,7 +118,6 @@ class SideHoleSetup:
             for ix, i in enumerate(res)
         ]
         self.init_dict = {v.name: v for v in self.domains}
-
 
     def create_graph(self):
         self.shapes = {
@@ -140,7 +144,3 @@ class SideHoleSetup:
         pairs, _, _ = check_for_side_holes(self.test_layout)
         self.pairs = list(pairs)
         self.res = [(int(i[0].name), int(i[1].name)) for i in self.pairs]
-
-
-
-

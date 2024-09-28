@@ -4,6 +4,7 @@ from typing import Callable, Iterable
 from domains.range import Range
 from functools import partial
 from constants import ROUNDING_LIM
+from helpers.directions import Direction
 from helpers.helpers import keys_from_value
 from svg_logger.settings import svlogger
 
@@ -82,11 +83,21 @@ class ComparedDomain:
         return f"N={N} \n S={S} \n E={E} \n W={W}"
 
     def get_domain_directions(self, domain: Domain):
-        return keys_from_value(self.__dict__, domain)
+        return [Direction[i] for i in keys_from_value(self.__dict__, domain)]
 
     def is_empty(self):
         if not self.NORTH and not self.SOUTH and not self.EAST and not self.WEST:
             return True
+    
+    def get_axis(self):
+        if self.NORTH and self.EAST:
+            return ["x", "y"]
+        elif self.NORTH: 
+            return ["y"]
+        elif self.EAST:
+            return ["x"]
+        else:
+            return []
 
 
 def get_domain_from_range(

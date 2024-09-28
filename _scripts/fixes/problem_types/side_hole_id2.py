@@ -1,9 +1,10 @@
 from itertools import chain, groupby, pairwise
 from typing import Dict, Iterable, List
-from shapely import LineString, STRtree, union_all, Polygon
+from actions.interfaces import ActionType, get_action_protocol
 from domains.domain import Domain
 from domains.range import Range
-from fixes.interfaces import Problem, ProblemType
+from fixes.id_helpers import chain_flatten, get_domain_directions, get_problem_size
+from fixes.interfaces import ActionDetails, Problem, ProblemType
 from helpers.helpers import pairwise
 from helpers.directions import (
     Direction,
@@ -12,12 +13,11 @@ from helpers.directions import (
 )
 import networkx as nx
 from helpers.layout import Layout
-from helpers.shapely import domain_to_shape
 
+SIDEHOLE_ACTIONS = [a for a in ActionType if get_action_protocol(a).is_attractive]
 
 def split(name: str, drns: list[str]):
     return ((name, drn) for drn in drns)
-
 
 def group_nodes_on_edge(G: nx.Graph):
     res = (
@@ -26,7 +26,6 @@ def group_nodes_on_edge(G: nx.Graph):
     filtered_res = (r for r in res if r[1] != [])
     split_res = chain.from_iterable(split(*i) for i in filtered_res)
     sorted_res = sorted(split_res, key=lambda x: x[1])
-    # print("hi")
 
     keys_and_groups: List[tuple[Direction, Iterable[str]]] = []
     for k, g in groupby(sorted_res, key=lambda x: x[1]):
@@ -53,14 +52,6 @@ def check_adjacencies(
     ]
 
 
-# def get_axes(drns: List[Direction]):
-#     return [get_opposite_axis(get_axis(drn)) for drn in drns]
-
-
-def chain_flatten(lst: List[List]):
-    return list(chain.from_iterable(lst))
-
-
 def check_for_side_holes(layout: Layout) -> List[tuple[Domain, Domain, str]]:
     drns_and_grouped_nodes = group_nodes_on_edge(layout.graph)
     sorted_domains_and_axes = [
@@ -69,59 +60,42 @@ def check_for_side_holes(layout: Layout) -> List[tuple[Domain, Domain, str]]:
     return chain_flatten([check_adjacencies(*i) for i in sorted_domains_and_axes])
 
 
-## ---- shapely geom
-
-
-
-def create_between_geom(domain_a: Domain, domain_b: Domain, axis):
+def create_hole_geom(domain_a: Domain, domain_b: Domain, axis):
     a, b = sorted([domain_a, domain_b], key=lambda d: d[axis].min)
-
     if axis == "x":
-        d = Domain(Range(a.x.max, b.x.min), Range(a.y.min, b.y.max), "problem")
-        
+       return Domain(Range(a.x.max, b.x.min), Range(a.y.min, b.y.max), "problem")
     else:
-        d = Domain(Range(a.x.min, b.x.max), Range(a.y.max, b.y.min), "problem")
-
-        # TODO should just return domains from problems.. bc flip it on the other side anyway (in StudyOneProbkem)
-    return domain_to_shape(d)
+        return Domain(Range(a.x.min, b.x.max), Range(a.y.max, b.y.min), "problem")
 
 
+def create_action_for_problem(pair_and_axis: tuple[Domain, Domain, str], geom: Domain):
+    a,b, axis = pair_and_axis
+    cmp = get_domain_directions(a, b)
+    def create_action_details(domain: Domain):
+        drns = cmp.get_domain_directions(domain)
+        try:
+            [drn] = [d for d in drns if get_axis(d) == axis]
+        except:
+            raise Exception("There should be obly one true dir!")
+
+        return ActionDetails(domain, drn, get_problem_size(geom, drn), SIDEHOLE_ACTIONS)
+    
+    return [create_action_details(i) for i in [a,b]]
 
 
-## integrate ---
-def get_pair_names(pair: tuple[Domain, Domain]):
-    a, b = pair
-    return [a.name, b.name]
-
-
-def get_side_hole_problems(layout: Layout):
+def create_side_hole_problems(layout: Layout):
     pairs_and_axes = check_for_side_holes(layout)
-    geoms = [create_between_geom(*p) for p in pairs_and_axes]
-    probs = []
+    geoms = [create_hole_geom(*p) for p in pairs_and_axes]
+    probs: list[Problem] = []
     for ix, (pair_and_axis, geom) in enumerate(zip(pairs_and_axes, geoms)):
-        u, v, ax = pair_and_axis
-        # print("shid", u,v, ax)
+        a, b, _ = pair_and_axis
         prob = Problem(
             ix,
             ProblemType.SIDE_HOLE,
-            nbs=get_pair_names((u, v)),
-            direction=Direction.NORTH,
+            nbs=[a.name, b.name],
             geometry=geom,
+            action_details=create_action_for_problem(pair_and_axis, geom)
         )
         probs.append(prob)
 
     return probs
-
-
-# TODO simplify to functions.. 
-class SideHoleIdentifier:
-    def __init__(self, layout: Layout) -> None:
-        self.layout = layout
-        self.problems = []
-        self.problem_type = "side_hole"
-
-    def report_problems(self):
-        try:
-            self.problems = get_side_hole_problems(self.layout)
-        except:
-            self.problems = []
