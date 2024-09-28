@@ -26,3 +26,20 @@ DEBUG|finder    finding node closest to dining in EAST direction... looking for 
 DEBUG|finder    [('kitchen', Decimal('0.91')), ('transit_space', Decimal('1.04'))]
 DEBUG|executer  current north node: m_closet
 DEBUG|executer  no more nodes to place
+INFO|executer  
+ begining to execute stacking
+DEBUG|executer  m_bath has no eastern nbs that are unplaced
+DEBUG|executer  current north node: m_bedroom
+DEBUG|finder    finding node closest to m_bedroom in SOUTH direction... looking for closest ('x', 'min')
+DEBUG|finder    [('transit_1', Decimal('2.03')), ('wic', Decimal('0.00'))]
+DEBUG|finder    no west node for wic
+DEBUG|executer  current north node: m_bath
+DEBUG|executer  changing north node reference to 1. Number of unplaced nodes is 4
+DEBUG|executer  current north node: wic
+DEBUG|finder    no west node for kitchen
+DEBUG|executer  current north node: transit_1
+DEBUG|executer  changing north node reference to 2. Number of unplaced nodes is 2
+DEBUG|executer  current north node: kitchen
+DEBUG|finder    no west node for dining
+DEBUG|executer  current north node: stair_bottom
+DEBUG|executer  no more nodes to place
