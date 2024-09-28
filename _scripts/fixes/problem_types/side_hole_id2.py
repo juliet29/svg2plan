@@ -72,32 +72,6 @@ def check_for_side_holes(layout: Layout) -> List[tuple[Domain, Domain, str]]:
 ## ---- shapely geom
 
 
-def find_geometric_holes(shapes: list[Polygon]):
-    union = union_all(shapes)
-    difference = union.convex_hull.difference(union)
-    if not difference:  # type: ignore
-        print("Invalid geometry for difference in sidehole!")
-        raise Exception("Invalid geometry for difference")
-    try:
-        assert difference.exterior  # type: ignore
-        return Polygon(difference)
-    except:
-        return STRtree(difference.geoms)  # type: ignore
-
-
-def create_test_line(domain_a: Domain, domain_b: Domain, axis):
-    a, b = sorted([domain_a, domain_b], key=lambda d: d[axis].min)
-    # f1 = lambda domain: [domain.x.max, domain.y.min]
-    # f2 = lambda domain: [domain.x.min, domain.y.max]
-
-    if axis == "x":
-        pt1 = [a.x.max, a.y.min]  # f1(a)
-        pt2 = [b.x.min, b.y.max]  # f2(b)
-    else:
-        pt1 = [a.x.min, a.y.max]  # f2(a)
-        pt2 = [b.x.max, b.y.min]  # f1(b)
-
-    return LineString([pt1, pt2])
 
 def create_between_geom(domain_a: Domain, domain_b: Domain, axis):
     a, b = sorted([domain_a, domain_b], key=lambda d: d[axis].min)
@@ -112,18 +86,6 @@ def create_between_geom(domain_a: Domain, domain_b: Domain, axis):
     return domain_to_shape(d)
 
 
-def match_geometry(
-    domain_a: Domain, domain_b: Domain, axis: str, geom: STRtree | Polygon
-):
-    try:
-        assert not isinstance(geom, STRtree)
-        assert geom.exterior
-        return Polygon(geom)
-    except:
-        assert not isinstance(geom, Polygon)
-        test_line = create_test_line(domain_a, domain_b, axis)
-        ix = geom.nearest(test_line)
-        return Polygon(geom.geometries.take(ix))
 
 
 ## integrate ---
@@ -132,20 +94,13 @@ def get_pair_names(pair: tuple[Domain, Domain]):
     return [a.name, b.name]
 
 
-def get_axis_for_pair(drns, grouped_nodes, pair):
-    p1, p2 = pair
-    for ix, g in enumerate(grouped_nodes):
-        if p1 and p2 in g:
-            drn = drns[ix]
-    return get_opposite_axis(get_axis(drn))
-
-
 def get_side_hole_problems(layout: Layout):
     pairs_and_axes = check_for_side_holes(layout)
     geoms = [create_between_geom(*p) for p in pairs_and_axes]
     probs = []
     for ix, (pair_and_axis, geom) in enumerate(zip(pairs_and_axes, geoms)):
-        u, v, _ = pair_and_axis
+        u, v, ax = pair_and_axis
+        # print("shid", u,v, ax)
         prob = Problem(
             ix,
             ProblemType.SIDE_HOLE,

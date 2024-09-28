@@ -30,22 +30,19 @@ def sort_and_group_objects(lst: List[T], fx: Callable[[T], Any]) -> List[List[T]
     return [list(g) for _, g in groupby(sorted_objs, fx)]
 
 
-def calculate_size_of_problems(problems: list[Problem]) -> float:
-    return reduce(add, map(lambda x: x.geometry.area, problems))
+
+def sort_results_by_score(results: List[ResultsLog]):
+    return sorted(results, key=lambda x: x.score)
 
 
-def sort_results_by_size_of_problem_geometry(results: List[ResultsLog]):
-    return sorted(results, key=lambda x: calculate_size_of_problems(x.problems))
+# def flatten_sorted_groups(sorted_groups: List[List[ResultsLog]]) -> list[ResultsLog]:
+#     return [item for sublist in sorted_groups for item in sublist]
 
 
-def flatten_sorted_groups(sorted_groups: List[List[ResultsLog]]) -> list[ResultsLog]:
-    return [item for sublist in sorted_groups for item in sublist]
-
-
-def sort_results(results: List[ResultsLog]) -> List[ResultsLog]:
-    grouped_res = sort_and_group_objects(results, lambda x: x.num_unresolved_problems)
-    sorted_groups = [sort_results_by_size_of_problem_geometry(g) for g in grouped_res]
-    return flatten_sorted_groups(sorted_groups)
+# def sort_results(results: List[ResultsLog]) -> List[ResultsLog]:
+#     grouped_res = sort_and_group_objects(results, lambda x: x.num_unresolved_problems)
+#     sorted_groups = [sort_results_by_size_of_problem_geometry(g) for g in grouped_res]
+#     return flatten_sorted_groups(sorted_groups)
 
 
 def get_next_best_result(
@@ -99,7 +96,7 @@ class Cook:
 
     def handle(self):
         self.count+=1
-        self.sorted_res = sort_results(self.results)
+        self.sorted_res = sort_results_by_score(self.results)
         self.res_hist.append(self.sorted_res)
         self.bl = get_next_best_result(self.sorted_res[0], self.sorted_res)
         print(f"problem being studied: -> {self.bl.problem_being_addressed}")

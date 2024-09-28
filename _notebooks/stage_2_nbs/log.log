@@ -4,3 +4,31 @@ DEBUG|__init__  interactive is False
 DEBUG|__init__  platform is darwin
 DEBUG|__init__  CACHEDIR=/Users/julietnwagwuume-ezeoke/.matplotlib
 DEBUG|font_managerUsing fontManager instance from /Users/julietnwagwuume-ezeoke/.matplotlib/fontlist-v390.json
+INFO|executer  
+ begining to execute stacking
+DEBUG|finder    finding node closest to bedroom_1 in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('transit_space', Decimal('1.90')), ('laundry', Decimal('0.03'))]
+DEBUG|finder    finding node closest to laundry in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('bath', Decimal('1.48')), ('m_bath', Decimal('0.03'))]
+DEBUG|executer  m_bedroom has no eastern nbs that are unplaced
+DEBUG|executer  current north node: bedroom_1
+DEBUG|finder    no west node for bedroom_2
+DEBUG|executer  current north node: laundry
+DEBUG|finder    finding node closest to transit_space in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('bedroom_1', Decimal('1.90')), ('bedroom_2', Decimal('1.04'))]
+DEBUG|executer  current north node: m_bath
+DEBUG|finder    finding node closest to bath in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('transit_space', Decimal('0.39')), ('laundry', Decimal('1.48'))]
+DEBUG|executer  current north node: m_bedroom
+DEBUG|finder    finding node closest to m_bedroom in SOUTH direction... looking for closest ('x', 'min')
+DEBUG|finder    [('dining', Decimal('2.38')), ('m_closet', Decimal('1.13'))]
+DEBUG|placer    No west node, and non 0 col num, North node = m_bedroom
+DEBUG|executer  changing north node reference to 1. Number of unplaced nodes is 3
+DEBUG|executer  current north node: bedroom_2
+DEBUG|executer  no more southern nbs for bedroom_2
+DEBUG|executer  current north node: transit_space
+DEBUG|executer  current north node: bath
+DEBUG|finder    finding node closest to dining in EAST direction... looking for closest ('y', 'max')
+DEBUG|finder    [('kitchen', Decimal('0.91')), ('transit_space', Decimal('1.04'))]
+DEBUG|executer  current north node: m_closet
+DEBUG|executer  no more nodes to place

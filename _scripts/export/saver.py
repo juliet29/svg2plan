@@ -1,3 +1,4 @@
+from typing import Any
 from helpers.layout import Layout
 import pickle
 import os
@@ -22,14 +23,14 @@ class Saver:
             pickle.dump(self.layout, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
-def read_layout(file_name):
+def read_pickle(file_name):
     path = os.path.join(PATH_TO_SOLS, f"{file_name}.pickle")
     with open(path, "rb") as handle:
-        layout = pickle.load(handle)
-    return layout
+        obj = pickle.load(handle)
+    return obj
 
-def save_layout(layout: Layout, file_name:str):
+def save_pickle(obj: Any, file_name:str):
     path = os.path.join(PATH_TO_SOLS, f"{file_name}.pickle")
     with open(path, "wb") as handle:
-            pickle.dump(layout, handle, protocol=pickle.HIGHEST_PROTOCOL)
+            pickle.dump(obj, handle, protocol=pickle.HIGHEST_PROTOCOL)
     return file_name

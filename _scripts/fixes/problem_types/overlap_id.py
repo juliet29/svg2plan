@@ -6,6 +6,23 @@ from shapely import Polygon, intersection
 from fixes.interfaces import Problem, ProblemType
 
 
+def find_overlaps(self):
+        assert self.G
+        for edge in self.G.edges:
+            u, v = edge
+            if self.shapes[u].overlaps(self.shapes[v]):
+                # if not self.is_local_corner_overlap([u,v]):
+                geometry = intersection(self.shapes[u], self.shapes[v])
+                assert isinstance(geometry, Polygon)
+                p = OverlapData(
+                    geometry,
+                    edge,
+                )
+                self.overlaps.append(p)
+
+
+
+
 @dataclass
 class OverlapData:
     shape: Polygon

@@ -51,6 +51,7 @@ def select_next_problem_by_x(problems: list[Problem]):
 
 
 class StudyOneProblem:
+    # TODO => why not just pass in the reporter? but also should take the functions out .. 
     def __init__(
         self,
         layout: Layout,
