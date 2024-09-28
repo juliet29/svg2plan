@@ -9,14 +9,24 @@ from actions.interfaces import (
     get_fx_and_side,
 )
 
+def is_action_here(ops: list[OperationLog], action: ActionType):
+    for o in ops:
+        if o.action_type == action:
+            return True
+    return False
+
 
 def create_node_operations(action_details: ActionDetails):
     operations: list[OperationLog] = []
     for action_type in action_details.action_types:
        cmd = CreateModifiedDomain(action_details, action_type)
        op = cmd.create_domain()
-       if op:
+       if op is not None:
            operations.append(op)
+
+    if is_action_here(operations, ActionType.PUSH) and not is_action_here(operations, ActionType.SQUEEZE):
+        raise Exception(f"Where is squeeze?") 
+        
     return operations
            
 
@@ -39,6 +49,7 @@ class CreateModifiedDomain:
         try:
             temp_domain[axis] = self.modify_range(self.node[axis])
         except InvalidRangeException:
+            print(f"Could not make domain!! for {self.node} doing action {self.action_type}")
             return None
         temp_domain[other_axis] = self.node[other_axis]
         return OperationLog(self.node, self.action_type, axis, Domain(**temp_domain))

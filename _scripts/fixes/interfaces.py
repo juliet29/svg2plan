@@ -66,5 +66,5 @@ class Problem:
     def short_message(self):
         return f"{self.problem_type}-{self.nbs}"
 
-OVERLAP_ACTIONS = [a for a in ActionType if not get_action_protocol(a).is_attractive]
-SIDEHOLE_ACTIONS = [a for a in ActionType if get_action_protocol(a).is_attractive]
+OVERLAP_ACTIONS = [ActionType.PUSH, ActionType.SQUEEZE]
+SIDEHOLE_ACTIONS = [ActionType.PULL, ActionType.STRETCH]

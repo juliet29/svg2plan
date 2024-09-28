@@ -29,7 +29,7 @@ def read_pickle(file_name):
         obj = pickle.load(handle)
     return obj
 
-def save_pickle(obj: Any, file_name:str):
+def save_pickle(obj, file_name:str):
     path = os.path.join(PATH_TO_SOLS, f"{file_name}.pickle")
     with open(path, "wb") as handle:
             pickle.dump(obj, handle, protocol=pickle.HIGHEST_PROTOCOL)
