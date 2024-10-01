@@ -1,16 +1,16 @@
 from typing import Dict
 from actions.interfaces import ActionType, get_action_protocol
 from domains.domain import Domain
+from helpers.helpers import chain_flatten
 from helpers.layout import Layout
 from fixes.interfaces import ActionDetails
-from shapely import Polygon, intersection 
+from shapely import Polygon, intersection
 from fixes.interfaces import Problem, ProblemType, OVERLAP_ACTIONS
 import networkx as nx
 from helpers.shapely import shape_to_domain
-from fixes.id_helpers import chain_flatten, get_domain_directions, get_problem_size
+from fixes.id_helpers import get_domain_directions, get_problem_size
 
 Overlap = tuple[tuple[str, str], Domain]
-
 
 
 def find_overlaps(G: nx.Graph, shapes: Dict[str, Polygon]) -> list[Overlap]:

@@ -1,11 +1,12 @@
 from itertools import chain, groupby, pairwise
+from os import name
 from typing import Dict, Iterable, List
 from actions.interfaces import ActionType, get_action_protocol
 from domains.domain import Domain
 from domains.range import Range
-from fixes.id_helpers import chain_flatten, get_domain_directions, get_problem_size
+from fixes.id_helpers import get_domain_directions, get_problem_size
 from fixes.interfaces import ActionDetails, Problem, ProblemType, SIDEHOLE_ACTIONS
-from helpers.helpers import pairwise
+from helpers.helpers import chain_flatten, pairwise
 from helpers.directions import (
     Direction,
     get_axis,
@@ -14,18 +15,24 @@ from helpers.directions import (
 import networkx as nx
 from helpers.layout import Layout
 
+from collections import namedtuple
+
+NodeEmptyDrns = namedtuple("NodeEmptyDrns", ["node_name", "empty_drn"])
 
 
 def split(name: str, drns: list[str]):
     return ((name, drn) for drn in drns)
 
-def group_nodes_on_edge(G: nx.Graph):
+
+def group_nodes_on_edge(G: nx.Graph) -> list[tuple[Direction, Iterable[str]]]:
     res = (
         (name, data["data"].get_empty_directions()) for name, data in G.nodes(data=True)
     )
-    filtered_res = (r for r in res if r[1] != [])
-    split_res = chain.from_iterable(split(*i) for i in filtered_res)
-    sorted_res = sorted(split_res, key=lambda x: x[1])
+    edge_nodes_and_their_drns = (r for r in res if r[1] != [])
+    edge_node_and_one_drn = chain.from_iterable(
+        split(*i) for i in edge_nodes_and_their_drns
+    )
+    sorted_res = sorted(edge_node_and_one_drn, key=lambda x: x[1])
 
     keys_and_groups: List[tuple[Direction, Iterable[str]]] = []
     for k, g in groupby(sorted_res, key=lambda x: x[1]):
@@ -63,16 +70,17 @@ def check_for_side_holes(layout: Layout) -> List[tuple[Domain, Domain, str]]:
 def create_hole_geom(domain_a: Domain, domain_b: Domain, axis):
     a, b = sorted([domain_a, domain_b], key=lambda d: d[axis].min)
     if axis == "x":
-    #    print("a:", a)
-    #    print("b:", b)
-       return Domain(Range(a.x.max, b.x.min), Range(a.y.min, b.y.max), "problem")
+        #    print("a:", a)
+        #    print("b:", b)
+        return Domain(Range(a.x.max, b.x.min), Range(a.y.min, b.y.max), "problem")
     else:
         return Domain(Range(a.x.min, b.x.max), Range(a.y.max, b.y.min), "problem")
 
 
 def create_action_for_problem(pair_and_axis: tuple[Domain, Domain, str], geom: Domain):
-    a,b, axis = pair_and_axis
+    a, b, axis = pair_and_axis
     cmp = get_domain_directions(a, b)
+
     def create_action_details(domain: Domain):
         drns = cmp.get_domain_directions(domain)
         try:
@@ -81,8 +89,8 @@ def create_action_for_problem(pair_and_axis: tuple[Domain, Domain, str], geom: D
             raise Exception("There should be obly one true dir!")
 
         return ActionDetails(domain, drn, get_problem_size(geom, drn), SIDEHOLE_ACTIONS)
-    
-    return [create_action_details(i) for i in [a,b]]
+
+    return [create_action_details(i) for i in [a, b]]
 
 
 def create_side_hole_problems(layout: Layout):
@@ -96,7 +104,7 @@ def create_side_hole_problems(layout: Layout):
             ProblemType.SIDE_HOLE,
             nbs=[a.name, b.name],
             geometry=geom,
-            action_details=create_action_for_problem(pair_and_axis, geom)
+            action_details=create_action_for_problem(pair_and_axis, geom),
         )
         probs.append(prob)
 

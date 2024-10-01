@@ -1,10 +1,7 @@
-from itertools import chain
 from domains.domain import Domain
 from helpers.directions import Direction
 from decimal import Decimal
 
-def chain_flatten(lst: list[list]):
-    return list(chain.from_iterable(lst))
 
 def get_problem_size(prob_domain: Domain, drn: Direction) -> Decimal:
     match drn:
@@ -14,7 +11,8 @@ def get_problem_size(prob_domain: Domain, drn: Direction) -> Decimal:
             return prob_domain.x.size
         case _:
             raise Exception("Invalid axis")
-        
+
+
 def get_domain_directions(a: Domain, b: Domain, consider_overlap=True):
     cmp = a.compare_domains(b, consider_overlap)
     if cmp.is_empty():

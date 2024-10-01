@@ -13,13 +13,13 @@ from helpers.layout import PartialLayout, Layout
 
 
 class PlacementExecuter(LooperInterface):
-    def __init__(self, layout: Layout) -> None:
+    def __init__(self, layout: Layout, ns_counter_max=10) -> None:
         stack_logger.info("\n begining to execute stacking")
         self.G = deepcopy(layout.graph)
         self.init_layout = PartialLayout(
             deepcopy(layout.shapes), deepcopy(layout.domains)
         )
-
+        self.ns_counter_max = ns_counter_max
         self.unplaced = list(self.G.nodes)
         self.tracker: Dict[int, list[str]] = {}
         self.tracker_column = 0
@@ -103,7 +103,7 @@ class PlacementExecuter(LooperInterface):
             )
 
             if self.is_over_ns_counter():
-                stack_logger.warning("ns_counter > 4 .. breaking")
+                stack_logger.warning(f"ns_counter > {self.ns_counter_max} .. breaking")
                 break
 
     def finish_setting_south_node(
@@ -121,7 +121,7 @@ class PlacementExecuter(LooperInterface):
     # TODO make ns and ew counter a class argument
     def is_over_ns_counter(self):
         self.ns_counter += 1
-        if self.ns_counter > 4:
+        if self.ns_counter > self.ns_counter_max:
             return True
 
     def is_over_ew_counter(self):
