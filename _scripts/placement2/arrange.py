@@ -1,12 +1,10 @@
 import numpy as np
-from export.saver import read_pickle
 from helpers.graph_helpers import sort_nodes_on_egde
 from helpers.helpers import chain_flatten, filter_none
 from helpers.layout import Layout
 from copy import deepcopy
 from icecream import ic
 from svg_logger.settings import svlogger
-# layout: Layout = read_pickle("1001_amber_c_ag")
 
 def create_string_2d_array(shape:tuple[int, int]):
     return np.full(shape=shape, fill_value="", dtype=object)
@@ -20,7 +18,6 @@ def get_unplaced(arr, domains):
 def remove_existing_node_from_list(arr, lst):
     return list(set(lst).difference(set(arr.flatten())))
 
-
 def initialize_arr(layout: Layout):
     sorted_domains = sort_nodes_on_egde(layout.graph, layout.domains)
     arr = create_string_2d_array(shape=(len(sorted_domains["WEST"]), len(sorted_domains["NORTH"])))
@@ -29,7 +26,6 @@ def initialize_arr(layout: Layout):
     arr[0, :] = [i.name for i in sorted_domains["NORTH"]]
     arr[:, 0] = [i.name for i in sorted_domains["WEST"]]
     return arr
-
 
 def get_node_with_north_nb_in_row(G, north_row, node):
     for i in G.nodes()[node]["data"]["NORTH"]:
@@ -48,7 +44,6 @@ def get_possible_members_of_next_row(G, arr, ix):
 
     return list(set(next_row).union(set(north_east)))
 
-
 def find_east_nb(G, arr, node, possible_nbs):
     east_nbs = G.nodes()[node]["data"]["EAST"]
     res = set(east_nbs).intersection(set(possible_nbs))
@@ -62,7 +57,6 @@ def find_east_nb(G, arr, node, possible_nbs):
             return list(r)[0]
         else:
             raise Exception("More than one east nb")
-    
 
 def create_next_row(G, arr, ix):
     possible_nodes = get_possible_members_of_next_row(G, arr, ix)
@@ -87,8 +81,6 @@ def create_next_row(G, arr, ix):
         cnt+=1
         if cnt > max_iter:
             raise Exception("Exceeded max iter")
-        
-
         
 def adjust_arr_for_row(arr, row):
     n_rows, n_cols = arr.shape
