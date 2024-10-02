@@ -8,22 +8,28 @@ from icecream import ic
 from svg_logger.settings import svlogger
 # layout: Layout = read_pickle("1001_amber_c_ag")
 
-def initialize_arr(layout: Layout):
-    sd = sort_nodes_on_egde(layout.graph, layout.domains)
-    arr = np.full(shape=(len(sd["WEST"]), len(sd["NORTH"])), fill_value="", dtype=object)
-    north_row = np.s_[0, :]
-    west_col = np.s_[:, 0]
+def create_string_2d_array(shape:tuple[int, int]):
+    return np.full(shape=shape, fill_value="", dtype=object)
 
-    # place north nodes and west nodes
-    arr[north_row] = [i.name for i in sd["NORTH"]]
-    arr[west_col] = [i.name for i in sd["WEST"]]
-    return arr, sd, north_row, west_col
+def get_row(arr, ix):
+    return list(arr[ix, :])
 
 def get_unplaced(arr, domains):
     return set(domains.keys()).difference(set(np.unique(arr)))
 
-def get_row(arr, ix):
-    return list(arr[ix, :])
+def remove_existing_node_from_list(arr, lst):
+    return list(set(lst).difference(set(arr.flatten())))
+
+
+def initialize_arr(layout: Layout):
+    sorted_domains = sort_nodes_on_egde(layout.graph, layout.domains)
+    arr = create_string_2d_array(shape=(len(sorted_domains["WEST"]), len(sorted_domains["NORTH"])))
+
+    # place north nodes and west nodes
+    arr[0, :] = [i.name for i in sorted_domains["NORTH"]]
+    arr[:, 0] = [i.name for i in sorted_domains["WEST"]]
+    return arr
+
 
 def get_node_with_north_nb_in_row(G, north_row, node):
     for i in G.nodes()[node]["data"]["NORTH"]:
@@ -42,13 +48,10 @@ def get_possible_members_of_next_row(G, arr, ix):
 
     return list(set(next_row).union(set(north_east)))
 
-def remove_existing_node_from_list(arr, lst):
-    return list(set(lst).difference(set(arr.flatten())))
 
-
-def find_east_nb(G, node, valid_nbs, arr):
+def find_east_nb(G, arr, node, possible_nbs):
     east_nbs = G.nodes()[node]["data"]["EAST"]
-    res = set(east_nbs).intersection(set(valid_nbs))
+    res = set(east_nbs).intersection(set(possible_nbs))
     if len(res) == 1:
         return list(res)[0]
     if len(res) == 0:
@@ -73,7 +76,7 @@ def create_next_row(G, arr, ix):
 
     while avail_nodes:
         curr_node = found_nodes[-1]
-        next_node = find_east_nb(G, curr_node, avail_nodes, arr)
+        next_node = find_east_nb(G, arr, curr_node, avail_nodes)
         
         if not next_node:
             return found_nodes
@@ -91,7 +94,7 @@ def adjust_arr_for_row(arr, row):
     n_rows, n_cols = arr.shape
     if n_cols < len(row):
         diff = len(row) - n_cols
-        temp = np.full(shape=(n_rows, diff), fill_value="", dtype=object)
+        temp = create_string_2d_array(shape=(n_rows, diff))
         narr = np.hstack((arr, temp))
         return narr
     return deepcopy(arr)
@@ -103,8 +106,9 @@ def update_arr(arr, row, ix):
 
 def get_current_row(arr):
     for ix, i in enumerate(arr):
-        if not i[1]: # i[0] are the west nodes
+        if not i[1]: # i[0] are the west nodes but
             return ix - 1
+        # TODO not  a good approach bc could have just one node in a row and thats not a problem.. 
     raise Exception("Couldnt find current row")
     
 def place_next_row(G, arr):
@@ -114,7 +118,7 @@ def place_next_row(G, arr):
     return update_arr(narr, row, ix+1)
 
 def create_placement(layout):
-    arr, *_ = initialize_arr(layout)
+    arr = initialize_arr(layout)
     unplaced = get_unplaced(arr, layout.domains)
     max_iter = 10
     cnt = 0
