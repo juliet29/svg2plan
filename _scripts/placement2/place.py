@@ -26,17 +26,6 @@ def create_new_shapes(darr):
     return {v.name: domain_to_shape(v) for v in darr.flatten() if v}
 
 
-def remove_repeat_nodes(arr):
-    unique, counts = np.unique(arr, return_counts=True)
-    for item, count in zip(unique, counts):
-        if item and count > 1:
-            xs, ys = np.where(arr == item)
-            locs = [np.s_[x, y] for x, y in zip(xs, ys)]
-            for loc in locs[1:]:
-                arr[loc] = ""
-    return arr
-
-
 def create_domains_arr(arr, domains):
     def get_domains(i):
         if i:
@@ -50,18 +39,6 @@ def update_domains_arr(s, domain, domains_arr):
     return new_darr
 
 
-def get_north_node(darr, curr_slice):
-    def create_north_slice():
-        return (curr_slice[0] - 1, col_cntr)
-
-    col_cntr = curr_slice[1]
-    while not darr[create_north_slice()]:
-        col_cntr -= 1
-        if col_cntr < 0:
-            raise Exception("No north node found")
-    return darr[create_north_slice()]
-
-
 def calculate_size_of_x_overlap(a: Domain, b: Domain):
     u,v = sorted([a,b], key=lambda d: d.x.size)
     return u.x.line_string.intersection(v.x.line_string).length
@@ -70,55 +47,35 @@ def potential_x_domain(darr, curr_slice):
     row, col = curr_slice
     west_node = darr[row, col-1]
     curr_node = darr[curr_slice]
-    x_adjusted_range = Range(west_node.x.max, west_node.x.max+curr_node.x.size)
+    x_adjusted_range = Range(west_node.x.max, west_node.x.max + curr_node.x.size)
     return Domain(x_adjusted_range, curr_node.y, name=curr_node.name)
 
 
 
-
-def choose_north_node(darr, curr_slice):
+def choose_north_node(darr, curr_slice, new_x_domain):
     row, _ = curr_slice
-    curr_node = potential_x_domain(darr, curr_slice)
-    if curr_node.name == "linen":
-        print(curr_node)
     northern_row = darr[row-1]
 
     max_overlap = (0, None)
     for node in northern_row:
         if not node:
             continue
-        ov = calculate_size_of_x_overlap(curr_node, node)
+        ov = calculate_size_of_x_overlap(new_x_domain, node)
         if ov > max_overlap[0]:
             max_overlap = (ov, node)
 
-        if curr_node.name == "linen":
-            print(max_overlap)
     assert max_overlap[1]
-
-    
-
-    
     return max_overlap[1]
 
 
-
+def get_north_node(darr, curr_slice):
+    row, col = curr_slice
+    return darr[row-1, col]
 
 
 def get_west_node(darr, curr_slice):
-    def create_west_slice():
-        return (curr_slice[0], col_cntr)
-
-    col_cntr = curr_slice[1] - 1
-    while not darr[create_west_slice()]:
-        col_cntr -= 1
-        if col_cntr < 0:
-            raise Exception("No west node found")
-    return darr[create_west_slice()]
-
-def get_y_top(darr, curr_slice):
-    row_ix, _ = curr_slice
-    prev_row_ys = [i.y.min for i in darr[row_ix-1] if i]
-    return min(prev_row_ys)
+    row, col = curr_slice
+    return darr[row, col-1]
 
 def handle_init_row(darr, s):
     node = darr[s]
@@ -132,15 +89,14 @@ def handle_init_row(darr, s):
 
 def handle_remaining_rows(darr, s):
     node = darr[s]
-    
     _, col = s
     if col == 0: 
-        north_node = get_north_node(darr,s) # TODO simplify
+        north_node = get_north_node(darr,s) 
         d = place_south(node, north_node)
     else:
-        north_node = choose_north_node(darr, s)
-        west_node = get_west_node(darr, s)
-        d = place_south_east(node, north_node, west_node)
+        new_x_domain = potential_x_domain(darr, s)
+        north_node = choose_north_node(darr, s, new_x_domain)
+        d = place_south_east(node, north_node, new_x_domain)
     return update_domains_arr(s, d, darr)
 
 
@@ -172,8 +128,6 @@ def place_nodes(darr):
     for loc in indices:
             darr, visited_nodes = handle_node(darr, loc, visited_nodes)
     return darr
-
-
 
 
 

@@ -33,8 +33,8 @@ def place_south(domain: Domain, north_domain: Domain):
     return create_new_domain(domain, new_x_left, new_y_top)
 
 
-def place_south_east(domain: Domain, north_domain: Domain, west_domain: Domain):
-    new_x_left = west_domain.x.max
+def place_south_east(domain: Domain, north_domain: Domain, new_x_domain: Domain):
+    new_x_left = new_x_domain.x.min
     new_y_top = north_domain.y.min
     return create_new_domain(domain, new_x_left, new_y_top)
 
