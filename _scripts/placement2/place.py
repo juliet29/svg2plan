@@ -17,6 +17,13 @@ def get_array_indices(arr):
     return list(product(*([i for i in range(sz)] for sz in arr.shape)))
 
 
+def create_new_domains(darr):
+    return {v.name: v for v in darr.flatten() if v}
+
+def create_new_shapes(darr):
+    return {v.name: domain_to_shape(v) for v in darr.flatten() if v}
+
+
 def remove_repeat_nodes(arr):
     unique, counts = np.unique(arr, return_counts=True)
     for item, count in zip(unique, counts):
@@ -64,27 +71,32 @@ def get_west_node(darr, curr_slice):
             raise Exception("No west node found")
     return darr[create_west_slice()]
 
+def get_y_top(darr, curr_slice):
+    row_ix, _ = curr_slice
+    prev_row_ys = [i.y.min for i in darr[row_ix-1] if i]
+    return min(prev_row_ys)
 
-def handle_init_col(darr, s, is_subsequent_row=False):
+def handle_init_row(darr, s):
     node = darr[s]
-    if not is_subsequent_row:
+    _, col = s
+    if col == 0: 
         d = place_north_west(node)
     else:
-        north_node = get_north_node(darr, s)
-        d = place_south(node, north_node)
-    return update_domains_arr(s, d, darr)
-
-
-def handle_remaining_cols(darr, s, is_subsequent_row=False):
-    node = darr[s]
-    if not is_subsequent_row:
         west_node = get_west_node(darr, s)
         d = place_east(node, west_node)
+    return update_domains_arr(s, d, darr)
+
+def handle_remaining_rows(darr, s):
+    node = darr[s]
+    north_node = get_north_node(darr, s)
+    _, col = s
+    if col == 0: 
+        d = place_south(node, north_node)
     else:
-        north_node = get_north_node(darr, s)
         west_node = get_west_node(darr, s)
         d = place_south_east(node, north_node, west_node)
     return update_domains_arr(s, d, darr)
+
 
 
 def handle_node(darr, loc):
@@ -92,10 +104,10 @@ def handle_node(darr, loc):
     s = np.s_[row_ix, ix]
     if not darr[s]:
         return darr
-    if ix == 0:
-        return handle_init_col(darr, s, bool(row_ix))
+    if row_ix == 0:
+        return handle_init_row(darr, s)
     else:
-        return handle_remaining_cols(darr, s, bool(row_ix))
+        return handle_remaining_rows(darr, s)
 
 
 def place_nodes(darr):
@@ -105,16 +117,11 @@ def place_nodes(darr):
     return darr
 
 
-def create_new_domains(darr):
-    return {v.name: v for v in darr.flatten() if v}
 
-def create_new_shapes(darr):
-    return {v.name: domain_to_shape(v) for v in darr.flatten() if v}
 
 
 def create_placement_and_update_layout(layout):
     arr = create_arrangement(layout)
-    arr = remove_repeat_nodes(arr)
     darr = create_domains_arr(arr, layout.domains)
     darr1 = place_nodes(darr)
 
