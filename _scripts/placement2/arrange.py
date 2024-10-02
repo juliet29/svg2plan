@@ -5,6 +5,7 @@ from helpers.helpers import chain_flatten, filter_none
 from helpers.layout import Layout
 from copy import deepcopy
 from icecream import ic
+from svg_logger.settings import svlogger
 # layout: Layout = read_pickle("1001_amber_c_ag")
 
 def initialize_arr(layout: Layout):
@@ -30,21 +31,22 @@ def get_node_with_north_nb_in_row(G, north_row, node):
             return node
 
 def get_north_and_east_nbs(G, north_row, node):
-    return [(node,i) for i in north_row if i in G.nodes()[node]["data"]["EAST"]]
+    return [i for i in north_row if i in G.nodes()[node]["data"]["EAST"]]
 
 def get_possible_members_of_next_row(G, arr, ix):
     north_row = get_row(arr, ix)
-    ic(north_row)
-    next_row_members = filter_none([get_node_with_north_nb_in_row(G, north_row, node) for node in G.nodes])
-    north_east_members = chain_flatten([get_north_and_east_nbs(G, north_row, node) for node in next_row_members])
-    ic(north_east_members)
+    next_row = filter_none([get_node_with_north_nb_in_row(G, north_row, node) for node in G.nodes])
+    north_east = chain_flatten([get_north_and_east_nbs(G, north_row, node) for node in next_row])
+    if north_east:
+        svlogger.debug(f"NORTH EAST node added when processing {ix}: {north_east}")
+
+    return list(set(next_row).union(set(north_east)))
+
+def remove_existing_node_from_list(arr, lst):
+    return list(set(lst).difference(set(arr.flatten())))
 
 
-    return next_row_members
-
-
-
-def find_east_nb(G, node, valid_nbs):
+def find_east_nb(G, node, valid_nbs, arr):
     east_nbs = G.nodes()[node]["data"]["EAST"]
     res = set(east_nbs).intersection(set(valid_nbs))
     if len(res) == 1:
@@ -52,29 +54,34 @@ def find_east_nb(G, node, valid_nbs):
     if len(res) == 0:
         return None
     if len(res) > 1:
-        raise Exception("More than one east nb")
-    
-
+        r = remove_existing_node_from_list(arr, res)
+        if len(r) == 1:
+            return list(r)[0]
+        else:
+            raise Exception("More than one east nb")
     
 
 def create_next_row(G, arr, ix):
-    valid_nodes = get_possible_members_of_next_row(G, arr, ix)
-    found_nodes = [arr[ix+1, 0]]
-    avail_nodes = list(set(valid_nodes).difference(set(found_nodes)))
-    print(valid_nodes)
+    possible_nodes = get_possible_members_of_next_row(G, arr, ix)
+    found_nodes = [arr[ix+1, 0]] #TODO make fx => western node of row
+    avail_nodes = list(set(possible_nodes).difference(set(found_nodes)))
+    if not avail_nodes:
+        return found_nodes
 
     max_iter = 10
     cnt = 0
 
     while avail_nodes:
-        cnt+=1
         curr_node = found_nodes[-1]
-        next_node = find_east_nb(G, curr_node, avail_nodes)
+        next_node = find_east_nb(G, curr_node, avail_nodes, arr)
+        
         if not next_node:
             return found_nodes
         else:
             found_nodes.append(next_node)
             curr_node = next_node
+
+        cnt+=1
         if cnt > max_iter:
             raise Exception("Exceeded max iter")
         
@@ -107,4 +114,17 @@ def place_next_row(G, arr):
     return update_arr(narr, row, ix+1)
 
 def create_placement(layout):
-    return [[]]
+    arr, *_ = initialize_arr(layout)
+    unplaced = get_unplaced(arr, layout.domains)
+    max_iter = 10
+    cnt = 0
+
+    while unplaced:
+        arr = place_next_row(layout.graph, arr)
+        unplaced = get_unplaced(arr, layout.domains)
+
+        cnt+=1
+        if cnt > max_iter:
+            raise Exception("Exceeded max iter")
+
+    return arr

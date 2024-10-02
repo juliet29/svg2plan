@@ -11,7 +11,7 @@ def expected_placement():
     d0 = [d["m_bed"], d["bed1"]]
     d1 = [d["m_closet"], d["transit"], d["bed1_closet"]]
     d2 = [d["m_bath"], d["corridor"], d["linen"], d["linen"]]
-    d3 = [d["bath"], d["den"]]
+    d3 = [d["bath"], d["corridor"], d["den"]]
     d4 = [d["kitchen"], d["dining"], d["den_closet"]]
     d5 = [d["living"]]
 
