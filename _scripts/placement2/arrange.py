@@ -1,9 +1,10 @@
 import numpy as np
 from export.saver import read_pickle
 from helpers.graph_helpers import sort_nodes_on_egde
+from helpers.helpers import chain_flatten, filter_none
 from helpers.layout import Layout
 from copy import deepcopy
-
+from icecream import ic
 # layout: Layout = read_pickle("1001_amber_c_ag")
 
 def initialize_arr(layout: Layout):
@@ -23,20 +24,23 @@ def get_unplaced(arr, domains):
 def get_row(arr, ix):
     return list(arr[ix, :])
 
-def is_north_nb_in_row(G, arr, ix, node):
-    nodes_to_find = get_row(arr, ix)
+def get_node_with_north_nb_in_row(G, north_row, node):
     for i in G.nodes()[node]["data"]["NORTH"]:
-        if i in nodes_to_find:
+        if i in north_row:
             return node
 
-def get_next_row(ref_row, G, arr, domains, unplaced):
-    res = [is_north_nb_in_row(ref_row, node, G, arr) for node in unplaced]
-    valid_res = [i for i in res if i]
-    return sorted(valid_res, key=lambda i: domains[i]["x"].min)
+def get_north_and_east_nbs(G, north_row, node):
+    return [(node,i) for i in north_row if i in G.nodes()[node]["data"]["EAST"]]
 
-def get_next_row_all(G, arr, ref_row_ix):
-    res = [is_north_nb_in_row(G, arr, ref_row_ix, node) for node in G.nodes]
-    return [i for i in res if i]
+def get_possible_members_of_next_row(G, arr, ix):
+    north_row = get_row(arr, ix)
+    ic(north_row)
+    next_row_members = filter_none([get_node_with_north_nb_in_row(G, north_row, node) for node in G.nodes])
+    north_east_members = chain_flatten([get_north_and_east_nbs(G, north_row, node) for node in next_row_members])
+    ic(north_east_members)
+
+
+    return next_row_members
 
 
 
@@ -50,16 +54,11 @@ def find_east_nb(G, node, valid_nbs):
     if len(res) > 1:
         raise Exception("More than one east nb")
     
-# def find_nb_through_north(G, node, arr, ix, valid_nodes):
-#     north_east_nb = find_east_nb(G, node, get_row(arr, ix))
-#     print(f"ne nb: {north_east_nb}, ix {ix}")
-#     nb = find_east_nb(G, north_east_nb, valid_nodes)
-#     return nb
 
     
 
 def create_next_row(G, arr, ix):
-    valid_nodes = get_next_row_all(G, arr, ix)
+    valid_nodes = get_possible_members_of_next_row(G, arr, ix)
     found_nodes = [arr[ix+1, 0]]
     avail_nodes = list(set(valid_nodes).difference(set(found_nodes)))
     print(valid_nodes)
@@ -72,14 +71,7 @@ def create_next_row(G, arr, ix):
         curr_node = found_nodes[-1]
         next_node = find_east_nb(G, curr_node, avail_nodes)
         if not next_node:
-            if len(found_nodes) == 1: # TODO just 1 is not a valid condition.. 
-                next_node = find_nb_through_north(G, curr_node, arr, ix, valid_nodes)
-                print(f"next node {next_node}")
-                if not next_node:
-                    return found_nodes
-                else:
-                    found_nodes.append(next_node)
-                    curr_node = next_node
+            return found_nodes
         else:
             found_nodes.append(next_node)
             curr_node = next_node

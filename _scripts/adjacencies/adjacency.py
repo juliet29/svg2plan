@@ -47,7 +47,7 @@ class AdjacencyGenerator:
 
     def check_adjacency(self, a: Polygon, b: Polygon):
         sz = self.buffer_size
-        return a.buffer(sz).intersects(b.buffer(sz))
+        return a.buffer(sz).intersects(b.buffer(sz, cap_style="square", join_style="bevel"))
 
     def create_layout(self):
         self.layout = Layout(

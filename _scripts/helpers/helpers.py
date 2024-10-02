@@ -44,13 +44,10 @@ def sort_and_group_objects(lst: List[T], fx: Callable[[T], Any]) -> List[List[T]
     sorted_objs = sorted(lst, key=fx)
     return [list(g) for _, g in groupby(sorted_objs, fx)]
 
-# def sort_and_group_objects_with_keys(lst: List[T], fx: Callable[[T], Any]) -> List[tuple[Any, List[T]]]:
-#     sorted_objs = sorted(lst, key=fx)
-#     keys_and_groups: List[tuple[Any, Iterable[str]]] = []
-#     for k, g in groupby(sorted_objs, key=fx):
-#         group = list((i[0] for i in g))
-#         keys_and_groups.append((key, group))
-
 
 def chain_flatten(lst: Iterable[Iterable]):
     return list(chain.from_iterable(lst))
+
+
+def filter_none(lst: Iterable[T|None]) -> List[T]:
+    return [i for i in lst if i]
