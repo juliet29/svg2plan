@@ -99,21 +99,32 @@ def handle_remaining_rows(darr, s):
 
 
 
-def handle_node(darr, loc):
+def handle_node(darr, loc, visited_nodes):
     row_ix, ix = loc
     s = np.s_[row_ix, ix]
-    if not darr[s]:
-        return darr
-    if row_ix == 0:
-        return handle_init_row(darr, s)
+    node = darr[s]
+    if not node:
+        return darr, visited_nodes
+    
+    if node.name in visited_nodes.keys():
+        darr[s] = darr[visited_nodes[node.name]]
+        return darr, visited_nodes
     else:
-        return handle_remaining_rows(darr, s)
+        visited_nodes[node.name] = s
+
+    if row_ix == 0:
+        return handle_init_row(darr, s), visited_nodes
+    else:
+        return handle_remaining_rows(darr, s), visited_nodes
+
+
 
 
 def place_nodes(darr):
     indices = get_array_indices(darr)
+    visited_nodes = {}
     for loc in indices:
-        darr = handle_node(darr, loc)
+            darr, visited_nodes = handle_node(darr, loc, visited_nodes)
     return darr
 
 
