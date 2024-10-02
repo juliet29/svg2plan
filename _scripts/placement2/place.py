@@ -2,6 +2,8 @@ from itertools import product
 import numpy as np
 from copy import deepcopy
 from icecream import ic
+from domains.domain import Domain
+from domains.range import Range
 from helpers.shapely import domain_to_shape
 from placement2.calculate import (
     place_east,
@@ -60,6 +62,48 @@ def get_north_node(darr, curr_slice):
     return darr[create_north_slice()]
 
 
+def calculate_size_of_x_overlap(a: Domain, b: Domain):
+    u,v = sorted([a,b], key=lambda d: d.x.size)
+    return u.x.line_string.intersection(v.x.line_string).length
+
+def potential_x_domain(darr, curr_slice):
+    row, col = curr_slice
+    west_node = darr[row, col-1]
+    curr_node = darr[curr_slice]
+    x_adjusted_range = Range(west_node.x.max, west_node.x.max+curr_node.x.size)
+    return Domain(x_adjusted_range, curr_node.y, name=curr_node.name)
+
+
+
+
+def choose_north_node(darr, curr_slice):
+    row, _ = curr_slice
+    curr_node = potential_x_domain(darr, curr_slice)
+    if curr_node.name == "linen":
+        print(curr_node)
+    northern_row = darr[row-1]
+
+    max_overlap = (0, None)
+    for node in northern_row:
+        if not node:
+            continue
+        ov = calculate_size_of_x_overlap(curr_node, node)
+        if ov > max_overlap[0]:
+            max_overlap = (ov, node)
+
+        if curr_node.name == "linen":
+            print(max_overlap)
+    assert max_overlap[1]
+
+    
+
+    
+    return max_overlap[1]
+
+
+
+
+
 def get_west_node(darr, curr_slice):
     def create_west_slice():
         return (curr_slice[0], col_cntr)
@@ -88,11 +132,13 @@ def handle_init_row(darr, s):
 
 def handle_remaining_rows(darr, s):
     node = darr[s]
-    north_node = get_north_node(darr, s)
+    
     _, col = s
     if col == 0: 
+        north_node = get_north_node(darr,s) # TODO simplify
         d = place_south(node, north_node)
     else:
+        north_node = choose_north_node(darr, s)
         west_node = get_west_node(darr, s)
         d = place_south_east(node, north_node, west_node)
     return update_domains_arr(s, d, darr)
@@ -100,8 +146,8 @@ def handle_remaining_rows(darr, s):
 
 
 def handle_node(darr, loc, visited_nodes):
-    row_ix, ix = loc
-    s = np.s_[row_ix, ix]
+    row_ix, _ = loc
+    s = np.s_[loc]
     node = darr[s]
     if not node:
         return darr, visited_nodes

@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from decimal import Decimal
 from typing import Callable
+from shapely import LineString
 
 from constants import ROUNDING_LIM
 
@@ -39,6 +40,9 @@ class Range:
     @property
     def size(self):
         return self.max - self.min
+    @property
+    def line_string(self):
+        return LineString([[self.min, 0], [self.max, 0]])
 
     def is_larger(self, other):
         return self.min >= other.max
