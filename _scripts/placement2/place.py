@@ -1,7 +1,11 @@
-from itertools import product
+from typing import Dict
+from xml import dom
+import networkx as nx
+from itertools import combinations, product
 import numpy as np
 from copy import deepcopy
 from icecream import ic
+from shapely import Polygon
 from domains.domain import Domain
 from domains.range import Range
 from helpers.shapely import domain_to_shape
@@ -15,18 +19,7 @@ from placement2.arrange import create_arrangement
 from helpers.layout import Layout
 
 
-def get_array_indices(arr):
-    return list(product(*([i for i in range(sz)] for sz in arr.shape)))
-
-
-def create_new_domains(darr):
-    return {v.name: v for v in darr.flatten() if v}
-
-def create_new_shapes(darr):
-    return {v.name: domain_to_shape(v) for v in darr.flatten() if v}
-
-
-def create_domains_arr(arr, domains):
+def create_domains_arr(arr:np.ndarray, domains: Dict[str, Domain]) -> np.ndarray:
     def get_domains(i):
         if i:
             return domains[i]
@@ -120,6 +113,8 @@ def handle_node(darr, loc, visited_nodes):
         return handle_remaining_rows(darr, s), visited_nodes
 
 
+def get_array_indices(arr):
+    return list(product(*([i for i in range(sz)] for sz in arr.shape)))
 
 
 def place_nodes(darr):
@@ -131,13 +126,48 @@ def place_nodes(darr):
 
 
 
-def create_placement_and_update_layout(layout):
+
+def create_new_domains(darr) -> Dict[str, Domain]:
+    return {v.name: v for v in darr.flatten() if v}
+
+def create_new_shapes(darr) -> Dict[str, Polygon]:
+    return {v.name: domain_to_shape(v) for v in darr.flatten() if v}
+
+def update_graph(shapes, graph):
+    # NEEDS UPDATED LAYOUT!
+    def get_shapes(pair):
+        u, v = pair
+        return shapes[u], shapes[v]
+    
+    def check_adjacency_simple(a:Polygon, b:Polygon):
+        return a.intersects(b)
+    
+    def create_set(edges):
+        return set([tuple(sorted(i)) for i in edges])
+
+
+    G = deepcopy(graph)
+    pairs = list(combinations(shapes.keys(), 2))
+    new_edges = [pair for pair in pairs if check_adjacency_simple(*get_shapes(pair))]
+    a, b = create_set(new_edges), create_set(G.edges)
+    G.add_edges_from(a.difference(b))
+
+    return G
+    
+
+
+
+def create_placement_and_update_layout(layout:Layout):
     arr = create_arrangement(layout)
     darr = create_domains_arr(arr, layout.domains)
     darr1 = place_nodes(darr)
 
+    shapes = create_new_shapes(darr1)
+    domains = create_new_domains(darr1)
+    G = update_graph(shapes, layout.graph)
+
     return Layout(
-        shapes=create_new_shapes(darr1),
-        domains=create_new_domains(darr1),
-        graph=layout.graph,
+        shapes=shapes,
+        domains=domains,
+        graph=G,
     )

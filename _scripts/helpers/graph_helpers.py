@@ -38,4 +38,3 @@ def sort_nodes_on_egde(G: nx.Graph, domains:Dict[str, Domain]) ->  Dict[str, lis
     return {g[0].drn: sort_domains(g, domains) for g in grouped_nodes}
 
 
-

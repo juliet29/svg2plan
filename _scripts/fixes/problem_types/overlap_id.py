@@ -33,7 +33,8 @@ def find_overlaps(G: nx.Graph, shapes: Dict[str, Polygon]) -> list[Overlap]:
 def create_action_for_problem(overlap: Overlap, domains: Dict[str, Domain]):
     edge, shape = overlap
     a, b = [domains[i] for i in edge]
-    cmp = get_domain_directions(a, b)
+    cmp = get_domain_directions(a, b, True)
+    
     if not cmp:
         return None
 
