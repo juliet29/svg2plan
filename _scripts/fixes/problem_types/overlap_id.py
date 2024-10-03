@@ -34,6 +34,8 @@ def create_action_for_problem(overlap: Overlap, domains: Dict[str, Domain]):
     edge, shape = overlap
     a, b = [domains[i] for i in edge]
     cmp = get_domain_directions(a, b)
+    if not cmp:
+        return None
 
     def create_action_details(domain: Domain):
         drns = cmp.get_domain_directions(domain)
@@ -51,6 +53,8 @@ def create_overlap_problems(layout: Layout):
     for ix, overlap in enumerate(overlaps):
         edge, shape = overlap
         p = Problem(ix, ProblemType.OVERLAP, list(edge), shape)
-        p.action_details.extend(create_action_for_problem(overlap, layout.domains))
+        actns = create_action_for_problem(overlap, layout.domains)
+        if actns:
+            p.action_details.extend(actns)
         problems.append(p)
     return problems

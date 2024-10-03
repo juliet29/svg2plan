@@ -80,6 +80,7 @@ def create_hole_geom(domain_a: Domain, domain_b: Domain, axis):
 def create_action_for_problem(pair_and_axis: tuple[Domain, Domain, str], geom: Domain):
     a, b, axis = pair_and_axis
     cmp = get_domain_directions(a, b)
+    assert cmp
 
     def create_action_details(domain: Domain):
         drns = cmp.get_domain_directions(domain)

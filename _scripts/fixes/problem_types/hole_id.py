@@ -1,14 +1,15 @@
 from dataclasses import dataclass
 from typing import Dict
 from domains.domain import Domain
-from fixes.id_helpers import get_domain_directions, get_problem_size
+from fixes.id_helpers import DomainComparisonError, get_domain_directions, get_problem_size
 from fixes.interfaces import SIDEHOLE_ACTIONS, ActionDetails, Problem, ProblemType
 from helpers.layout import Layout
 from helpers.directions import Direction
 from fixes.interfaces import LayoutBase
 from shapely import Polygon, union_all, STRtree, LinearRing
-from helpers.helpers import key_from_value, compare_sequences
+from helpers.helpers import filter_none, key_from_value, compare_sequences
 from helpers.shapely import shape_to_domain
+from svg_logger.settings import svlogger
 
 
 def find_holes(shapes: list[Polygon]):
@@ -29,6 +30,8 @@ def create_action_for_problem(rooms_and_hole: tuple[list[str], Domain], domains:
 
     def create_action_details_for_room(room: Domain):
         cmp = get_domain_directions(room, hole_domain, consider_overlap=False)
+        if not cmp:
+            return None
         drns = cmp.get_domain_directions(room)
         try:
             [drn] = drns
@@ -36,7 +39,7 @@ def create_action_for_problem(rooms_and_hole: tuple[list[str], Domain], domains:
             raise Exception("Domain should only have one relationship to hole.. ")
         return ActionDetails(room, drn, get_problem_size(hole_domain, drn), SIDEHOLE_ACTIONS)
     
-    return [create_action_details_for_room(i) for i in room_domains]
+    return filter_none([create_action_details_for_room(i) for i in room_domains])
        
 
 def create_hole_problems(layout: Layout):

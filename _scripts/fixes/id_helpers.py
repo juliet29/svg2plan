@@ -6,7 +6,7 @@ class DomainComparisonError(Exception):
     def __init__(self, domains: tuple[Domain, Domain]):            
         super().__init__("Problem domains should have a relationship!")
             
-        print(domains)
+        # print(domains)
 
 
 def get_problem_size(prob_domain: Domain, drn: Direction) -> Decimal:
@@ -24,5 +24,6 @@ def get_domain_directions(a: Domain, b: Domain, consider_overlap=True):
     if cmp.is_empty():
         cmp = b.compare_domains(a, consider_overlap)
     if cmp.is_empty():
-        raise DomainComparisonError((a,b))
+        return None
+        # raise DomainComparisonError((a,b))
     return cmp

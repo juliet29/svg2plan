@@ -24,8 +24,8 @@ def create_node_operations(action_details: ActionDetails):
        if op is not None:
            operations.append(op)
 
-    if is_action_here(operations, ActionType.PUSH) and not is_action_here(operations, ActionType.SQUEEZE):
-        raise Exception(f"Where is squeeze?") 
+    # if is_action_here(operations, ActionType.PUSH) and not is_action_here(operations, ActionType.SQUEEZE):
+    #     raise Exception(f"Where is squeeze?") 
         
     return operations
            
@@ -49,7 +49,7 @@ class CreateModifiedDomain:
         try:
             temp_domain[axis] = self.modify_range(self.node[axis])
         except InvalidRangeException:
-            print(f"Could not make domain!! for {self.node} doing action {self.action_type}")
+            print(f"Could not make domain!! for {self.node.name} of size {self.node[axis].size} doing action {self.action_type} in {axis} direction for {self.size} units")
             return None
         temp_domain[other_axis] = self.node[other_axis]
         return OperationLog(self.node, self.action_type, axis, Domain(**temp_domain))
