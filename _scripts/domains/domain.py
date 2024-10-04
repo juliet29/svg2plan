@@ -43,8 +43,16 @@ class Domain:
         [other_axis] = axes.difference({axis})
         return other_axis
 
-    def modify(self, fx: Callable[[Decimal], Decimal]):
-        return self.__class__(self.x.modify(fx), self.y.modify(fx), self.name)
+        
+    
+    def modify(self, fx: Callable[[Decimal], Decimal], axis: str|None = None):
+        if axis == "x":
+            return self.__class__(self.x.modify(fx), self.y, self.name)
+        elif axis == "y":
+            return self.__class__(self.x, self.y.modify(fx), self.name)
+        else:
+            return self.__class__(self.x.modify(fx), self.y.modify(fx), self.name)
+
 
     def get_values(self):
         return (self.x.min, self.x.max, self.y.min, self.y.max)
@@ -57,12 +65,7 @@ class Domain:
             Range.create_range(x_min, x_max), Range.create_range(y_min, y_max), name
         )
 
-    # @classmethod
-    # def create_empty_domain(cls):
-    #     return cls.create_domain([0,0.01,0,0.01])
 
-    # def is_empty_domain(self):
-    #     return self == (0,0.01,0,0.01)
 
 
 @dataclass(frozen=True)
