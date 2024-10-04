@@ -56,10 +56,14 @@ def find_adjacent_nodes(
             adjacent_nodes.append(cmp[-1])
         else:
             return adjacent_nodes
+    return adjacent_nodes
         
-def print_adjacent_nodes(node: Domain, domains: DomainsDict):
-    _, ranges = find_possible_east_nbs_and_ranges(node, domains)
-    return find_adjacent_nodes(ranges, domains)
+def collect_adjacent_nodes(node: Domain, domains: DomainsDict):
+    poss_nbs, ranges = find_possible_east_nbs_and_ranges(node, domains)
+    nbs = find_adjacent_nodes(ranges, domains)
+    if nbs:
+        return {k:v for k,v in ranges.items() if k in nbs}
+    
 
 
 
