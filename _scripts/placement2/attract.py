@@ -1,17 +1,15 @@
+from copy import deepcopy
+from decimal import Decimal
 from functools import reduce
 from itertools import pairwise, product
 from operator import add
+from typing import NamedTuple
 from numpy import isin
 from domains.range import Range
-from helpers.helpers import filter_none
-from helpers.layout import DomainsDict, Layout, PartialLayout, OptionalDomainsDict
+from helpers.helpers import filter_none, sort_and_group_objects
+from helpers.layout import DomainsDict
 from domains.domain import Domain
 import networkx as nx
-
-
-def init_new_domains_dict(domains: DomainsDict):
-    return {k: None for k in domains.keys()}
-
 
 def get_possible_nbs_east(node: Domain, domains: DomainsDict) -> list[Domain]:
     other_doms = list(set(domains.values()).difference(set([node])))
@@ -63,17 +61,16 @@ def find_adjacent_nodes(
     return adjacent_nodes
         
 def collect_adjacent_nodes(node: Domain, domains: DomainsDict):
-    poss_nbs, ranges = find_possible_east_nbs_and_ranges(node, domains)
+    _, ranges = find_possible_east_nbs_and_ranges(node, domains)
     nbs = find_adjacent_nodes(ranges, domains)
     if nbs:
         return {k:v for k,v in ranges.items() if k in nbs}
-    
-
-
 
 def create_ranges_for_all_nodes(domains: DomainsDict):
     nb_ranges = {d.name:collect_adjacent_nodes(d, domains) for d in domains.values()}
     return {k:v for k,v in nb_ranges.items() if v}
+
+
 
 def create_graph(domains: DomainsDict):
     ranges = create_ranges_for_all_nodes(domains)
@@ -83,11 +80,15 @@ def create_graph(domains: DomainsDict):
         for k1, v1 in v.items():
             n2 = k1
             G.add_edge(n1, n2, size=v1.size)
+
+    nx.is_directed_acyclic_graph(G)
     return G
 
-    # TODO check that is acyclic and directed
 
-
+class DistanceToMove(NamedTuple):
+    root: str
+    node: str
+    val: Decimal
 
 
 def get_distances(G: nx.DiGraph):
@@ -102,14 +103,42 @@ def get_distances(G: nx.DiGraph):
     def get_size_of_path(path: list[str]):
         return reduce(add, [G.edges[u,v]["size"] for u,v in pairwise(path)])
     
-    sizes = []
+    def handle_group(group:list[DistanceToMove]):
+        val = min([i.val for i in group])
+        root, node, _ = group[0]
+        return DistanceToMove(root, node, val)
+    
+    sizes: list[DistanceToMove] = []
     for pair in segment_roots():
         paths = get_paths(*pair)
         if paths:
             sz = min([get_size_of_path(p) for p in paths])
-            sizes.append((*pair, sz))
+            sizes.append(DistanceToMove(*pair, sz))
 
-    return sizes
+    groups = sort_and_group_objects(sizes, lambda x: x.node)
+    return [handle_group(i) for i in groups]
+
+
+def modify_domain(domains: DomainsDict, distances: list[DistanceToMove]):
+    new_domains = deepcopy(domains)
+    for g in distances:
+        _, node, val = g
+        new_domains[node] = domains[node].modify(lambda x: x-val, "x")
+    return new_domains
+
+
+def adjust_domains_x(domains: DomainsDict):
+    G  = create_graph(domains)
+    distances = get_distances(G)
+    return modify_domain(domains, distances)
+
+
+
+
+    
+
+
+
 
 
 
