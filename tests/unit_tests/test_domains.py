@@ -103,3 +103,12 @@ class TestRange:
         res = control.modify(fx)
         assert res.min == control.min + 2
         assert res.max == control.max + 2
+
+
+
+# def check_contains(a,b):
+#     print(f"a contains b: {a.contains(b)}")
+#     print(f"b contains a: {b.contains(a)}")
+# a = Range.create_range(10, 30)
+# b = Range.create_range(8, 29)
+# check_contains(a,b)

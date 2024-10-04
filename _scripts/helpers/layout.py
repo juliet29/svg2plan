@@ -1,21 +1,23 @@
 from dataclasses import dataclass
-from typing import Dict, Optional
+from typing import Dict, NamedTuple
 from shapely import Polygon
 from networkx import Graph
 from domains.domain import Domain
 
+DomainsDict = Dict[str, Domain]
+OptionalDomainsDict = Dict[str, Domain|None]
+ShapesDict = Dict[str, Polygon]
 
-@dataclass
-class Layout:
-    shapes: Dict[str, Polygon]
-    domains: Dict[str, Domain]
+class Layout(NamedTuple):
+    shapes: ShapesDict
+    domains: DomainsDict 
     graph: Graph
 
 
-@dataclass
-class PartialLayout:
-    shapes: Dict[str, Polygon]
-    domains: Dict[str, Domain]
+
+class PartialLayout(NamedTuple):
+    shapes: ShapesDict
+    domains: DomainsDict
 
 
 def get_bounds_of_layout(coordinates: Dict[str, tuple]):

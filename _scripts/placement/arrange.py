@@ -69,9 +69,9 @@ def get_possible_members_of_next_row(G, arr, ix):
     return list(set(next_row).union(set(north_east)))
 
 
-def find_east_nb(graph_domains:GraphDomains, arr, node, possible_nbs):
+def find_east_nb(graph_domains:GraphDomains, arr, node, possible_nbs, drn="EAST"):
     G = graph_domains.G
-    east_nbs = G.nodes()[node]["data"]["EAST"]
+    east_nbs = G.nodes()[node]["data"][drn]
     res = set(east_nbs).intersection(set(possible_nbs))
     if len(res) == 1:
         return list(res)[0]
@@ -99,7 +99,8 @@ def create_next_row(graph_domains:GraphDomains, arr, ix):
     while avail_nodes:
         curr_node = found_nodes[-1]
         next_node = find_east_nb(graph_domains, arr, curr_node, avail_nodes)
-
+        if not next_node:
+            next_node = find_east_nb(graph_domains, arr, curr_node, avail_nodes, "NORTH")
         if not next_node:
             return found_nodes
         else:

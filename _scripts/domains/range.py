@@ -41,8 +41,14 @@ class Range:
     def size(self):
         return self.max - self.min
     @property
-    def line_string(self):
+    def line_string_x(self):
         return LineString([[self.min, 0], [self.max, 0]])
+    @property
+    def line_string_y(self):
+        return LineString([[0, self.min], [0, self.max]])
+    
+    def contains(self, other):
+        return self.min <= other.min and self.max >= other.max
 
     def is_larger(self, other):
         return self.min >= other.max

@@ -34,7 +34,7 @@ def update_domains_arr(s, domain, domains_arr):
 
 def calculate_size_of_x_overlap(a: Domain, b: Domain):
     u,v = sorted([a,b], key=lambda d: d.x.size)
-    return u.x.line_string.intersection(v.x.line_string).length
+    return u.x.line_string_x.intersection(v.x.line_string_x).length
 
 def potential_x_domain(darr, curr_slice):
     row, col = curr_slice
