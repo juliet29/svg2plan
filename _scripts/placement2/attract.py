@@ -5,77 +5,21 @@ from itertools import pairwise, product
 from operator import add
 from typing import NamedTuple
 from numpy import isin
-from domains.range import Range
-from helpers.helpers import filter_none, sort_and_group_objects
+from helpers.helpers import sort_and_group_objects
 from helpers.layout import DomainsDict
-from domains.domain import Domain
 import networkx as nx
 
-def get_possible_nbs_east(node: Domain, domains: DomainsDict) -> list[Domain]:
-    other_doms = list(set(domains.values()).difference(set([node])))
-    assert not isinstance(node, str)
+from placement2.neighbors import create_ranges_for_all_nodes
 
-    def is_possible_east_nb(other: Domain):
-        return node.y.line_string_y.intersection(other.y.line_string_y) and other.x.min >= node.x.max
+class DistanceToMove(NamedTuple):
+    root: str
+    node: str
+    val: Decimal
 
-    poss_nbs = [i for i in other_doms if is_possible_east_nb(i)]
-    return sorted(poss_nbs, key=lambda n: n.x.min)
-
-
-def create_ranges_between_east(node: Domain, poss_nbs: list[Domain]) -> dict[str, Range]:
-    def create_range(other: Domain):
-        return Range(node.x.max, other.x.min)
-    return {i.name: create_range(i) for i in poss_nbs}
-
-def find_possible_east_nbs_and_ranges(node: Domain, domains: DomainsDict):
-    poss_nbs = get_possible_nbs_east(node, domains)
-    ranges = create_ranges_between_east(node, poss_nbs)
-    return poss_nbs, ranges
-
-
-def create_comparisons(poss_nbs: list[str]) -> list[list[str]]:
-    comparisons = []
-    for ix, _ in enumerate(poss_nbs):
-        comparisons.extend([poss_nbs[:ix+1]])
-    return filter_none(comparisons)
-
-
-def find_adjacent_nodes(
-    ranges: dict[str, Range], domains: DomainsDict
-):
-    def is_seperated_by_another_node(comparison: list[str]):
-        if len(comparison) == 1:
-            return
-        *others, current = comparison
-        for other in others:
-            if ranges[current].contains(domains[other].x):
-                return True
-
-    comparisons = create_comparisons((list(ranges.keys())))
-    adjacent_nodes = []
-    for cmp in comparisons:
-        if not is_seperated_by_another_node(cmp):
-            adjacent_nodes.append(cmp[-1])
-        else:
-            return adjacent_nodes
-    return adjacent_nodes
-        
-def collect_adjacent_nodes(node: Domain, domains: DomainsDict):
-    _, ranges = find_possible_east_nbs_and_ranges(node, domains)
-    nbs = find_adjacent_nodes(ranges, domains)
-    if nbs:
-        return {k:v for k,v in ranges.items() if k in nbs}
-
-def create_ranges_for_all_nodes(domains: DomainsDict):
-    nb_ranges = {d.name:collect_adjacent_nodes(d, domains) for d in domains.values()}
-    return {k:v for k,v in nb_ranges.items() if v}
-
-
-
-def create_graph(domains: DomainsDict):
-    ranges = create_ranges_for_all_nodes(domains)
+def create_graph(domains: DomainsDict, ax):
+    ranges = create_ranges_for_all_nodes(domains, ax)
     G = nx.DiGraph()
-    for k,v in ranges.items():
+    for k, v in ranges.items():
         n1 = k
         for k1, v1 in v.items():
             n2 = k1
@@ -83,12 +27,6 @@ def create_graph(domains: DomainsDict):
 
     nx.is_directed_acyclic_graph(G)
     return G
-
-
-class DistanceToMove(NamedTuple):
-    root: str
-    node: str
-    val: Decimal
 
 
 def get_distances(G: nx.DiGraph):
@@ -101,13 +39,13 @@ def get_distances(G: nx.DiGraph):
         return [i for i in nx.all_simple_paths(G, root, node)]
 
     def get_size_of_path(path: list[str]):
-        return reduce(add, [G.edges[u,v]["size"] for u,v in pairwise(path)])
-    
-    def handle_group(group:list[DistanceToMove]):
+        return reduce(add, [G.edges[u, v]["size"] for u, v in pairwise(path)])
+
+    def handle_group(group: list[DistanceToMove]):
         val = min([i.val for i in group])
         root, node, _ = group[0]
         return DistanceToMove(root, node, val)
-    
+
     sizes: list[DistanceToMove] = []
     for pair in segment_roots():
         paths = get_paths(*pair)
@@ -119,40 +57,40 @@ def get_distances(G: nx.DiGraph):
     return [handle_group(i) for i in groups]
 
 
-def modify_domain(domains: DomainsDict, distances: list[DistanceToMove]):
+def modify_domain(domains: DomainsDict, distances: list[DistanceToMove], ax):
     new_domains = deepcopy(domains)
     for g in distances:
         _, node, val = g
-        new_domains[node] = domains[node].modify(lambda x: x-val, "x")
+        if ax == "x":
+            new_domains[node] = domains[node].modify(lambda x: x - val, "x")
+        elif ax == "y":
+            new_domains[node] = domains[node].modify(lambda x: x - val, "y")
+
     return new_domains
 
 
 def adjust_domains_x(domains: DomainsDict):
-    G  = create_graph(domains)
+    ax="x"
+    G = create_graph(domains, ax)
     distances = get_distances(G)
-    return modify_domain(domains, distances)
+    return modify_domain(domains, distances, ax)
+
+def adjust_domains_y(domains: DomainsDict):
+    ax="y"
+    G = create_graph(domains, ax)
+    distances = get_distances(G)
+    return modify_domain(domains, distances, ax)
 
 
+## drawing
 
-
-    
-
-
-
-
-
-
-    
-
-
-
-## drawing 
 
 def create_pos(domains):
-    return {k:( float(v.x.min), float(v.y.min))for k,v in domains.items()}
+    return {k: (float(v.x.min), float(v.y.min)) for k, v in domains.items()}
+
 
 def draw_digraph(G, pos):
     nx.draw(G, pos=pos)
-    nx.draw_networkx_labels(G,pos, labels={n: n for n in G},font_size=10)
-    edge_labels = nx.get_edge_attributes(G, 'size')
+    nx.draw_networkx_labels(G, pos, labels={n: n for n in G}, font_size=10)
+    edge_labels = nx.get_edge_attributes(G, "size")
     nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8)

@@ -6,7 +6,6 @@ from shapely import LineString
 from constants import ROUNDING_LIM
 
 
-
 class InvalidRangeException(Exception):
     pass
 
@@ -40,15 +39,27 @@ class Range:
     @property
     def size(self):
         return self.max - self.min
+
     @property
-    def line_string_x(self):
+    def line_string(self):
+        # 'projected' on to x axis
         return LineString([[self.min, 0], [self.max, 0]])
-    @property
-    def line_string_y(self):
-        return LineString([[0, self.min], [0, self.max]])
-    
+
+    # @property
+    # def line_string_y(self):
+    #     return LineString([[0, self.min], [0, self.max]])
+
+    def is_intersecting_shapely(self, other):
+        return self.line_string.intersection(other.line_string)
+
     def contains(self, other):
         return self.min <= other.min and self.max >= other.max
+
+    def is_strictly_smaller(self, other):
+        return other.min >= self.max
+
+    def is_strictly_larger(self, other):
+        return other.max <= self.min
 
     def is_larger(self, other):
         return self.min >= other.max
@@ -61,10 +72,9 @@ class Range:
 
     def is_overlapping_and_smaller(self, other):
         return self.min < other.min and other.min <= self.max <= other.max
-    
+
     def __lt__(self, other):
         return self.is_overlapping_and_smaller(other)
-
 
     def compare_ranges(self, other, consider_overlap=False):
         if self.is_smaller(other):
@@ -88,7 +98,7 @@ class Range:
 
     @classmethod
     def create_range(cls, a: float, b: float):
-        fx =lambda x: round(Decimal(x), ROUNDING_LIM)
+        fx = lambda x: round(Decimal(x), ROUNDING_LIM)
         return cls(fx(a), fx(b))
 
 

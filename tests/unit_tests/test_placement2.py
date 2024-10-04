@@ -1,22 +1,29 @@
 from export.saver import read_pickle
 from helpers.layout import Layout
-from placement2.arrange import create_arrangement
+from placement2.attract import *
 import numpy as np
+from read.svg_reader import SVGReader
 
 
-expected_placement_amber_c = np.array(
-    [
-        ["m_bed", "bed1", "", ""],
-        ["m_closet", "transit", "bed1_closet", ""],
-        ["m_bath", "corridor", "linen", "laundry"],
-        ["bath", "corridor", "den", ""],
-        ["kitchen", "dining", "den_closet", ""],
-        ["living", "", "", ""],
-    ],
-    dtype=object,
-)  # type: ignore
+def set_up_case(case):
+    sv = SVGReader(case)
+    sv.run()
+    return sv.layout.domains
 
+def test_a():
+    case  = "amber_a_f01.svg"
+    doms = set_up_case(case)
+    n_doms = adjust_domains_x(doms)
+    assert n_doms.keys() == doms.keys()
 
-def test_expected_placement():
-    layout: Layout = read_pickle("1001_amber_c_ag")
-    assert (expected_placement_amber_c == create_arrangement(layout)).all()
+def test_b():
+    case  = "amber_b_f01.svg"
+    doms = set_up_case(case)
+    n_doms = adjust_domains_x(doms)
+    assert n_doms.keys() == doms.keys()
+
+def test_c():
+    case  = "amber_c_f01.svg"
+    doms = set_up_case(case)
+    n_doms = adjust_domains_x(doms)
+    assert n_doms.keys() == doms.keys()
