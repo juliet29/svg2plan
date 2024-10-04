@@ -9,13 +9,13 @@ from shapely import Polygon
 from domains.domain import Domain
 from domains.range import Range
 from helpers.shapely import domain_to_shape
-from placement2.calculate import (
+from placement.calculate import (
     place_east,
     place_north_west,
     place_south,
     place_south_east,
 )
-from placement2.arrange import create_arrangement
+from placement.arrange import create_arrangement
 from helpers.layout import Layout
 
 
