@@ -172,12 +172,22 @@ def handle_unplaced(graph_domains:GraphDomains, arr):
     def is_lingering(curr_node):
         return not is_sharing_north_nb(G, curr_node, west_node) and not is_west_nb(G, curr_node, west_node)
     
+    
     lingering = [i for i in unplaced if is_lingering(i)]
+    assert len(lingering) == len(unplaced), "Not all unplaced nodes are lingering.. "
     if len(lingering) > (arr.shape[1] - 1):
         raise Exception("lingering nodes > than available space.. ")
+    
+    # TODO think about south relationships.. 
     sorted_lingering = sorted(lingering, key=lambda n: domains[n].x.min)
-    arr[-1, -(len(lingering)):] = sorted_lingering
-    return arr
+    row = deepcopy(arr[-1])
+    row[-(len(lingering)):] = sorted_lingering
+    indices = [ix for ix, item in enumerate(row) if not item]
+    row[indices] = arr[-2, indices]
+    new_arr = deepcopy(arr)
+    new_arr[-1] = row
+
+    return new_arr
     
 
 
