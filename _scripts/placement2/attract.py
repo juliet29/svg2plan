@@ -29,7 +29,7 @@ def create_graph(domains: DomainsDict, ax):
     return G
 
 
-def get_distances(G: nx.DiGraph):
+def get_distances(G: nx.DiGraph, op_fx=min):
     def segment_roots():
         roots = [n[0] for n in G.in_degree if n[1] == 0]
         non_roots = [n[0] for n in G.in_degree if n[1] != 0]
@@ -42,7 +42,7 @@ def get_distances(G: nx.DiGraph):
         return reduce(add, [G.edges[u, v]["size"] for u, v in pairwise(path)])
 
     def handle_group(group: list[DistanceToMove]):
-        val = min([i.val for i in group])
+        val = op_fx([i.val for i in group])
         root, node, _ = group[0]
         return DistanceToMove(root, node, val)
 
@@ -50,10 +50,10 @@ def get_distances(G: nx.DiGraph):
     for pair in segment_roots():
         paths = get_paths(*pair)
         if paths:
-            sz = min([get_size_of_path(p) for p in paths])
+            sz = op_fx([get_size_of_path(p) for p in paths])
             sizes.append(DistanceToMove(*pair, sz))
 
-    groups = sort_and_group_objects(sizes, lambda x: x.node)
+    groups = sort_and_group_objects(sizes, lambda n: n.node)
     return [handle_group(i) for i in groups]
 
 

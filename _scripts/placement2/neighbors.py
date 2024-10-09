@@ -1,3 +1,6 @@
+from decimal import Decimal
+from turtle import pos
+from sympy import EX
 from domains.domain import Domain
 from domains.range import Range
 from helpers.directions import get_opposite_axis
@@ -21,10 +24,26 @@ def get_possible_nbs(node: Domain, domains: DomainsDict, ax) -> list[Domain]:
 def create_ranges_between(
     node: Domain, poss_nbs: list[Domain], ax
 ) -> dict[str, Range]:
+    
     def create_range(other: Domain):
-        return Range(node[ax].max, other[ax].min)
+        try:
+            return Range(node[ax].max, other[ax].min)
+        except:
+            return Range(node[ax].max, node[ax].max)
 
-    return {i.name: create_range(i) for i in poss_nbs}
+    res = {}
+    for i in poss_nbs:
+        try:
+            res[i.name] = create_range(i)
+        except:
+            print(node.name, i.name)
+            raise Exception("ranges failed")
+        
+    res = {i.name: create_range(i) for i in poss_nbs}
+
+        
+
+    return res
 
 
 def find_possible_nbs_and_ranges(node: Domain, domains: DomainsDict, ax):
