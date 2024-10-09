@@ -40,11 +40,10 @@ def is_not_touching(edge, domains: dict[str, Domain], ax):
         return Hole(dif, assign_directions(ax, u, v))
 
 
-def find_holes(Gx: nx.DiGraph, domains):
+def find_holes(Gx: nx.DiGraph, Gy: nx.DiGraph, domains):
     x_holes = filter_none([is_not_touching(e, domains, "x") for e in Gx.edges])
-    # Gy = None
-    # y_holes = filter_none([is_not_touching(e, domains, "y") for e in Gy.edges])
-    return x_holes
+    y_holes = filter_none([is_not_touching(e, domains, "y") for e in Gy.edges])
+    return x_holes + y_holes
 
 
 def actions_for_hole(hole: Hole):

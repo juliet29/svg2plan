@@ -52,7 +52,7 @@ def find_possible_nbs_and_ranges(node: Domain, domains: DomainsDict, ax):
     return poss_nbs, ranges
 
 
-def find_adjacent_nodes(ranges: dict[str, Range], domains: DomainsDict):
+def find_adjacent_nodes(ranges: dict[str, Range], domains: DomainsDict, ax):
 
     def create_comparisons(poss_nbs: list[str]) -> list[list[str]]:
         comparisons = []
@@ -65,7 +65,7 @@ def find_adjacent_nodes(ranges: dict[str, Range], domains: DomainsDict):
             return
         *others, current = comparison
         for other in others:
-            if ranges[current].contains(domains[other].x):
+            if ranges[current].contains(domains[other][ax]):
                 return True
 
     comparisons = create_comparisons((list(ranges.keys())))
@@ -81,7 +81,7 @@ def find_adjacent_nodes(ranges: dict[str, Range], domains: DomainsDict):
 def create_ranges_for_all_nodes(domains: DomainsDict, ax):
     def collect_adjacent_nodes(node: Domain):
         _, ranges = find_possible_nbs_and_ranges(node, domains, ax)
-        nbs = find_adjacent_nodes(ranges, domains)
+        nbs = find_adjacent_nodes(ranges, domains, ax)
         if nbs:
             return {k: v for k, v in ranges.items() if k in nbs}
 
