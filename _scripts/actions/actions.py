@@ -9,11 +9,6 @@ from actions.interfaces import (
     get_fx_and_side,
 )
 
-def is_action_here(ops: list[OperationLog], action: ActionType):
-    for o in ops:
-        if o.action_type == action:
-            return True
-    return False
 
 
 def create_node_operations(action_details: ActionDetails):
@@ -24,8 +19,6 @@ def create_node_operations(action_details: ActionDetails):
        if op is not None:
            operations.append(op)
 
-    # if is_action_here(operations, ActionType.PUSH) and not is_action_here(operations, ActionType.SQUEEZE):
-    #     raise Exception(f"Where is squeeze?") 
         
     return operations
            

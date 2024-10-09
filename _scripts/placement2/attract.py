@@ -6,7 +6,7 @@ from operator import add
 from typing import NamedTuple
 from numpy import isin
 from helpers.helpers import sort_and_group_objects
-from helpers.layout import DomainsDict
+from helpers.layout import DiGraphs, DomainsDict
 import networkx as nx
 
 from placement2.neighbors import create_ranges_for_all_nodes
@@ -78,13 +78,8 @@ def adjust_domains(domains: DomainsDict):
     x_domains = modify_domain(domains, distances_x, "x")
     xy_domains = modify_domain(x_domains, distances_y, "y")
 
-    return xy_domains, Gx, Gy
+    return xy_domains, DiGraphs(Gx, Gy)
 
-def adjust_domains_y(domains: DomainsDict):
-    ax="y"
-    G = create_graph(domains, ax)
-    distances = get_distances(G)
-    return modify_domain(domains, distances, ax)
 
 
 ## drawing

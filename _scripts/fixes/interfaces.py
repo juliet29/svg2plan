@@ -9,14 +9,6 @@ from helpers.layout import Layout
 from domains.domain import Domain
 
 
-class LayoutBase:
-    def __init__(self, layout: Layout) -> None:
-        self.G = layout.graph
-        self.domains = layout.domains
-        self.shapes = layout.shapes
-        self.layout = layout
-
-
 @dataclass
 class ActionDetails:
     node: Domain
@@ -47,16 +39,14 @@ class Problem:
         if (
             self.problem_type == value.problem_type
             and self.nbs == value.nbs
-            and self.geometry == value.geometry
+            and self.action_details == value.action_details
         ):
             return True
         else:
             return False
 
     def custom_rep(self):
-        txt = (
-            f"problem_type={self.problem_type}, nbs={self.nbs}, detail={self.geometry}"
-        )
+        txt = f"problem_type={self.problem_type}, nbs={self.nbs}actions={self.action_details} "
         return txt
 
     def __hash__(self):

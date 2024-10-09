@@ -21,7 +21,7 @@ def update_layout(op: OperationLog, layout: Layout):
     name = op.node.name
     tmp_layout: Layout = deepcopy(layout)
     tmp_layout.domains[name] = op.modified_domain
-    tmp_layout.shapes[name] = domain_to_shape(op.modified_domain)
+    # tmp_layout.shapes[name] = domain_to_shape(op.modified_domain)
     return tmp_layout
 
 

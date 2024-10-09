@@ -3,8 +3,7 @@ from copy import deepcopy
 from icecream import ic
 
 from helpers.layout import Layout
-from fixes.interfaces import Problem, ProblemType
-from fixes.interfaces import LayoutBase
+from fixes.interfaces import Problem
 
 from fixes.problem_types.overlap_id import create_overlap_problems
 from fixes.problem_types.hole_id import create_hole_problems
@@ -31,7 +30,7 @@ class Reporter:
         self.output = (self.layout, self.summary, self.problems)
 
     def find_new(self):
-        for identifier in [create_side_hole_problems, create_overlap_problems, create_hole_problems]:
+        for identifier in [create_hole_problems]:
             probs = identifier(self.layout)
             if probs:
                 self.candidates.extend(probs)

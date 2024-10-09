@@ -1,17 +1,22 @@
 from dataclasses import dataclass
 from typing import Dict, NamedTuple
 from shapely import Polygon
-from networkx import Graph
+from networkx import Graph, DiGraph
 from domains.domain import Domain
 
 DomainsDict = Dict[str, Domain]
 OptionalDomainsDict = Dict[str, Domain|None]
 ShapesDict = Dict[str, Polygon]
 
+class DiGraphs(NamedTuple):
+    Gx: DiGraph
+    Gy: DiGraph
+
 class Layout(NamedTuple):
-    shapes: ShapesDict
+    # shapes: ShapesDict
     domains: DomainsDict 
-    graph: Graph
+    graphs: DiGraphs
+
 
 
 

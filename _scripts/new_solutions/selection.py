@@ -62,21 +62,28 @@ class Cook:
         self.results = study_many_problems(
             self.bl.layout, self.bl.problems
         )
-        self.handle()
+        if self.results:
+            self.handle()
+        else:
+            print("No more results!")
         
 
     def handle(self):
         self.count+=1
         print(f"running again -> {self.count}")
+
+
         self.sorted_res = sort_results_by_score(self.results)
-        self.res_hist.append(self.sorted_res)
         self.bl = self.sorted_res[0]
-        # get_next_best_result(self.sorted_res[0], self.sorted_res)
-        print(f"problem being studied: -> {self.bl.problem_being_addressed}")
+
         while is_domain_in_history(self.bl.layout.domains, self.history):
             self.bl = get_next_best_result(self.bl, self.sorted_res)
             print(f"skipping bc prev domains are in history")
+
         print(f"next best layout {self.bl.short_message()}")
+        # print(f"problem being studied: -> {self.bl.problem_being_addressed}")
+
+        self.res_hist.append(self.sorted_res)
         self.history.append(self.bl.layout.domains)
         self.bl_hist.append(self.bl)
 

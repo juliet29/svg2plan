@@ -9,6 +9,7 @@ from fixes.interfaces import Problem
 from dataclasses import dataclass
 from decimal import Decimal
 
+from helpers.helpers import chain_flatten
 from helpers.layout import Layout
 
 N_PROBS_WEIGHT = Decimal(0.5)
@@ -31,7 +32,9 @@ class ResultsLog:
 
     @property
     def problem_size(self):
-        return reduce(add, map(lambda x: x.geometry.area, self.problems))
+        # some double counting, but will be larger for more complex problems.. 
+        res = chain_flatten([i.action_details for i in self.problems])
+        return sum([i.distance for i in res])
     
     @property
     def score(self):

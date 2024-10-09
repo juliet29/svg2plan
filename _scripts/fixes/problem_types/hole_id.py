@@ -2,7 +2,7 @@ from decimal import Decimal
 import networkx as nx
 from domains.domain import Domain
 from fixes.interfaces import HOLE_ACTIONS, ActionDetails, Problem, ProblemType
-from helpers.layout import Layout
+from helpers.layout import DiGraphs, Layout
 from helpers.directions import Direction
 from helpers.helpers import filter_none
 from typing import NamedTuple
@@ -40,7 +40,8 @@ def is_not_touching(edge, domains: dict[str, Domain], ax):
         return Hole(dif, assign_directions(ax, u, v))
 
 
-def find_holes(Gx: nx.DiGraph, Gy: nx.DiGraph, domains):
+def find_holes(graphs: DiGraphs, domains):
+    Gx, Gy = graphs
     x_holes = filter_none([is_not_touching(e, domains, "x") for e in Gx.edges])
     y_holes = filter_none([is_not_touching(e, domains, "y") for e in Gy.edges])
     return x_holes + y_holes
@@ -57,8 +58,7 @@ def nbs_for_hole(hole: Hole):
 
 
 def create_hole_problems(layout: Layout):
-    # TODO update layout..
-    holes = find_holes(layout.graph, layout.domains)
+    holes = find_holes(layout.graphs, layout.domains)
 
     def define_problem_for_hole(ix: int, hole: Hole):
         return Problem(
