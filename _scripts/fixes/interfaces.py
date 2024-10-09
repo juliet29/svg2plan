@@ -9,7 +9,6 @@ from helpers.layout import Layout
 from domains.domain import Domain
 
 
-
 class LayoutBase:
     def __init__(self, layout: Layout) -> None:
         self.G = layout.graph
@@ -27,20 +26,22 @@ class ActionDetails:
 
     def __repr__(self) -> str:
         return f"{self.node.name}-{self.direction.name}-{self.distance}"
-       
+
+
 class ProblemType(Enum):
     OVERLAP = 0
     HOLE = 1
     SIDE_HOLE = 2
 
+
 @dataclass()
 class Problem:
     index: int
-    problem_type: ProblemType 
-    nbs: list[str]  
-    geometry: Domain 
+    problem_type: ProblemType
+    nbs: list[str]
+    action_details: list[ActionDetails]
+    geometry: Optional[Domain] = None  # TODO phase out
     resolved: bool = False
-    action_details: list[ActionDetails] = field(default_factory=list)
 
     def __eq__(self, value) -> bool:
         if (
@@ -53,7 +54,9 @@ class Problem:
             return False
 
     def custom_rep(self):
-        txt = f"problem_type={self.problem_type}, nbs={self.nbs}, detail={self.geometry}"
+        txt = (
+            f"problem_type={self.problem_type}, nbs={self.nbs}, detail={self.geometry}"
+        )
         return txt
 
     def __hash__(self):
@@ -66,5 +69,6 @@ class Problem:
     def short_message(self):
         return f"{self.problem_type}-{self.nbs}"
 
+
 OVERLAP_ACTIONS = [ActionType.PUSH, ActionType.SQUEEZE]
-SIDEHOLE_ACTIONS = [ActionType.PULL, ActionType.STRETCH]
+HOLE_ACTIONS = [ActionType.PULL, ActionType.STRETCH]

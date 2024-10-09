@@ -69,11 +69,16 @@ def modify_domain(domains: DomainsDict, distances: list[DistanceToMove], ax):
     return new_domains
 
 
-def adjust_domains_x(domains: DomainsDict):
-    ax="x"
-    G = create_graph(domains, ax)
-    distances = get_distances(G)
-    return modify_domain(domains, distances, ax)
+def adjust_domains(domains: DomainsDict):
+    Gx = create_graph(domains, "x")
+    distances_x = get_distances(Gx)
+    Gy = create_graph(domains, "y")
+    distances_y = get_distances(Gy)
+
+    x_domains = modify_domain(domains, distances_x, "x")
+    xy_domains = modify_domain(x_domains, distances_y, "y")
+
+    return xy_domains, Gx, Gy
 
 def adjust_domains_y(domains: DomainsDict):
     ax="y"
@@ -89,7 +94,10 @@ def create_pos(domains):
     return {k: (float(v.x.min), float(v.y.min)) for k, v in domains.items()}
 
 
-def draw_digraph(G, pos):
+def draw_digraph(G, domains=None, pos=None):
+    if not pos:
+        assert domains
+        pos = create_pos(domains)
     nx.draw(G, pos=pos)
     nx.draw_networkx_labels(G, pos, labels={n: n for n in G}, font_size=10)
     edge_labels = nx.get_edge_attributes(G, "size")

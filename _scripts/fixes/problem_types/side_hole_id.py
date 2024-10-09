@@ -5,7 +5,7 @@ from actions.interfaces import ActionType, get_action_protocol
 from domains.domain import Domain
 from domains.range import Range
 from fixes.id_helpers import get_domain_directions, get_problem_size
-from fixes.interfaces import ActionDetails, Problem, ProblemType, SIDEHOLE_ACTIONS
+from fixes.interfaces import ActionDetails, Problem, ProblemType, HOLE_ACTIONS
 from helpers.helpers import chain_flatten, pairwise
 from helpers.directions import (
     Direction,
@@ -89,7 +89,7 @@ def create_action_for_problem(pair_and_axis: tuple[Domain, Domain, str], geom: D
         except:
             raise Exception("There should be obly one true dir!")
 
-        return ActionDetails(domain, drn, get_problem_size(geom, drn), SIDEHOLE_ACTIONS)
+        return ActionDetails(domain, drn, get_problem_size(geom, drn), HOLE_ACTIONS)
 
     return [create_action_details(i) for i in [a, b]]
 
