@@ -1,15 +1,11 @@
-from itertools import groupby
-from typing import Any, Callable, Dict, List, TypeVar
-
+from typing import List
 from fixes.reporter import Reporter
-from helpers.layout import Layout
 from new_solutions.interfaces import ResultsLog
 from new_solutions.simple_problem import (
     study_many_problems,
 )
 from visuals.plots import make_subplot_for_all_probs
 from visuals.plotter import plot_general
-from svg_logger.settings import svlogger
 
 
 
