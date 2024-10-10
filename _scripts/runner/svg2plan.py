@@ -4,7 +4,6 @@ import json
 from read.svg_reader import SVGReader
 from adjacencies.adjacency import AdjacencyGenerator
 from adjacencies.connectivity import ConnectivityGenerator
-from placement.executer import PlacementExecuter
 from export.saver import Saver
 
 from fixes.reporter import Reporter
