@@ -75,7 +75,7 @@ def subplot_layout(
     col: int,
     label: str,
     xrange=[-1, 12],
-    yrange=[-10, 1],
+    yrange=[-1, 10],
     label_shapes=False,
 ):
     colors, _ = get_plotly_colors(n_colors=len(domains))
@@ -85,7 +85,13 @@ def subplot_layout(
         if label_shapes:
             plot_dict[k]["label"] = dict(text=k)
 
-    fig.update_xaxes(range=xrange, title_text=label, title_font=dict(size=10), row=row, col=col, )
+    fig.update_xaxes(
+        range=xrange,
+        title_text=label,
+        title_font=dict(size=10),
+        row=row,
+        col=col,
+    )
     fig.update_yaxes(range=yrange, row=row, col=col)
     for d in plot_dict.values():
         fig.add_shape(**d, row=row, col=col)
@@ -93,25 +99,25 @@ def subplot_layout(
     return fig
 
 
-def make_subplot_indices(num_sols):
-    n_rows = math.ceil(math.sqrt(num_sols))
+def make_subplot_indices(n_sols, n_cols=3):
+    additional = 1 if (n_sols + 1 % n_cols) > 0 else 0
+    n_rows = (n_sols // n_cols) + additional
+    print(f"n_rows {n_rows}, n_sols: {n_sols}")
     range_rows = list(range(1, n_rows + 1))
-    indices = list(product(range_rows, range_rows))
+    range_cols = list(range(1, n_cols + 1))
+    indices = list(product(range_rows, range_cols))
 
-    assert len(indices) >= num_sols
-    print(f"len sols = {num_sols}. Len indices = {len(indices)}")
+    print(f"len sols = {n_sols}+1. Len indices = {len(indices)}")
+    assert len(indices) >= (n_sols + 1)
 
-    return indices, n_rows
-
+    return indices, n_rows, n_cols
 
 
 def make_subplot_for_all_probs(init_domains, results: List[ResultsLog]):
-    indices, n_rows = make_subplot_indices(len(results))
+    indices, n_rows, n_cols = make_subplot_indices(len(results))
 
-    fig = make_subplots(rows=n_rows, cols=n_rows)
-    fig = subplot_layout(
-        fig, init_domains, 1, 1, "Init Layout", label_shapes=True
-    )
+    fig = make_subplots(rows=n_rows, cols=n_cols)
+    fig = subplot_layout(fig, init_domains, 1, 1, "Init Layout", label_shapes=True)
 
     for ix, (row, col) in enumerate(indices[1:]):
         try:
@@ -121,9 +127,6 @@ def make_subplot_for_all_probs(init_domains, results: List[ResultsLog]):
         except IndexError:
             # out of solutions
             break
-    # fig.update_layout(title_text=pr.problem.short_message())
 
-    return fig
-
-
-
+    fig.show(renderer="browser")
+    return

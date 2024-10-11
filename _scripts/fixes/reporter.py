@@ -1,14 +1,8 @@
-from collections import Counter, namedtuple
+from collections import Counter
 from copy import deepcopy
-from icecream import ic
-
 from helpers.layout import Layout
 from fixes.interfaces import Problem
-
-from fixes.problem_types.overlap_id import create_overlap_problems
-from fixes.problem_types.hole_id import create_hole_problems
-from fixes.problem_types.side_hole_id import create_side_hole_problems
-from svg_logger.settings import svlogger
+from fixes.id_problems import report_problems
 
 
 class Reporter:
@@ -30,10 +24,9 @@ class Reporter:
         self.output = (self.layout, self.summary, self.problems)
 
     def find_new(self):
-        for identifier in [create_hole_problems]:
-            probs = identifier(self.layout)
-            if probs:
-                self.candidates.extend(probs)
+        probs = report_problems(self.layout)
+        if probs:
+            self.candidates.extend(probs)
 
     def compare_new_and_old(self):
         new_probs = set(self.candidates)
@@ -56,4 +49,6 @@ class Reporter:
         self.problems.extend(self.new)
 
     def summarize(self):
-        self.summary = Counter([i.problem_type.name for i in self.problems if i.resolved == False])
+        self.summary = Counter(
+            [i.problem_type.name for i in self.problems if i.resolved == False]
+        )

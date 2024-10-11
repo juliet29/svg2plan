@@ -87,9 +87,7 @@ class Cook:
         plot_general(self.history[ix], f"iteration {ix}")
 
     def plot_all(self):
-        fig = make_subplot_for_all_probs(self.history[0], self.bl_hist)
-        fig.show()
-        return fig
+        make_subplot_for_all_probs(self.history[0], self.bl_hist)
 
     def show_results_at_ix(self, ix):
         [i.short_message() for i in self.res_hist[ix]]
