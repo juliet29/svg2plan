@@ -50,7 +50,9 @@ class Range:
     #     return LineString([[0, self.min], [0, self.max]])
 
     def is_intersecting_shapely(self, other):
-        return self.line_string.intersection(other.line_string)
+        are_related = not self.line_string.disjoint(other.line_string)
+        are_insides_related = not self.line_string.touches(other.line_string) # not only boundaries touch
+        return are_related and are_insides_related
 
     def contains(self, other):
         return self.min <= other.min and self.max >= other.max
