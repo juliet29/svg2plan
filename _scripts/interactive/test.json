@@ -1,5 +1,12 @@
-[
-  { "id": 3, "width": "0.84", "height": "0.48", "head_height": "3.67", "model": "Andersen", "type": "Casement", "opening_hieght": "0.00", "subsurface_type": "Window" },
-  { "id": 3, "width": "0.84", "height": "0.48", "head_height": "3.67", "model": "Andersen", "type": "Casement", "opening_hieght": "0.00", "subsurface_type": "Window" },
-  { "id": 4, "width": "0.84", "height": "0.48", "head_height": "3.67", "model": "Andersen", "type": "Casement", "opening_hieght": "0.00", "subsurface_type": "Window" }
-]
+{
+  "WINDOWS": [
+    { "id": 3, "width": "0.84", "height": "0.48", "head_height": "3.67", "opening_hieght": "0.30", "model": "Andersen", "wtype": "Casement+Fixed" },
+    { "id": 4, "width": "0.84", "height": "0.48", "head_height": "3.67", "opening_hieght": "0.33", "model": "Andersen", "wtype": "Casement+Fixed" },
+    { "id": 5, "width": "0.84", "height": "0.48", "head_height": "3.67", "opening_hieght": "0.33", "model": "Andersen", "wtype": "Casement+Fixed" }
+  ],
+  "DOORS": [
+    { "id": 0, "width": "0.63", "height": "0.53", "thickness": "0.33", "material": "SCQC" },
+    { "id": 1, "width": "0.63", "height": "0.53", "thickness": "0.33", "material": "SCQC" },
+    { "id": 2, "width": "0.63", "height": "0.53", "thickness": "0.33", "material": "SCQC" }
+  ]
+}

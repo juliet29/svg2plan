@@ -1,96 +1,24 @@
 import sys
 sys.path.append("/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/_scripts")
 
-from fractions import Fraction
-import json
-from typing_extensions import Annotated
+from interactive.detail_helpers import (
+    DimInput,
+    complete_wtype,
+    create_dimension,
+    open_json,
+    update_json,
+    validate_id,
+    validate_wtype,
+)
 import typer
-from dataclasses import dataclass
-from typing import Literal, NamedTuple, Optional, Tuple
-from rich.prompt import Prompt, PromptBase
-from pint import UnitRegistry
-from decimal import Decimal, localcontext
-from helpers.shapely import ROUNDING_LIM
-from pprint import pprint
+from typing_extensions import Annotated
 from rich import print as rprint
-
-## find a json file, or for now, create one. when complete, this will be passed from svg reader..
-
-## speficy type, door or window.
-## from there ask different questions.. so series of prompts..
-
-## will have to enter in models, and materials as well..
-
-
-def rounded_decimal_from_fraction(frac: Fraction):
-    return round(frac.numerator / Decimal(frac.denominator), ROUNDING_LIM)
-
-
-class FootInchesDimension(NamedTuple):
-    feet: Fraction
-    inches: tuple[Fraction, Fraction]
-
-    def __repr__(self) -> str:
-        return f"{self.feet}ft, {format(self.inches[0])} {format(self.inches[1])}in ({self.meters}m)"
-
-    @property
-    def meters(self):
-        ureg = UnitRegistry()
-        total_meters = 0
-        fractional_inches = sum([Fraction(i) for i in self.inches])
-        inches_as_meters = (fractional_inches * ureg.inches).to(ureg.meters)
-        total_meters += inches_as_meters
-
-        feet_as_meters = (Fraction(self.feet) * ureg.feet).to(ureg.meters)
-        total_meters += feet_as_meters
-        return rounded_decimal_from_fraction(total_meters.magnitude)  # type: ignore
-
-
-@dataclass
-class SubsurfaceBase:
-    id: int
-    width: FootInchesDimension
-    height: FootInchesDimension
-
-    def to_json(self):
-        d = self.__dict__
-        for k, v in d.items():
-            if hasattr(v, "feet"):
-                d[k] = str(v.meters)
-        return d
-
-
-@dataclass
-class WindowType(SubsurfaceBase):
-    head_height: FootInchesDimension
-    model: str = "Andersen"
-    type: Literal["Casement", "Fixed", "Casement+Fixed"] = "Casement"
-    opening_hieght: FootInchesDimension = FootInchesDimension(
-        Fraction(0), (Fraction(0), Fraction(0))
-    )
-    subsurface_type: str = "Window"
-
-
-@dataclass
-class DoorType(SubsurfaceBase):
-    thickness: FootInchesDimension
-    material: str  # TODO
-    subsurface_type: str = "Door"
+from interactive.interfaces import DoorType, WindowType
 
 
 PATH = "test.json"
 
 app = typer.Typer(no_args_is_help=True)
-
-
-DimInput = Tuple[str, str, str]
-
-def create_dimension(dim: DimInput):
-    feet, *inches = dim
-    fraction_inches = tuple([Fraction(i) for i in inches])
-    assert len(fraction_inches) == 2
-
-    return FootInchesDimension(feet=Fraction(feet), inches=fraction_inches)
 
 
 @app.command()
@@ -99,35 +27,67 @@ def create_window(
     width: Annotated[DimInput, typer.Option("--width", "-w")],
     height: Annotated[DimInput, typer.Option("--height", "-h")],
     head_height: Annotated[DimInput, typer.Option("--head-height", "-hh")],
+    opening_height: Annotated[DimInput, typer.Option("--opening-height", "-oh")] = (
+        "0",
+        "0",
+        "0",
+    ),
+    model: Annotated[str, typer.Option("--model", "-m")] = "Andersen",
+    wtype: Annotated[
+        str, typer.Option("--wtype", "-wt", autocompletion=complete_wtype)
+    ] = "Casement",
+    edit: Annotated[bool, typer.Option("--edit")] = False,
 ):
-    
-    try:
-        with open(PATH, "r") as file:
-            windows: list[dict] = json.load(file)
-    except:
-        windows = []
+    existing_data = open_json(PATH)
+    windows: list[dict] = existing_data["WINDOWS"]
 
-    if windows:
-        existing_ids = [i["id"] for i in windows]
-        if id in existing_ids:
-            rprint(f"ID {id} already exists. Incrementing to {id+1}")
-            id+=1
-            
-    
+    if not edit:
+        id = validate_id(windows, id)
+    validate_wtype(wtype, opening_height)
+
     res = WindowType(
         id,
         create_dimension(width),
         create_dimension(height),
         create_dimension(head_height),
+        create_dimension(opening_height),
+        model,
+        wtype,
     )
-
-
     rprint(res)
+
     windows.append(res.to_json())
+    existing_data["WINDOWS"] = windows
+    update_json(PATH, existing_data)
 
 
-    with open(PATH, "w") as file:
-        json.dump(windows, default=str, fp=file)
+@app.command()
+def create_door(
+    id: Annotated[int, typer.Argument(help="id")],
+    width: Annotated[DimInput, typer.Option("--width", "-w")],
+    height: Annotated[DimInput, typer.Option("--height", "-h")],
+    thickness: Annotated[DimInput, typer.Option("--thickness", "-t")],
+    material: Annotated[str, typer.Option("--model", "-m")] = "SCQC",
+    edit: Annotated[bool, typer.Option("--edit")] = False,
+):
+    existing_data = open_json(PATH)
+    doors: list[dict] = existing_data["DOORS"]
+
+    if not edit:
+        id = validate_id(doors, id)
+
+    res = DoorType(
+        id,
+        create_dimension(width),
+        create_dimension(height),
+        create_dimension(thickness),
+        material,
+    )
+    rprint(res)
+
+    doors.append(res.to_json())
+    existing_data["DOORS"] = doors
+    update_json(PATH, existing_data)
 
 
 @app.callback()
