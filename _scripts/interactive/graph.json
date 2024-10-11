@@ -1,0 +1,21 @@
+{
+  "directed": true,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    { "id": "kitchen" },
+    { "id": "transit_space" },
+    { "id": "m_closet" },
+    { "id": "m_bedroom" },
+    { "id": "bath" },
+    { "id": "m_bath" },
+    { "id": "SOUTH" },
+    { "id": "bedroom_2" }
+  ],
+  "links": [
+    { "details": { "stype": "DOOR", "id": "0" }, "source": "kitchen", "target": "transit_space" },
+    { "details": { "stype": "DOOR", "id": "1" }, "source": "m_closet", "target": "m_bedroom" },
+    { "details": { "stype": "DOOR", "id": "1" }, "source": "bath", "target": "m_bath" },
+    { "details": { "stype": "WINDOW", "id": "3" }, "source": "SOUTH", "target": "bedroom_2" }
+  ]
+}
