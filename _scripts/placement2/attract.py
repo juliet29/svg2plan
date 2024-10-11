@@ -3,7 +3,7 @@ from decimal import Decimal
 from functools import reduce
 from itertools import pairwise, product
 from operator import add
-from typing import NamedTuple
+from typing import NamedTuple, Optional
 from numpy import isin
 from helpers.helpers import sort_and_group_objects
 from helpers.layout import DiGraphs, DomainsDict
@@ -85,13 +85,15 @@ def adjust_domains(domains: DomainsDict):
 ## drawing
 
 
-def create_pos(domains):
+def create_pos(domains: DomainsDict):
+
     return {k: (float(v.x.min), float(v.y.min)) for k, v in domains.items()}
 
+NodePositions = dict[str, tuple[float, float]]
 
-def draw_digraph(G, domains=None, pos=None):
+def draw_digraph(G,pos: Optional[NodePositions] = None, domains:Optional[DomainsDict] = None):
     if not pos:
-        assert domains
+        assert domains, "Must have domians if pos not passed"
         pos = create_pos(domains)
     nx.draw(G, pos=pos)
     nx.draw_networkx_labels(G, pos, labels={n: n for n in G}, font_size=10)

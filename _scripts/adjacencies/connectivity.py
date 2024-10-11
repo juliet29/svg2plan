@@ -10,7 +10,6 @@ import networkx as nx
 
 from helpers.directions import Direction
 from adjacencies.positioned_graph import PositionedGraph
-from helpers.layout import get_bounds_of_layout
 from constants import BUFFER_SIZE
 
 # todo for amber plan 01
@@ -55,7 +54,7 @@ class ConnectivityGenerator:
     def add_direction_nodes(self):
         for d in Direction:
             self.G.add_node(d.name, direction_node=True)
-        self.update_layout_for_direction_nodes()
+        self.update_layout_for_direction_nodes() # type: ignore
 
         self.G_rooms = nx.subgraph_view(self.G, filter_node=self.filter_direction_nodes)
 
@@ -120,15 +119,14 @@ class ConnectivityGenerator:
         except:
             return True
 
-    def update_layout_for_direction_nodes(self):
-        c = get_bounds_of_layout(self.layout)
-        mid_x = ((c.x.max - c.x.min) / 2) + c.x.min
-        mid_y = ((c.y.max - c.y.min) / 2) + c.y.min
+    # def update_layout_for_direction_nodes(self):
+    #     c = get_bounds_of_positioned_graph(self.layout)
+    #     mid_x = ((c.x.max - c.x.min) / 2) + c.x.min
+    #     mid_y = ((c.y.max - c.y.min) / 2) + c.y.min
 
-        PAD = Decimal(BUFFER_SIZE * 4)
+    #     PAD = Decimal(BUFFER_SIZE * 4)
 
-
-        self.layout[Direction.NORTH.name] = (mid_x, c.y.max + PAD)
-        self.layout[Direction.SOUTH.name] = (mid_x, c.y.min - PAD)
-        self.layout[Direction.EAST.name] = (c.x.min - PAD, mid_y)
-        self.layout[Direction.WEST.name] = (c.x.max + PAD, mid_y)
+    #     self.layout[Direction.NORTH.name] = (mid_x, c.y.max + PAD)
+    #     self.layout[Direction.SOUTH.name] = (mid_x, c.y.min - PAD)
+    #     self.layout[Direction.EAST.name] = (c.x.min - PAD, mid_y)
+    #     self.layout[Direction.WEST.name] = (c.x.max + PAD, mid_y)

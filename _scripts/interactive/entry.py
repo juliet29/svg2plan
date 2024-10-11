@@ -1,7 +1,7 @@
-import string
 import sys
 sys.path.append("/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/_scripts")
 
+from fixes.interfaces import Direction
 import os 
 from typing_extensions import Annotated
 from placement2.attract import adjust_domains
@@ -11,6 +11,7 @@ import json
 import typer
 from rich import print as rprint
 from rich.prompt import Confirm, Prompt
+from placement2.connectivity import create_cardinal_dags
 
 SVG_PATHS =  "/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/svg_imports"
 
@@ -30,7 +31,11 @@ def stringify(ix, e):
 
 
 def is_window_edge(e: tuple[str, str]):
-    return False
+    u,v = e
+    drns = [i.name for i in Direction]
+    if u in drns or v in drns:
+        return True
+    
 
 def assign_details(connections: list[tuple[str, str]]):
     # TODO make dict type... 
@@ -82,12 +87,13 @@ def read_svg(case_name: Annotated[str, typer.Argument(help="case_name", autocomp
     sv = SVGReader(case_name)
     sv.run()
     domains, [Gx, Gy] = adjust_domains(sv.layout.domains)
+    Gxd, Gyd = create_cardinal_dags(Gx, Gy)
 
     rprint("\n ---- Beginning to assess X edges -----")
-    x_edges = handle_edges(Gx)
+    x_edges = handle_edges(Gxd)
 
     rprint("\n ---- Beginning to assess Y edges -----")
-    y_edges = handle_edges(Gy)
+    y_edges = handle_edges(Gyd)
 
     # TODO: write to connectivity graph, pass graph to leveler.. 
 
