@@ -94,6 +94,15 @@ class Range:
     def get_other_side(self, side: str):
         [other_side] = set(self.__annotations__.keys()).difference({side})
         return other_side
+    
+    def update_side(self, side:str, val):
+        assert side == "min" or side == "max"
+        if side == "min":
+            return self.__class__(val, self.max)
+        else:
+            return self.__class__(self.min, val)
+
+
 
     def modify(self, fx: Callable[[Decimal], Decimal]):
         return self.__class__(fx(self.min), fx(self.max))

@@ -56,6 +56,14 @@ class Domain:
 
     def get_values(self):
         return (self.x.min, self.x.max, self.y.min, self.y.max)
+    
+    def update_one_side(self, ax, side, val):
+        assert ax == "x" or ax == "y"
+        if ax == "x":
+            return self.__class__(self.x.update_side(side, val), self.y, self.name) 
+        else:
+            return self.__class__(self.x, self.y.update_side(side, val), self.name)
+
 
     @classmethod
     def create_domain(cls, arr: Iterable, name=""):

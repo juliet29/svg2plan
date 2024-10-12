@@ -8,6 +8,7 @@ from itertools import chain
 from domains.domain import Domain
 from fixes.interfaces import Direction
 from placement2.attract import DomainsDict, create_pos, draw_digraph
+import matplotlib.pyplot as plt
 
 
 def get_roots_and_leaves_for_dag(G: nx.DiGraph):
@@ -82,7 +83,6 @@ def create_cardinal_positions(
     new_pos[Direction.WEST.name] = res[2]
     new_pos[Direction.EAST.name] = res[3]
 
-
     return new_pos
 
 def create_cardinal_dags(Gx: nx.DiGraph, Gy: nx.DiGraph ):
@@ -90,13 +90,15 @@ def create_cardinal_dags(Gx: nx.DiGraph, Gy: nx.DiGraph ):
     Gyd = create_dag_with_cardinal_directions(Gy, "y")
     return Gxd, Gyd
 
-def draw_graph_with_node_labels(G, pos):
+def draw_graph_with_node_labels(G, pos, ):
     nx.draw(G, pos=pos)
     nx.draw_networkx_labels(G, pos, labels={n: n for n in G}, font_size=10)
 
 def draw_cardinal_dags(Gx: nx.DiGraph, Gy: nx.DiGraph,domains: DomainsDict):
     pos=create_cardinal_positions(domains=domains, padding=2)
+    plt.subplot(121)
     draw_graph_with_node_labels(Gx, pos=pos)
+    plt.subplot(122)
     draw_graph_with_node_labels(Gy, pos=pos)
 
 

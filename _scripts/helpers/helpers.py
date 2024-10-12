@@ -52,3 +52,7 @@ def chain_flatten(lst: Iterable[Iterable]):
 
 def filter_none(lst: Iterable[T|None]) -> List[T]:
     return [i for i in lst if i]
+
+
+def uniter(iterer: Iterable):
+    return [i for i in iterer]
