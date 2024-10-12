@@ -78,7 +78,10 @@ def adjust_domains(domains: DomainsDict):
     x_domains = modify_domain(domains, distances_x, "x")
     xy_domains = modify_domain(x_domains, distances_y, "y")
 
-    return xy_domains, DiGraphs(Gx, Gy)
+    # Gxn = create_graph(xy_domains, "x")
+    # Gyn = create_graph(xy_domains, "y")
+
+    return xy_domains,  DiGraphs(Gx, Gy)
 
 
 
@@ -91,10 +94,8 @@ def create_pos(domains: DomainsDict):
 
 NodePositions = dict[str, tuple[float, float]]
 
-def draw_digraph(G,pos: Optional[NodePositions] = None, domains:Optional[DomainsDict] = None):
-    if not pos:
-        assert domains, "Must have domians if pos not passed"
-        pos = create_pos(domains)
+def draw_digraph(G, domains:DomainsDict):
+    pos = create_pos(domains)
     nx.draw(G, pos=pos)
     nx.draw_networkx_labels(G, pos, labels={n: n for n in G}, font_size=10)
     edge_labels = nx.get_edge_attributes(G, "size")
