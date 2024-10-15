@@ -60,3 +60,13 @@ class WindowType(SubsurfaceBase):
 class DoorType(SubsurfaceBase):
     thickness: FootInchesDimension
     material: str  # TODO
+
+
+@dataclass
+class EdgeDetails():
+    ix: int
+    edge: tuple[str, str]
+    axis: Literal["x", "y"]
+    external: bool = False
+    connectivity: bool = False
+    detail: int | None = None

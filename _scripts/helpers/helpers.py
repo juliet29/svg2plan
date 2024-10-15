@@ -41,7 +41,7 @@ def pairwise(iterable):
 T = TypeVar("T")
 
 
-def sort_and_group_objects(lst: List[T], fx: Callable[[T], Any]) -> List[List[T]]:
+def sort_and_group_objects(lst: Iterable[T], fx: Callable[[T], Any]) -> List[List[T]]:
     sorted_objs = sorted(lst, key=fx)
     return [list(g) for _, g in groupby(sorted_objs, fx)]
 
