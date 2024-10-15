@@ -1,0 +1,63 @@
+[
+  {
+    "directed": true,
+    "multigraph": false,
+    "graph": {},
+    "nodes": [
+      { "id": "bedroom_1" },
+      { "id": "transit_space" },
+      { "id": "laundry" },
+      { "id": "kitchen" },
+      { "id": "dining" },
+      { "id": "m_bath" },
+      { "id": "m_bedroom" },
+      { "id": "bath" },
+      { "id": "closet" },
+      { "id": "m_closet" },
+      { "id": "bedroom_2" }
+    ],
+    "links": [
+      { "size": "0.14", "source": "bedroom_1", "target": "transit_space" },
+      { "size": "0.16", "source": "bedroom_1", "target": "laundry" },
+      { "size": "0.14", "source": "transit_space", "target": "bath" },
+      { "size": "0.26", "source": "transit_space", "target": "dining" },
+      { "size": "0.32", "source": "laundry", "target": "m_bath" },
+      { "size": "0.32", "source": "laundry", "target": "bath" },
+      { "size": "0.26", "source": "kitchen", "target": "dining" },
+      { "size": "0.15", "source": "dining", "target": "closet" },
+      { "size": "0.15", "source": "dining", "target": "m_closet" },
+      { "size": "0.18", "source": "m_bath", "target": "m_bedroom" },
+      { "size": "0.18", "source": "bath", "target": "m_bedroom" },
+      { "size": "0.14", "source": "bedroom_2", "target": "transit_space" },
+      { "size": "0.14", "source": "bedroom_2", "target": "kitchen" }
+    ]
+  },
+  {
+    "directed": true,
+    "multigraph": false,
+    "graph": {},
+    "nodes": [
+      { "id": "kitchen" },
+      { "id": "transit_space" },
+      { "id": "m_closet" },
+      { "id": "m_bedroom" },
+      { "id": "bath" },
+      { "id": "m_bath" },
+      { "id": "dining" },
+      { "id": "laundry" },
+      { "id": "closet" },
+      { "id": "bedroom_2" },
+      { "id": "bedroom_1" }
+    ],
+    "links": [
+      { "size": "0.17", "source": "kitchen", "target": "transit_space" },
+      { "size": "0.12", "source": "transit_space", "target": "laundry" },
+      { "size": "0.06", "source": "m_closet", "target": "m_bedroom" },
+      { "size": "0.21", "source": "bath", "target": "m_bath" },
+      { "size": "0.20", "source": "dining", "target": "m_bedroom" },
+      { "size": "0.20", "source": "dining", "target": "bath" },
+      { "size": "0.33", "source": "closet", "target": "m_closet" },
+      { "size": "0.14", "source": "bedroom_2", "target": "bedroom_1" }
+    ]
+  }
+]

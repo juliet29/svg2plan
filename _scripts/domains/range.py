@@ -102,14 +102,18 @@ class Range:
         else:
             return self.__class__(self.min, val)
 
-
-
     def modify(self, fx: Callable[[Decimal], Decimal]):
         return self.__class__(fx(self.min), fx(self.max))
+    
 
     @classmethod
     def create_range(cls, a: float, b: float):
         fx = lambda x: round(Decimal(x), ROUNDING_LIM)
+        return cls(fx(a), fx(b))
+    
+    @classmethod
+    def recreate_range(cls, a: str, b: str):
+        fx = lambda x: Decimal(x)
         return cls(fx(a), fx(b))
 
 

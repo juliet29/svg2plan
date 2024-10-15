@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from decimal import Decimal
-from typing import Callable, Iterable
+from typing import Callable, Iterable, TypedDict
 from domains.range import Range
 from functools import partial
 from constants import ROUNDING_LIM
@@ -52,6 +52,7 @@ class Domain:
             return self.__class__(self.x, self.y.modify(fx), self.name)
         else:
             return self.__class__(self.x.modify(fx), self.y.modify(fx), self.name)
+        
 
 
     def get_values(self):
@@ -63,6 +64,13 @@ class Domain:
             return self.__class__(self.x.update_side(side, val), self.y, self.name) 
         else:
             return self.__class__(self.x, self.y.update_side(side, val), self.name)
+        
+    def to_json(self):
+        d = {}
+        d["x"] = (str(self.x.min), str(self.x.max))
+        d["y"] = (str(self.y.min), str(self.y.max))
+        d["name"] = self.name
+        return d
 
 
     @classmethod
@@ -72,6 +80,9 @@ class Domain:
         return cls(
             Range.create_range(x_min, x_max), Range.create_range(y_min, y_max), name
         )
+    
+
+
 
 
 
@@ -129,3 +140,19 @@ def get_domain_from_range(
         return domain_b
     else:
         raise Exception("invalid range")
+    
+
+class DomainJson(TypedDict):
+    x: tuple[str, str]
+    y: tuple[str, str]
+    name: str
+
+def create_json_doman_dict(domains: dict[str, Domain]):
+    return [i.to_json() for i in domains.values()]
+
+
+def recreate_domain_dict_from_json(res: list[DomainJson]):
+    def recreate_domain(res: DomainJson):
+        return Domain(x=Range.recreate_range(*res["x"]), y=Range.recreate_range(*res["y"]), name=res["name"])
+    
+    return {i["name"]: recreate_domain(i) for i in res}

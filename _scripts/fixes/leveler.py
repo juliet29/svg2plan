@@ -1,9 +1,7 @@
 from copy import deepcopy
 from decimal import Decimal, localcontext
 from statistics import mean
-from domains.domain import Domain
 from helpers.directions import Direction
-import networkx as nx
 from helpers.layout import DiGraphs
 from placement2.attract import DomainsDict
 from placement2.connectivity import create_cardinal_dags
@@ -20,48 +18,58 @@ def normalize_to_target(arr):
         return [scale(i) for i in arr]
 
 
-def get_edge_nodes(graphs: DiGraphs, domains: DomainsDict):
+def get_edge_nodes(graphs: DiGraphs):
     Gxc, Gyc = create_cardinal_dags(*graphs)
     nodes = {}
 
-    nodes[Direction.WEST] = [domains[e[1]] for e in Gxc.edges if "WEST" in e]
-    nodes[Direction.EAST] = [domains[e[0]] for e in Gxc.edges if "EAST" in e]
+    nodes[Direction.WEST] = [e[1] for e in Gxc.edges if "WEST" in e]
+    nodes[Direction.EAST] = [e[0] for e in Gxc.edges if "EAST" in e]
 
-    nodes[Direction.SOUTH] = [domains[e[1]] for e in Gyc.edges if "SOUTH" in e]
-    nodes[Direction.NORTH] = [domains[e[0]] for e in Gyc.edges if "NORTH" in e]
+    nodes[Direction.SOUTH] = [e[1] for e in Gyc.edges if "SOUTH" in e]
+    nodes[Direction.NORTH] = [e[0] for e in Gyc.edges if "NORTH" in e]
 
     return nodes
 
+def to_rounded_decimal(val:float):
+    return round(Decimal(val), 2)
 
-def smooth_edge(nodes: list[Domain], drn: Direction, domains: DomainsDict):
-    weights = normalize_to_target([i.area for i in nodes])
-    vals = [i.x.min for i in nodes]
-    val = mean([w * x for w, x in zip(weights, vals)])
+def smooth_edge(node_names: list[str], drn: Direction, domains: DomainsDict):
+    nodes = [domains[i] for i in node_names]
 
     match drn:
         case Direction.SOUTH:
-            ax, side = "y", min
+            ax, side = "y", "min"
         case Direction.WEST:
-            ax, side = "x", min
+            ax, side = "x", "min"
         case Direction.NORTH:
-            ax, side = "y", max
+            ax, side = "y", "max"
         case Direction.EAST:
-            ax, side = "x", min
+            ax, side = "x", "max"
+
+    
+    # TODO - weights = normalize_to_target([i.area for i in nodes])
+    vals = [i[ax][side] for i in nodes]
+    weights = [1 for i in nodes]
+    val = to_rounded_decimal(mean([w * x for w, x in zip(weights, vals)]))
+    print(drn, val)
+
 
     new_nodes = [i.update_one_side(ax, side, val) for i in nodes] 
 
-    new_domains = deepcopy(domains)
     for node in new_nodes:
-        new_domains[node.name] = node
+        domains[node.name] = node
 
-    return new_domains
+    return domains
 
 
 def level_sides(graphs: DiGraphs, domains: DomainsDict):
-    nodes_dict = get_edge_nodes(graphs, domains)
-    for drn, nodes in nodes_dict.items():
-        domains = smooth_edge(nodes, drn, domains)
+    nodes_dict = get_edge_nodes(graphs)
 
-    return domains
+    new_doms = deepcopy(domains)
+    for drn, nodes in nodes_dict.items():
+        new_doms = smooth_edge(nodes, drn, new_doms)
+
+    return new_doms
+
 
 

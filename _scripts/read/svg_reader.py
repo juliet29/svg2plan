@@ -3,7 +3,6 @@ from xml.dom import minidom
 
 from read.interfaces import SVGRect
 from read.conversion import ConversionPreparer
-from amber.details import svg_ref
 
 from helpers.shapely import domain_to_shape
 from helpers.layout import PartialLayout
@@ -13,9 +12,10 @@ from domains.domain import Domain
 from domains.range import nonDecimalRange
 
 from decimal import Decimal
+from read.interfaces import SVGReference
 
 PATH = "/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/svg_imports"
-
+svg_ref = SVGReference("bedroom_1", "width")
 
 class SVGReader:
     def __init__(self, svg_name) -> None:

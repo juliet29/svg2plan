@@ -1,8 +1,9 @@
 from pint import UnitRegistry, Quantity
-from amber.details import REF_LENGTH_IN, REF_LENGTH_FT
 from read.interfaces import SVGRect
 from read.interfaces import SVGReference
 
+REF_LENGTH_FT = 10
+REF_LENGTH_IN = 6.75
 
 class ConversionPreparer:
     def __init__(

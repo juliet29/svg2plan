@@ -23,13 +23,17 @@ class Saver:
             pickle.dump(self.layout, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
-def read_pickle(file_name):
+def read_pickle(path=None, file_name=None):
+    if not path:
+        assert file_name
     path = os.path.join(PATH_TO_SOLS, f"{file_name}.pickle")
     with open(path, "rb") as handle:
         obj = pickle.load(handle)
     return obj
 
-def save_pickle(obj, file_name:str):
+def write_pickle(obj, file_name=None, path=None):
+    if not path:
+        assert file_name
     path = os.path.join(PATH_TO_SOLS, f"{file_name}.pickle")
     with open(path, "wb") as handle:
             pickle.dump(obj, handle, protocol=pickle.HIGHEST_PROTOCOL)
