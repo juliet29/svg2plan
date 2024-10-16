@@ -10,23 +10,8 @@ from actions.interfaces import (
 )
 
 
-
-def create_node_operations(action_details: ActionDetails):
-    operations: list[OperationLog] = []
-    for action_type in action_details.action_types:
-       cmd = CreateModifiedDomain(action_details, action_type)
-       op = cmd.create_domain()
-       if op is not None:
-           operations.append(op)
-
-        
-    return operations
-           
-
 class CreateModifiedDomain:
-    def __init__(
-        self, action_details: ActionDetails, action_type: ActionType
-    ) -> None:
+    def __init__(self, action_details: ActionDetails, action_type: ActionType) -> None:
         self.node = action_details.node
         self.size = action_details.distance
         self.direction = action_details.direction
@@ -42,15 +27,16 @@ class CreateModifiedDomain:
         try:
             temp_domain[axis] = self.modify_range(self.node[axis])
         except InvalidRangeException:
-            print(f"Could not make domain!! for {self.node.name} of size {self.node[axis].size} doing action {self.action_type} in {axis} direction for {self.size} units")
+            print(
+                f"Could not make domain!! for {self.node.name} of size {self.node[axis].size} doing action {self.action_type} in {axis} direction for {self.size} units"
+            )
             return None
         temp_domain[other_axis] = self.node[other_axis]
         return OperationLog(self.node, self.action_type, axis, Domain(**temp_domain))
-       
 
     def modify_range(self, range: Range):
         fx, side = get_fx_and_side(self.direction, self.action.is_attractive)
-        
+
         if self.action.is_deformed:
             temp_range = {}
             other_side = range.get_other_side(side)

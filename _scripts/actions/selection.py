@@ -1,12 +1,11 @@
 from typing import List
 from fixes.reporter import Reporter
-from new_solutions.interfaces import ResultsLog
-from new_solutions.simple_problem import (
+from actions.interfaces import ResultsLog
+from actions.operations import (
     study_many_problems,
 )
 from visuals.plots import make_subplot_for_all_probs
 from visuals.plotter import plot_general
-
 
 
 def sort_results_by_score(results: List[ResultsLog]):
@@ -49,25 +48,21 @@ class Cook:
         self.bl_hist = []
         self.history = [init_report.layout.domains]
         self.results = study_many_problems(init_report.layout, init_report.problems)
-        
+
         self.count = 0
         print(f"initializing.. {self.count}")
         self.handle()
 
     def run_again(self):
-        self.results = study_many_problems(
-            self.bl.layout, self.bl.problems
-        )
+        self.results = study_many_problems(self.bl.layout, self.bl.problems)
         if self.results:
             self.handle()
         else:
             print("No more results!")
-        
 
     def handle(self):
-        self.count+=1
+        self.count += 1
         print(f"running again -> {self.count}")
-
 
         self.sorted_res = sort_results_by_score(self.results)
         self.bl = self.sorted_res[0]
@@ -91,8 +86,6 @@ class Cook:
 
     def show_results_at_ix(self, ix):
         [i.short_message() for i in self.res_hist[ix]]
-
-
 
 
 # report = run_new_layout()

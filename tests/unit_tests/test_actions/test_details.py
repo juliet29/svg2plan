@@ -2,7 +2,7 @@ from decimal import Decimal
 import pytest
 from domains.range import nonDecimalRange, Range
 from domains.domain import Domain
-from actions.actions import create_node_operations
+from actions.operations import create_node_operations
 from actions.interfaces import ActionType
 from actions.details import Details
 from helpers.directions import Direction

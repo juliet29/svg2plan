@@ -1,5 +1,5 @@
-from new_solutions.simple_problem import *
-from new_solutions.selection import *
+from actions.operations import *
+from actions.selection import *
 from runner.svg2plan import run_new_layout
 import pytest
 

@@ -1,13 +1,24 @@
 from copy import deepcopy
 from typing import Counter, List, Optional
-from actions.actions import create_node_operations
+from actions.actions import CreateModifiedDomain
 from fixes.reporter import Reporter
 from helpers.shapely import domain_to_shape
-from new_solutions.interfaces import ResultsLog
+from actions.interfaces import ResultsLog
 from helpers.layout import Layout
-from fixes.interfaces import Problem
+from fixes.interfaces import ActionDetails, Problem
 from actions.interfaces import OperationLog
 from svg_logger.settings import svlogger
+
+
+def create_node_operations(action_details: ActionDetails):
+    operations: list[OperationLog] = []
+    for action_type in action_details.action_types:
+        cmd = CreateModifiedDomain(action_details, action_type)
+        op = cmd.create_domain()
+        if op is not None:
+            operations.append(op)
+
+    return operations
 
 
 def execute_actions(problem: Problem):
@@ -21,7 +32,6 @@ def update_layout(op: OperationLog, layout: Layout):
     name = op.node.name
     tmp_layout: Layout = deepcopy(layout)
     tmp_layout.domains[name] = op.modified_domain
-    # tmp_layout.shapes[name] = domain_to_shape(op.modified_domain)
     return tmp_layout
 
 
@@ -48,9 +58,6 @@ def study_one_problem(layout, problem, initial_problems: list[Problem] = []):
         return report_on_actions(op, problem, tmp_layout, initial_problems)
 
     return [update_and_report(i) for i in ops]
-
-
-# TODO what is the role of initial problems?
 
 
 def study_many_problems(layout: Layout, problems: List[Problem]) -> list[ResultsLog]:

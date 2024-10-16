@@ -7,7 +7,7 @@ from domains.domain import Domain
 import plotly.express as px
 import plotly.graph_objects as go
 
-from new_solutions.interfaces import ResultsLog
+from actions.interfaces import ResultsLog
 from plotly.subplots import make_subplots
 
 from fixes.interfaces import Problem
