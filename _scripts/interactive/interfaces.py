@@ -1,9 +1,10 @@
 from fractions import Fraction
 from dataclasses import dataclass
-from typing import Literal, NamedTuple
+from typing import Literal, NamedTuple, TypedDict
 from pint import UnitRegistry
 from decimal import Decimal
 from helpers.shapely import ROUNDING_LIM
+from enum import Enum
 
 
 
@@ -31,18 +32,34 @@ class FootInchesDimension(NamedTuple):
         return rounded_decimal_from_fraction(total_meters.magnitude)  # type: ignore
 
 
+class WindowsJSON(TypedDict):
+    id: int
+    width: str
+    height: str
+    head_height: str
+    opening_hieght: str 
+    model: str 
+    wtype: str
+
+class DoorsJSON(TypedDict):
+    id: int
+    width: str
+    height: str
+    thickness: str
+    material: str  # TODO
+
+def to_json(obj):
+    d = obj.__dict__
+    for k, v in d.items():
+        if hasattr(v, "feet"):
+            d[k] = str(v.meters)
+    return d
+
 @dataclass
 class SubsurfaceBase:
     id: int
     width: FootInchesDimension
     height: FootInchesDimension
-
-    def to_json(self):
-        d = self.__dict__
-        for k, v in d.items():
-            if hasattr(v, "feet"):
-                d[k] = str(v.meters)
-        return d
 
 
 WTypes = Literal["Casement", "Fixed", "Casement+Fixed"]
@@ -54,12 +71,20 @@ class WindowType(SubsurfaceBase):
     model: str 
     wtype: str
 
+    def to_json(self) -> WindowsJSON:
+        return to_json(self) # type: ignore
+
 
 
 @dataclass
 class DoorType(SubsurfaceBase):
     thickness: FootInchesDimension
     material: str  # TODO
+
+    def to_json(self) -> DoorsJSON:
+        return to_json(self) # type: ignore
+
+
 
 
 @dataclass
@@ -70,3 +95,16 @@ class EdgeDetails():
     external: bool = False
     connectivity: bool = False
     detail: int | None = None
+
+
+
+class SubsurfaceType(str, Enum):
+    DOORS = "DOORS"
+    WINDOWS = "WINDOWS"
+
+
+
+
+class SubSurfacesJSON(TypedDict):
+    WINDOWS: list[WindowsJSON]
+    DOORS: list[DoorsJSON]

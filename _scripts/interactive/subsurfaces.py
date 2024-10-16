@@ -1,20 +1,20 @@
+from pathlib import Path
 import sys
+sys.path.append(str(Path.cwd().parent))
 
-sys.path.append("/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/_scripts")
-
+from interactive.helpers import get_subsurfaces, write_subsurfaces
+from interactive.begin import CaseNameInput
 from interactive.subsurface_helpers import (
     DimInput,
     complete_wtype,
     create_dimension,
-    open_subsurface_json,
-    update_json,
     validate_id,
     validate_wtype,
 )
 import typer
 from typing_extensions import Annotated
 from rich import print as rprint
-from interactive.interfaces import DoorType, WindowType
+from interactive.interfaces import DoorType, DoorsJSON, WindowType, WindowsJSON
 
 
 PATH = "test.json"
@@ -24,6 +24,7 @@ app = typer.Typer(no_args_is_help=True)
 
 @app.command()
 def create_window(
+    case_name: CaseNameInput,
     id: Annotated[int, typer.Argument(help="id")],
     width: Annotated[DimInput, typer.Option("--width", "-w")],
     height: Annotated[DimInput, typer.Option("--height", "-h")],
@@ -39,8 +40,8 @@ def create_window(
     ] = "Casement",
     edit: Annotated[bool, typer.Option("--edit")] = False,
 ):
-    existing_data = open_subsurface_json(PATH)
-    windows: list[dict] = existing_data["WINDOWS"]
+    existing_data = get_subsurfaces(case_name)
+    windows: list[WindowsJSON] = existing_data["WINDOWS"]
 
     if not edit:
         id = validate_id(windows, id)
@@ -59,11 +60,12 @@ def create_window(
 
     windows.append(res.to_json())
     existing_data["WINDOWS"] = windows
-    update_json(PATH, existing_data)
+    write_subsurfaces(case_name, existing_data)
 
 
 @app.command()
 def create_door(
+    case_name: CaseNameInput,
     id: Annotated[int, typer.Argument(help="id")],
     width: Annotated[DimInput, typer.Option("--width", "-w")],
     height: Annotated[DimInput, typer.Option("--height", "-h")],
@@ -71,8 +73,8 @@ def create_door(
     material: Annotated[str, typer.Option("--model", "-m")] = "SCQC",
     edit: Annotated[bool, typer.Option("--edit")] = False,
 ):
-    existing_data = open_subsurface_json(PATH)
-    doors: list[dict] = existing_data["DOORS"]
+    existing_data = get_subsurfaces(case_name)
+    doors: list[DoorsJSON] = existing_data["DOORS"]
 
     if not edit:
         id = validate_id(doors, id)
@@ -84,11 +86,10 @@ def create_door(
         create_dimension(thickness),
         material,
     )
-    rprint(res)
 
     doors.append(res.to_json())
     existing_data["DOORS"] = doors
-    update_json(PATH, existing_data)
+    write_subsurfaces(case_name, existing_data)
 
 
 @app.callback()

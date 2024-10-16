@@ -1,0 +1,29 @@
+{
+  "directed": true,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    { "id": "bedroom_1" },
+    { "id": "laundry" },
+    { "id": "m_bedroom" },
+    { "id": "EAST" },
+    { "id": "m_closet" },
+    { "id": "WEST" },
+    { "id": "bedroom_2" },
+    { "id": "kitchen" },
+    { "id": "transit_space" },
+    { "id": "NORTH" },
+    { "id": "SOUTH" }
+  ],
+  "links": [
+    { "details": { "external": false, "id": 0 }, "source": "bedroom_1", "target": "laundry" },
+    { "details": { "external": true, "id": null }, "source": "bedroom_1", "target": "NORTH" },
+    { "details": { "external": true, "id": 0 }, "source": "m_bedroom", "target": "EAST" },
+    { "details": { "external": true, "id": null }, "source": "m_bedroom", "target": "NORTH" },
+    { "details": { "external": true, "id": null }, "source": "m_closet", "target": "EAST" },
+    { "details": { "external": true, "id": null }, "source": "WEST", "target": "bedroom_1" },
+    { "details": { "external": true, "id": 0 }, "source": "WEST", "target": "bedroom_2" },
+    { "details": { "external": false, "id": null }, "source": "kitchen", "target": "transit_space" },
+    { "details": { "external": true, "id": null }, "source": "SOUTH", "target": "kitchen" }
+  ]
+}

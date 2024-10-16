@@ -1,8 +1,9 @@
 from typing import Literal, Tuple
 from rich import print as rprint
-from interactive.interfaces import FootInchesDimension
+from interactive.interfaces import FootInchesDimension, SubSurfacesJSON
 import json
 from fractions import Fraction
+from pathlib import Path
 
 DimInput = Tuple[str, str, str]
 
@@ -15,12 +16,13 @@ def create_dimension(dim: DimInput):
     return FootInchesDimension(feet=Fraction(feet), inches=fraction_inches)
 
 
-def open_json(PATH):
+def open_subsurface_json(PATH):
     try:
         with open(PATH, "r") as file:
-            data = json.load(file)
+            data: SubSurfacesJSON = json.load(file)
     except:
-        data = {"WINDOWS": [], "DOORS": []}
+        rprint(f"{Path(PATH).name} is empty")
+        data: SubSurfacesJSON = {"WINDOWS": [], "DOORS": []}
     return data
 
 
@@ -31,11 +33,6 @@ def validate_id(data, id):
             rprint(f"ID {id} already exists. Incrementing to {id+1}")
             id += 1
     return id
-
-
-def update_json(PATH, data):
-    with open(PATH, "w") as file:
-        json.dump(data, default=str, fp=file)
 
 
 valid_wtypes = ["Casement", "Fixed", "Casement+Fixed"]
@@ -53,6 +50,3 @@ def validate_wtype(wtype: str, opening_height: DimInput):
     assert wtype in valid_wtypes
     if wtype == "Casement+Fixed":
         assert opening_height != ("0", "0", "0")
-
-
-SubsurfaceType = Literal["WINDOWS", "DOORS"]
