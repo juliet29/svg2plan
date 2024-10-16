@@ -1,6 +1,6 @@
+from decimal import Decimal
 from pathlib import Path
 import sys
-
 sys.path.append(str(Path.cwd().parent))
 
 
@@ -28,31 +28,36 @@ from interactive.helpers import (
 )
 from interactive.edge_helpers import display_edges, init_edge_details
 from interactive.interfaces import SubsurfaceType
+from interactive.subsurface_helpers import create_dimension, DimInput
 
+INIT_WORLD_LEN = ("10", "6", "3/4")
+INIT_PX_LEN = "234"
 
 app = typer.Typer(no_args_is_help=True, pretty_exceptions_show_locals=False)
 
 
 @app.command()
-def read_svg(case_name: CaseNameInput):
+def read_svg(
+    case_name: CaseNameInput,
+    pixel_length: Annotated[str, typer.Argument(help="pixel len")] = INIT_PX_LEN,
+    world_length: Annotated[DimInput, typer.Argument(help="real len")] = INIT_WORLD_LEN,
+):
     case_path = get_case_path(case_name)
     output_path = get_output_path(case_name)
     subsurfaces_path = output_path / "subsurfaces.json"
 
     try:
         output_path.mkdir()
-        shutil.copy(case_path, output_path)
     except FileExistsError:
         print("Folder already initialized")
-        # TODO return when in production and have built out..
+        return
 
-    try:
-        subsurfaces_path.touch(exist_ok=False)
-    except FileExistsError:
-        print("subsurfaces.json already exists")
+    shutil.copy(case_path, output_path)
+    subsurfaces_path.touch(exist_ok=False)
 
-    sv = SVGReader(case_name)  # TODO pass dimensions..
-    # pixel_length: int, true_length: tuple[str, str, str]
+    pixel_dec = Decimal(pixel_length)
+    world_length_dec = create_dimension(world_length).meters
+    sv = SVGReader(case_name, pixel_dec, world_length_dec)
     sv.run()
     domains, graphs = adjust_domains(sv.layout.domains)
     layout = Layout(domains, graphs)
@@ -153,7 +158,7 @@ def save_connectivity_graph(case_name: CaseNameInput):
 
     edge_details = get_edge_details(case_name)
 
-    # check all have detal assigned 
+    # check all have detal assigned
 
     Gconn = nx.DiGraph()
     for e in edge_details:
@@ -165,11 +170,6 @@ def save_connectivity_graph(case_name: CaseNameInput):
 
     write_connectivity_graph(case_name, Gconn)
 
-
-# get the details.json, detail_edges from layout..
-# check that ids are of the correct type (there exists a id 3 w/in DOORS)
-# check that the n_eges are connectivity edges
-# check that edges are WINDOW if type is WINDOW
 
 
 @app.callback()

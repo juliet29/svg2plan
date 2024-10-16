@@ -18,13 +18,13 @@ PATH = "/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/svg_imports"
 svg_ref = SVGReference("bedroom_1", "width")
 
 class SVGReader:
-    def __init__(self, svg_name) -> None:
+    def __init__(self, svg_name, px_len=Decimal("234"), real_len=Decimal("3.8862")) -> None:
         self.svg_path = os.path.join(PATH, svg_name)
         self.layout = PartialLayout({}, {})
+        self.conversion = real_len / px_len
 
     def run(self):
         self.get_rectangles()
-        self.prepare_to_update_dimensions()
         self.get_y_correction()
         self.convert_rectangles()
 
@@ -49,8 +49,6 @@ class SVGReader:
         value = path.getAttribute(attr)
         return float(value) if value else 0.0
 
-    def prepare_to_update_dimensions(self):
-        self.du = ConversionPreparer(self.rectangles, svg_ref)
 
     def get_y_correction(self):
         ys = [r.y for r in self.rectangles]
@@ -83,6 +81,6 @@ class SVGReader:
         )
 
     def update_dimensions(self):
-        fx = lambda x: round(x * Decimal(self.du.conversion), ROUNDING_LIM)
+        fx = lambda x: round(x * self.conversion, ROUNDING_LIM)
         self.domain = self.temp_domain.modify(fx)
         self.polygon = domain_to_shape(self.domain)
