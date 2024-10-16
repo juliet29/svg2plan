@@ -1,8 +1,8 @@
 from collections import Counter
 from copy import deepcopy
 from helpers.layout import Layout
-from fixes.interfaces import Problem
-from fixes.id_problems import report_problems
+from identify.interfaces import Problem
+from identify.id_problems import report_problems
 
 
 class Reporter:

@@ -3,6 +3,7 @@ from pathlib import Path
 import typer
 import json
 from rich import print as rprint
+from export.save_plan import RoomType
 from export.saver import read_pickle, write_pickle
 from helpers.layout import Layout
 from interactive.interfaces import EdgeDetails, SubSurfacesJSON
@@ -17,7 +18,7 @@ SVG_DIR = ROOT_DIR / "svg_imports"
 
 
 def error_print(m):
-    rprint(f"[bold red]{m}[/bold red]" )
+    rprint(f"[bold red]{m}[/bold red]")
     raise typer.Exit(code=1)
 
 
@@ -91,7 +92,15 @@ def write_connectivity_graph(case_name, G: nx.Graph):
     output_path = get_output_path(case_name)
     path = output_path / "graph.json"
     with open(path, "w+") as file:
-        # overwriting
         json.dump(G_json, default=str, fp=file)
 
     rprint(f"Saved connectivity graph to {path.parent / path.name}")
+
+
+def write_plan(case_name, plan: list[list[RoomType]]):
+    output_path = get_output_path(case_name)
+    path = output_path / "plan.json"
+    with open(path, "w+") as file:
+        json.dump(plan, default=str, fp=file)
+
+    rprint(f"Saved floorplan to {path.parent / path.name}")

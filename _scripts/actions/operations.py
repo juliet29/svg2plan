@@ -1,11 +1,12 @@
 from copy import deepcopy
 from typing import Counter, List, Optional
 from actions.actions import CreateModifiedDomain
-from fixes.reporter import Reporter
+from actions.results_log import ResultsLog
+from identify.reporter import Reporter
 from helpers.shapely import domain_to_shape
-from actions.interfaces import ResultsLog
+from actions.interfaces import ActionDetails
 from helpers.layout import Layout
-from fixes.interfaces import ActionDetails, Problem
+from identify.interfaces import Problem
 from actions.interfaces import OperationLog
 from svg_logger.settings import svlogger
 

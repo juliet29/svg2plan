@@ -2,7 +2,7 @@ import pytest
 from svg_reader import SVGReader
 from adjacencies.adjacency import AdjacencyGenerator
 from placement.executer import PlacementExecuter
-from fixes.reporter import Reporter
+from identify.reporter import Reporter
 from problems.classes.sequence import Sequence
 from problems.sequence_runner import SequenceRunner
 

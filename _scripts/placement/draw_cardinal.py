@@ -4,10 +4,9 @@ from typing import Optional
 
 import networkx as nx
 from domains.domain import Domain
-from fixes.interfaces import Direction
+from helpers.directions import Direction
 from helpers.layout import DomainsDict
 from placement.attract import create_pos
-
 
 
 NodePositions = dict[str, tuple[float, float]]

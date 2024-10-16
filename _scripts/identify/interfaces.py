@@ -1,23 +1,11 @@
 from dataclasses import dataclass, field
-from decimal import Decimal
 from typing import Optional
 from enum import Enum
 from shapely import Polygon
-from actions.interfaces import ActionType, get_action_protocol
-from helpers.directions import Direction
+from actions.interfaces import get_action_protocol
+from actions.interfaces import ActionDetails
 from helpers.layout import Layout
 from domains.domain import Domain
-
-
-@dataclass
-class ActionDetails:
-    node: Domain
-    direction: Direction
-    distance: Decimal
-    action_types: list[ActionType]
-
-    def __repr__(self) -> str:
-        return f"{self.node.name}-{self.direction.name}-{self.distance}"
 
 
 class ProblemType(Enum):
@@ -58,7 +46,3 @@ class Problem:
 
     def short_message(self):
         return f"{self.problem_type}-{self.nbs}"
-
-
-OVERLAP_ACTIONS = [ActionType.PUSH, ActionType.SQUEEZE]
-HOLE_ACTIONS = [ActionType.PULL, ActionType.STRETCH]

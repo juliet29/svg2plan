@@ -25,24 +25,27 @@ def init(
     world_length: Annotated[DimInput, typer.Argument(help="real len")] = INIT_WORLD_LEN,
 ):
     case_path = get_case_path(case_name)
-    output_path = get_output_path(case_name)
-    subsurfaces_path = output_path / "subsurfaces.json"
+    # TODO dont make / save anything until have all info.. 
+    pixel_dec = Decimal(pixel_length)
+    world_length_dec = create_dimension(world_length).meters
+    
+    sv = SVGReader(case_path, pixel_dec, world_length_dec)
+    sv.run()
+    layout = adjust_domains(sv.layout.domains)
+    edge_details = init_edge_details(layout)
 
+
+    output_path = get_output_path(case_name)
     try:
         output_path.mkdir()
     except FileExistsError:
         error_print("Folder already initialized")
 
     shutil.copy(case_path, output_path)
+
+    subsurfaces_path = output_path / "subsurfaces.json"
     subsurfaces_path.touch(exist_ok=False)
 
-    pixel_dec = Decimal(pixel_length)
-    world_length_dec = create_dimension(world_length).meters
-    sv = SVGReader(case_path, pixel_dec, world_length_dec)
-    sv.run()
-    domains, graphs = adjust_domains(sv.layout.domains)
-    layout = Layout(domains, graphs)
-    edge_details = init_edge_details(graphs)
 
     write_pickle(obj=layout, path=(output_path / "layout.pkl"))
     write_pickle(obj=edge_details, path=(output_path / "edges.pkl"))

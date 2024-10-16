@@ -4,6 +4,7 @@ from rich.console import Console
 from rich.table import Table
 from helpers.directions import Direction
 from helpers.helpers import sort_and_group_objects
+from helpers.layout import Layout
 from interactive.helpers import EdgeDetails
 from placement.cardinal import create_cardinal_dags
 
@@ -19,8 +20,8 @@ def number_edges(G, ax, start=0):
     return g1e + g2e
 
 
-def init_edge_details(graphs):
-    Gxc, Gyc = create_cardinal_dags(*graphs)
+def init_edge_details(layout: Layout):
+    Gxc, Gyc = create_cardinal_dags(layout)
     x_assign = number_edges(Gxc, ax="x")
     y_assign = number_edges(Gyc, ax="y", start=len(x_assign))
     return x_assign + y_assign

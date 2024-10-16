@@ -7,10 +7,10 @@ from domains.domain import Domain
 import plotly.express as px
 import plotly.graph_objects as go
 
-from actions.interfaces import ResultsLog
+from actions.results_log import ResultsLog
 from plotly.subplots import make_subplots
 
-from fixes.interfaces import Problem
+from identify.interfaces import Problem
 
 
 def prepare_shape_dict(

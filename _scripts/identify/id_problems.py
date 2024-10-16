@@ -1,7 +1,8 @@
 from decimal import Decimal
 import networkx as nx
+from actions.interfaces import HOLE_ACTIONS, OVERLAP_ACTIONS, ActionDetails
 from domains.domain import Domain
-from fixes.interfaces import HOLE_ACTIONS, OVERLAP_ACTIONS, ActionDetails, Problem, ProblemType
+from identify.interfaces import Problem, ProblemType
 from helpers.layout import DiGraphs, Layout
 from helpers.directions import Direction
 from helpers.helpers import filter_none
@@ -53,15 +54,17 @@ def find_problems(graphs: DiGraphs, domains):
     y_problems = filter_none([is_a_problem(e, domains, "y") for e in Gy.edges])
     return x_problems + y_problems
 
+
 def actions_for_problems(problem: UniqueProblem):
     actions = HOLE_ACTIONS if problem.ptype == ProblemType.HOLE else OVERLAP_ACTIONS
     return [
-        ActionDetails(nb.domain, nb.drn, problem.size, actions)
-        for nb in problem.nbs
+        ActionDetails(nb.domain, nb.drn, problem.size, actions) for nb in problem.nbs
     ]
+
 
 def nbs_for_problem(problem: UniqueProblem):
     return [nb.domain.name for nb in problem.nbs]
+
 
 def report_problems(layout: Layout):
     holes = find_problems(layout.graphs, layout.domains)

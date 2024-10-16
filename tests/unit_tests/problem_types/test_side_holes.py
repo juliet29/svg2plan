@@ -5,7 +5,7 @@ from sympy import Polygon
 from adjacencies.adjacency import AdjacencyGenerator
 from domains.domain import Domain
 from domains.range import Range
-from fixes.problem_types.side_hole_id import *
+from identify.problem_types.side_hole_id import *
 from helpers.helpers import pairwise
 from helpers.layout import Layout, PartialLayout
 from helpers.shapely import domain_to_shape

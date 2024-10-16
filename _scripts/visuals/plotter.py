@@ -5,7 +5,7 @@ from domains.domain import Domain
 
 class Plotter:
     def __init__(
-        self, domains: Dict[str, Domain], xrange=[-1, 12], yrange=[-10, 10], title: str = ""
+        self, domains: Dict[str, Domain], xrange=[-1, 12], yrange=[-3, 18], title: str = ""
     ) -> None:
         self.domains = domains
         self.xrange = xrange

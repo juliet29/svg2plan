@@ -13,11 +13,13 @@ from interactive.edges import (
     assign_subsurfaces,
     save_connectivity_graph,
 )
+from interactive.finish import clean_up_domains
 
 
 app = typer.Typer(no_args_is_help=True, pretty_exceptions_show_locals=False)
 
 app.command()(init)
+
 app.command()(create_window)
 app.command()(create_door)
 
@@ -26,6 +28,8 @@ app.command()(show_subsurfaces)
 app.command()(assign_connectivity)
 app.command()(assign_subsurfaces)
 app.command()(save_connectivity_graph)
+
+app.command()(clean_up_domains)
 
 
 @app.callback()

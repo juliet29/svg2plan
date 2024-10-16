@@ -1,5 +1,5 @@
 from domains.range import InvalidRangeException, Range
-from fixes.interfaces import ActionDetails
+from actions.interfaces import ActionDetails
 from helpers.directions import get_axis
 from domains.domain import Domain
 from actions.interfaces import (
