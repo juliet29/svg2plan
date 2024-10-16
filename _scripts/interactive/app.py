@@ -8,6 +8,7 @@ from interactive.subsurfaces import create_window, create_door
 from interactive.init import init
 from interactive.edges import (
     show_edges,
+    show_subsurfaces,
     assign_connectivity,
     assign_subsurfaces,
     save_connectivity_graph,
@@ -21,6 +22,7 @@ app.command()(create_window)
 app.command()(create_door)
 
 app.command()(show_edges)
+app.command()(show_subsurfaces)
 app.command()(assign_connectivity)
 app.command()(assign_subsurfaces)
 app.command()(save_connectivity_graph)

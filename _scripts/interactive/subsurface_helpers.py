@@ -21,7 +21,7 @@ def open_subsurface_json(PATH):
         with open(PATH, "r") as file:
             data: SubSurfacesJSON = json.load(file)
     except:
-        rprint(f"{Path(PATH).name} is empty")
+        rprint(f"{Path(PATH).name} is empty, initializing data.. ")
         data: SubSurfacesJSON = {"WINDOWS": [], "DOORS": []}
     return data
 

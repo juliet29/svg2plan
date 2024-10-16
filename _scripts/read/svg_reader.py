@@ -1,8 +1,6 @@
-import os
+from pathlib import Path
 from xml.dom import minidom
-
-from read.interfaces import SVGRect
-from read.conversion import ConversionPreparer
+from typing import NamedTuple
 
 from helpers.shapely import domain_to_shape
 from helpers.layout import PartialLayout
@@ -12,14 +10,20 @@ from domains.domain import Domain
 from domains.range import nonDecimalRange
 
 from decimal import Decimal
-from read.interfaces import SVGReference
 
-PATH = "/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/svg_imports"
-svg_ref = SVGReference("bedroom_1", "width")
+
+class SVGRect(NamedTuple):
+    x: float
+    y: float
+    width: float
+    height: float
+    id: str
+
+
 
 class SVGReader:
-    def __init__(self, svg_name, px_len=Decimal("234"), real_len=Decimal("3.8862")) -> None:
-        self.svg_path = os.path.join(PATH, svg_name)
+    def __init__(self, svg_path: Path, px_len=Decimal("234"), real_len=Decimal("3.8862")) -> None:
+        self.svg_path = svg_path
         self.layout = PartialLayout({}, {})
         self.conversion = real_len / px_len
 
@@ -29,7 +33,7 @@ class SVGReader:
         self.convert_rectangles()
 
     def get_rectangles(self):
-        doc = minidom.parse(self.svg_path)
+        doc = minidom.parse(str(self.svg_path))
         self.rectangles = [
             self.parse_single_rectangle(path)
             for path in doc.getElementsByTagName("rect")

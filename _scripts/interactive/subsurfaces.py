@@ -17,12 +17,6 @@ from rich import print as rprint
 from interactive.interfaces import DoorType, DoorsJSON, WindowType, WindowsJSON
 
 
-
-# PATH = "test.json"
-
-# app = typer.Typer(no_args_is_help=True)
-
-
 def create_window(
     case_name: CaseNameInput,
     id: Annotated[int, typer.Argument(help="id")],
@@ -86,16 +80,9 @@ def create_door(
         create_dimension(thickness),
         material,
     )
+    rprint(res)
 
     doors.append(res.to_json())
     existing_data["DOORS"] = doors
     write_subsurfaces(case_name, existing_data)
 
-
-# @app.callback()
-# def main(ctx: typer.Context):
-#     pass
-
-
-# if __name__ == "__main__":
-#     app()

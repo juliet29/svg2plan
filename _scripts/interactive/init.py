@@ -1,7 +1,7 @@
 from export.saver import write_pickle
 from helpers.layout import Layout
 from interactive.edge_helpers import init_edge_details
-from interactive.helpers import CaseNameInput, get_case_path, get_output_path
+from interactive.helpers import CaseNameInput, error_print, get_case_path, get_output_path
 from interactive.subsurface_helpers import DimInput, create_dimension
 from placement2.attract import adjust_domains
 from read.svg_reader import SVGReader
@@ -31,15 +31,14 @@ def init(
     try:
         output_path.mkdir()
     except FileExistsError:
-        print("Folder already initialized")
-        return
+        error_print("Folder already initialized")
 
     shutil.copy(case_path, output_path)
     subsurfaces_path.touch(exist_ok=False)
 
     pixel_dec = Decimal(pixel_length)
     world_length_dec = create_dimension(world_length).meters
-    sv = SVGReader(case_name, pixel_dec, world_length_dec)
+    sv = SVGReader(case_path, pixel_dec, world_length_dec)
     sv.run()
     domains, graphs = adjust_domains(sv.layout.domains)
     layout = Layout(domains, graphs)

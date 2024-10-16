@@ -1,3 +1,4 @@
+from os import error
 from pathlib import Path
 import typer
 import json
@@ -13,6 +14,11 @@ import networkx as nx
 ROOT_DIR = Path.cwd().parent.parent
 OUTPUT_DIR = ROOT_DIR / "outputs2"
 SVG_DIR = ROOT_DIR / "svg_imports"
+
+
+def error_print(m):
+    rprint(f"[bold red]{m}[/bold red]" )
+    raise typer.Exit(code=1)
 
 
 def complete_case(incomplete: str):
@@ -31,8 +37,8 @@ CaseNameInput = Annotated[
 
 class UninitializedSVGError(Exception):
     def __init__(self) -> None:
-        message = "Make sure have 'read-svg'."
-        super().__init__(message)
+        error_print("Make sure have 'read-svg' for this case.")
+        super().__init__()
 
 
 def get_case_path(case_name) -> Path:
