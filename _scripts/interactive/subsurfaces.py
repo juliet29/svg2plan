@@ -3,7 +3,7 @@ import sys
 sys.path.append(str(Path.cwd().parent))
 
 from interactive.helpers import get_subsurfaces, write_subsurfaces
-from interactive.begin import CaseNameInput
+from interactive.helpers import CaseNameInput
 from interactive.subsurface_helpers import (
     DimInput,
     complete_wtype,
@@ -17,12 +17,12 @@ from rich import print as rprint
 from interactive.interfaces import DoorType, DoorsJSON, WindowType, WindowsJSON
 
 
-PATH = "test.json"
 
-app = typer.Typer(no_args_is_help=True)
+# PATH = "test.json"
+
+# app = typer.Typer(no_args_is_help=True)
 
 
-@app.command()
 def create_window(
     case_name: CaseNameInput,
     id: Annotated[int, typer.Argument(help="id")],
@@ -63,7 +63,7 @@ def create_window(
     write_subsurfaces(case_name, existing_data)
 
 
-@app.command()
+
 def create_door(
     case_name: CaseNameInput,
     id: Annotated[int, typer.Argument(help="id")],
@@ -92,10 +92,10 @@ def create_door(
     write_subsurfaces(case_name, existing_data)
 
 
-@app.callback()
-def main(ctx: typer.Context):
-    pass
+# @app.callback()
+# def main(ctx: typer.Context):
+#     pass
 
 
-if __name__ == "__main__":
-    app()
+# if __name__ == "__main__":
+#     app()
