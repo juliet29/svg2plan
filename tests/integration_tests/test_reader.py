@@ -1,5 +1,5 @@
 import pytest
-from read.svg_reader import SVGReader
+from svg_reader import SVGReader
 
 
 @pytest.fixture(params=["amber_a_f01.svg", "amber_b_f01.svg"])

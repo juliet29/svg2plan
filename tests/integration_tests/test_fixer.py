@@ -1,5 +1,5 @@
 import pytest
-from read.svg_reader import SVGReader
+from svg_reader import SVGReader
 from adjacencies.adjacency import AdjacencyGenerator
 from placement.executer import PlacementExecuter
 from fixes.reporter import Reporter

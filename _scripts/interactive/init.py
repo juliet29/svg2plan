@@ -3,8 +3,8 @@ from helpers.layout import Layout
 from interactive.edge_helpers import init_edge_details
 from interactive.helpers import CaseNameInput, error_print, get_case_path, get_output_path
 from interactive.subsurface_helpers import DimInput, create_dimension
-from placement2.attract import adjust_domains
-from read.svg_reader import SVGReader
+from placement.attract import adjust_domains
+from svg_reader import SVGReader
 
 
 import typer

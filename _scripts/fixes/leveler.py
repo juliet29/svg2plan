@@ -4,8 +4,8 @@ from statistics import mean
 from domains.domain import Domain
 from helpers.directions import Direction
 from helpers.layout import DiGraphs, Layout
-from placement2.attract import DomainsDict
-from placement2.cardinal import create_cardinal_dags
+from helpers.layout import DomainsDict
+from placement.cardinal import create_cardinal_dags
 
 
 def normalize_to_target(arr):

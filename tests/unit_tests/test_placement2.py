@@ -2,7 +2,7 @@ from export.saver import read_pickle
 from helpers.layout import Layout
 from placement2.attract import *
 import numpy as np
-from read.svg_reader import SVGReader
+from svg_reader import SVGReader
 
 
 def set_up_case(case):

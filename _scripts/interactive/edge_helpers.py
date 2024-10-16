@@ -5,7 +5,7 @@ from rich.table import Table
 from helpers.directions import Direction
 from helpers.helpers import sort_and_group_objects
 from interactive.helpers import EdgeDetails
-from placement2.cardinal import create_cardinal_dags
+from placement.cardinal import create_cardinal_dags
 
 
 def number_edges(G, ax, start=0):

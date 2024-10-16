@@ -7,7 +7,8 @@ from itertools import chain
 from fixes.interfaces import Direction
 from helpers.helpers import chain_flatten
 from helpers.layout import Layout
-from placement2.attract import DomainsDict, draw_digraph
+from helpers.layout import DomainsDict
+from placement.attract import draw_digraph
 from domains.domain import AxisNames
 
 

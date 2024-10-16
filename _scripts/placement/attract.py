@@ -9,7 +9,7 @@ from helpers.helpers import sort_and_group_objects
 from helpers.layout import DiGraphs, DomainsDict, Layout
 import networkx as nx
 
-from placement2.neighbors import create_ranges_for_all_nodes
+from placement.neighbors import create_ranges_for_all_nodes
 
 class DistanceToMove(NamedTuple):
     root: str
