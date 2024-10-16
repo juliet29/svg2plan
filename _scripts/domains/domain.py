@@ -1,12 +1,14 @@
 from dataclasses import dataclass
 from decimal import Decimal
-from typing import Callable, Iterable, TypedDict
+from typing import Callable, Iterable, Literal, TypedDict
 from domains.range import Range
 from functools import partial
 from constants import ROUNDING_LIM
 from helpers.directions import Direction
 from helpers.helpers import keys_from_value
 from svg_logger.settings import svlogger
+
+AxisNames = Literal["x", "y"]
 
 
 @dataclass(frozen=True)

@@ -1,10 +1,11 @@
 from copy import deepcopy
 from decimal import Decimal, localcontext
 from statistics import mean
+from domains.domain import Domain
 from helpers.directions import Direction
-from helpers.layout import DiGraphs
+from helpers.layout import DiGraphs, Layout
 from placement2.attract import DomainsDict
-from placement2.connectivity import create_cardinal_dags
+from placement2.cardinal import create_cardinal_dags
 
 
 def normalize_to_target(arr):
@@ -18,8 +19,8 @@ def normalize_to_target(arr):
         return [scale(i) for i in arr]
 
 
-def get_edge_nodes(graphs: DiGraphs):
-    Gxc, Gyc = create_cardinal_dags(*graphs)
+def get_edge_nodes(layout: Layout):
+    Gxc, Gyc = create_cardinal_dags(layout)
     nodes = {}
 
     nodes[Direction.WEST] = [e[1] for e in Gxc.edges if "WEST" in e]
@@ -30,8 +31,10 @@ def get_edge_nodes(graphs: DiGraphs):
 
     return nodes
 
-def to_rounded_decimal(val:float):
+
+def to_rounded_decimal(val: float):
     return round(Decimal(val), 2)
+
 
 def smooth_edge(node_names: list[str], drn: Direction, domains: DomainsDict):
     nodes = [domains[i] for i in node_names]
@@ -46,15 +49,12 @@ def smooth_edge(node_names: list[str], drn: Direction, domains: DomainsDict):
         case Direction.EAST:
             ax, side = "x", "max"
 
-    
     # TODO - weights = normalize_to_target([i.area for i in nodes])
     vals = [i[ax][side] for i in nodes]
     weights = [1 for i in nodes]
     val = to_rounded_decimal(mean([w * x for w, x in zip(weights, vals)]))
-    print(drn, val)
 
-
-    new_nodes = [i.update_one_side(ax, side, val) for i in nodes] 
+    new_nodes = [i.update_one_side(ax, side, val) for i in nodes]
 
     for node in new_nodes:
         domains[node.name] = node
@@ -62,14 +62,23 @@ def smooth_edge(node_names: list[str], drn: Direction, domains: DomainsDict):
     return domains
 
 
-def level_sides(graphs: DiGraphs, domains: DomainsDict):
-    nodes_dict = get_edge_nodes(graphs)
+def zero_out_domains(domains: DomainsDict):
+    x = min([i.x.min for i in domains.values()])
+    y = min([i.y.min for i in domains.values()])
+
+    def zero_out(domain: Domain):
+        d = domain.modify(lambda i: i - x, "x")
+        return d.modify(lambda i: i - y, "y")
+
+    return {i.name: zero_out(i) for i in domains.values()}
+
+
+def level_sides(layout: Layout):
+    domains, _ = layout
+    nodes_dict = get_edge_nodes(layout)
 
     new_doms = deepcopy(domains)
     for drn, nodes in nodes_dict.items():
         new_doms = smooth_edge(nodes, drn, new_doms)
 
-    return new_doms
-
-
-
+    return zero_out_domains(new_doms)
