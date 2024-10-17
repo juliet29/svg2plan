@@ -1,5 +1,7 @@
 from typing import Dict, TypedDict, Optional
 from helpers.layout import DomainsDict
+import pickle
+from pathlib import Path
 
 
 # final json format is [[{obj}, {obj}...]]
@@ -29,3 +31,25 @@ def create_plan(domains: DomainsDict) -> list[list[RoomType]]:
         }
         rooms.append(g_room)
     return [rooms]
+
+
+
+def read_pickle(path:Path):
+    with open(path, "rb") as handle:
+        obj = pickle.load(handle)
+    return obj
+
+def write_pickle(path:Path, obj):
+    with open(path, "wb") as handle:
+        pickle.dump(obj, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    return path.name
+
+def read_temp_sol(name):
+    sols_path = Path.cwd().parent.parent / "temp_sols"
+    path = sols_path / f"{name}.pickle"
+    return read_pickle(path)
+
+def write_temp_sol(name, obj):
+    sols_path = Path.cwd().parent.parent / "temp_sols"
+    path = sols_path / f"{name}.pickle"
+    return write_pickle(path, obj)

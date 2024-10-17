@@ -1,15 +1,16 @@
 from pathlib import Path
 from xml.dom import minidom
 from typing import NamedTuple
+from decimal import Decimal
 
-from helpers.shapely import domain_to_shape
-from helpers.layout import PartialLayout
-from constants import ROUNDING_LIM
+from scipy import stats
+import numpy as np
+
+from helpers.layout import PartialLayout, DomainsDict
+from constants import ROUNDING_LIM, INIT_WORLD_LEN_M, INIT_PX_LEN
 
 from domains.domain import Domain
 from domains.range import nonDecimalRange
-
-from decimal import Decimal
 
 
 class SVGRect(NamedTuple):
@@ -20,12 +21,33 @@ class SVGRect(NamedTuple):
     id: str
 
 
+def filter_outlier_domains(domains: DomainsDict):
+    threshold_z = 2
+    domains_list = list(domains.values())
+    areas = [i.area for i in domains_list]
+    z = np.abs(stats.zscore(areas))
+    outlier_indices = np.where(z > threshold_z)[0]
+    valid_domains = [
+        domains_list[ix]
+        for ix, _ in enumerate(domains_list)
+        if ix not in outlier_indices
+    ]
+    return {i.name: i for i in valid_domains}
+
 
 class SVGReader:
-    def __init__(self, svg_path: Path, px_len=Decimal("234"), real_len=Decimal("3.8862")) -> None:
+    def __init__(
+        self,
+        svg_path: Path,
+        px_len=Decimal(INIT_PX_LEN),
+        real_len=Decimal(INIT_WORLD_LEN_M),
+    ) -> None:
+        assert svg_path.exists(), "Invalid SVG Path"
         self.svg_path = svg_path
-        self.layout = PartialLayout({}, {})
-        self.conversion = real_len / px_len
+
+        self.conversion_fx = lambda x: round(x * (real_len / px_len), ROUNDING_LIM)
+
+        self.domains = {}
 
     def run(self):
         self.get_rectangles()
@@ -37,6 +59,7 @@ class SVGReader:
         self.rectangles = [
             self.parse_single_rectangle(path)
             for path in doc.getElementsByTagName("rect")
+            if path.getAttribute("id")
         ]
         doc.unlink()
 
@@ -46,29 +69,30 @@ class SVGReader:
             self.get_attr_as_float("y", path),
             self.get_attr_as_float("width", path),
             self.get_attr_as_float("height", path),
-            path.getAttribute("id"),
+            id=path.getAttribute("id"),
         )
 
     def get_attr_as_float(self, attr: str, path):
         value = path.getAttribute(attr)
         return float(value) if value else 0.0
 
+    def convert_rectangles(self):
+        self.init_domains = {}
+        for r in self.rectangles:
+            self.init_domains[r.id] = self.create_domain(r)
+        self.domains = filter_outlier_domains(self.init_domains)
+        diff = set(self.init_domains).difference(set(self.domains))
+        if diff:
+            print(f"Removed outlier domains: {diff}")
 
     def get_y_correction(self):
         ys = [r.y for r in self.rectangles]
         max_y = max(ys)
         max_ix = ys.index(max_y)
-        # TODO doesnt actually work to zero out => need to get the correction after the fact!
+        # TODO doesnt actually work to zero out
         self.correction = max_y + self.rectangles[max_ix].height
 
-    def convert_rectangles(self):
-        for r in self.rectangles:
-            self.create_domains(r)
-            self.update_dimensions()
-            self.layout.domains[r.id] = self.domain
-            self.layout.shapes[r.id] = self.polygon
-
-    def create_domains(self, r: SVGRect):
+    def create_domain(self, r: SVGRect):
         x_left = r.x
         y_top = r.y * (-1)  # make +y in conventional +y direction
 
@@ -78,13 +102,8 @@ class SVGReader:
         y_bottom += self.correction
         y_top += self.correction
 
-        self.temp_domain = Domain(
+        return Domain(
             name=r.id,
             x=nonDecimalRange(x_left, x_right).toRange(),
             y=nonDecimalRange(y_bottom, y_top).toRange(),
-        )
-
-    def update_dimensions(self):
-        fx = lambda x: round(x * self.conversion, ROUNDING_LIM)
-        self.domain = self.temp_domain.modify(fx)
-        self.polygon = domain_to_shape(self.domain)
+        ).modify(self.conversion_fx)

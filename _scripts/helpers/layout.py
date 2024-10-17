@@ -21,7 +21,7 @@ class Layout(NamedTuple):
 
 
 class PartialLayout(NamedTuple):
-    shapes: ShapesDict
+    # shapes: ShapesDict
     domains: DomainsDict
 
 

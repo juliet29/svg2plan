@@ -1,4 +1,4 @@
-from export.saver import read_pickle
+from helpers.save import read_pickle
 from helpers.layout import Layout
 from placement2.attract import *
 import numpy as np
@@ -10,20 +10,23 @@ def set_up_case(case):
     sv.run()
     return sv.layout.domains
 
+
 def test_a():
-    case  = "amber_a_f01.svg"
+    case = "amber_a_f01.svg"
     doms = set_up_case(case)
     n_doms = adjust_domains_x(doms)
     assert n_doms.keys() == doms.keys()
+
 
 def test_b():
-    case  = "amber_b_f01.svg"
+    case = "amber_b_f01.svg"
     doms = set_up_case(case)
     n_doms = adjust_domains_x(doms)
     assert n_doms.keys() == doms.keys()
 
+
 def test_c():
-    case  = "amber_c_f01.svg"
+    case = "amber_c_f01.svg"
     doms = set_up_case(case)
     n_doms = adjust_domains_x(doms)
     assert n_doms.keys() == doms.keys()
