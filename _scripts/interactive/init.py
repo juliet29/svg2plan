@@ -20,6 +20,7 @@ from rich import print as rprint
 import shutil
 from decimal import Decimal
 from typing_extensions import Annotated
+from pathlib import Path
 
 
 def init(
@@ -30,11 +31,11 @@ def init(
     case_path = get_case_path(case_name)
     # TODO dont make / save anything until have all info..
     pixel_dec = Decimal(pixel_length)
-    world_length_dec = create_dimension(world_length).meters
+    world_dim = create_dimension(world_length)
 
-    sv = SVGReader(case_path, pixel_dec, world_length_dec)
+    sv = SVGReader(case_path, pixel_dec, world_dim.meters)
     sv.run()
-    layout = adjust_domains(sv.layout.domains)
+    layout = adjust_domains(sv.domains)
     edge_details = init_edge_details(layout)
 
     output_path = get_output_path(case_name)
@@ -43,12 +44,27 @@ def init(
     except FileExistsError:
         error_print("Folder already initialized")
 
+    # copy svg to case 
     shutil.copy(case_path, output_path)
 
+    # copy assignment helper
+    details_path = Path(output_path.parent / "details" / case_name)
+    assign_helper = details_path / "assign.txt"
+    if not assign_helper.exists:
+        details_path.mkdir(exist_ok=True)
+        shutil.copy(Path("assign.txt"), details_path)
+
+    # write dimensions in config.. 
+    (output_path / "config.txt").write_text(f"{pixel_length}px -> {world_dim}", encoding="utf-8")
+
+    # create path for subsurfaces 
     subsurfaces_path = output_path / "subsurfaces.json"
     subsurfaces_path.touch(exist_ok=False)
 
+    # save temp data, layout + edges 
     write_pickle(obj=layout, path=(output_path / "layout.pkl"))
     write_pickle(obj=edge_details, path=(output_path / "edges.pkl"))
 
     rprint(f"Saved files in '{output_path}'")
+
+

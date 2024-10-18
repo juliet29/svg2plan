@@ -1,0 +1,15 @@
+
+#ignoring closet between bedroom and prim bed
+trun assign-connectivity $1 #TODO {edge_numbers} 
+
+# no real door here
+trun assign-subsurfaces $1 0 
+
+# regular doors 
+trun assign-subsurfaces $1 1 #TODO {edge_numbers} 
+
+# regular windows 
+trun assign-subsurfaces $1 1 #TODO {edge_numbers} -w
+
+trun save-connectivity-graph $1
+trun clean-up-domains $1

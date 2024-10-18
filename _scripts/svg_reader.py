@@ -6,6 +6,7 @@ from decimal import Decimal
 from scipy import stats
 import numpy as np
 
+from helpers.helpers import filter_none
 from helpers.layout import PartialLayout, DomainsDict
 from constants import ROUNDING_LIM, INIT_WORLD_LEN_M, INIT_PX_LEN
 
@@ -21,8 +22,7 @@ class SVGRect(NamedTuple):
     id: str
 
 
-def filter_outlier_domains(domains: DomainsDict):
-    threshold_z = 2
+def filter_outlier_domains(domains: DomainsDict, threshold_z:int=2):
     domains_list = list(domains.values())
     areas = [i.area for i in domains_list]
     z = np.abs(stats.zscore(areas))
@@ -41,13 +41,15 @@ class SVGReader:
         svg_path: Path,
         px_len=Decimal(INIT_PX_LEN),
         real_len=Decimal(INIT_WORLD_LEN_M),
+        filter_outliers=False
     ) -> None:
         assert svg_path.exists(), "Invalid SVG Path"
         self.svg_path = svg_path
 
         self.conversion_fx = lambda x: round(x * (real_len / px_len), ROUNDING_LIM)
+        self.filter_outliers = filter_outliers
 
-        self.domains = {}
+
 
     def run(self):
         self.get_rectangles()
@@ -56,14 +58,17 @@ class SVGReader:
 
     def get_rectangles(self):
         doc = minidom.parse(str(self.svg_path))
-        self.rectangles = [
+        self.rectangles = filter_none([
             self.parse_single_rectangle(path)
             for path in doc.getElementsByTagName("rect")
             if path.getAttribute("id")
-        ]
+        ])
         doc.unlink()
 
     def parse_single_rectangle(self, path):
+        id=path.getAttribute("id")
+        if "image" in id:
+            return None
         return SVGRect(
             self.get_attr_as_float("x", path),
             self.get_attr_as_float("y", path),
@@ -80,10 +85,14 @@ class SVGReader:
         self.init_domains = {}
         for r in self.rectangles:
             self.init_domains[r.id] = self.create_domain(r)
-        self.domains = filter_outlier_domains(self.init_domains)
-        diff = set(self.init_domains).difference(set(self.domains))
-        if diff:
-            print(f"Removed outlier domains: {diff}")
+
+        if self.filter_outliers:
+            self.domains = filter_outlier_domains(self.init_domains)
+            diff = set(self.init_domains).difference(set(self.domains))
+            if diff:
+                print(f"Removed outlier domains: {diff}")
+        else:
+            self.domains = self.init_domains
 
     def get_y_correction(self):
         ys = [r.y for r in self.rectangles]

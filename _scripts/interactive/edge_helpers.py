@@ -74,3 +74,5 @@ def display_edges(edge_details):
 
     console = Console()
     console.print(table)
+
+    return table

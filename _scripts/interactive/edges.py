@@ -19,6 +19,7 @@ from interactive.interfaces import SubsurfaceType
 def show_edges(case_name: CaseNameInput):
     edge_details = get_edge_details(case_name)
     display_edges(edge_details)
+    
 
 def show_subsurfaces(case_name: CaseNameInput):
     subsurfaces = get_subsurfaces(case_name)

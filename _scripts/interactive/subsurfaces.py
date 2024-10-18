@@ -50,7 +50,7 @@ def create_window(
         model,
         wtype,
     )
-    rprint(res)
+    # rprint(res)
 
     windows.append(res.to_json())
     existing_data["WINDOWS"] = windows
@@ -80,7 +80,7 @@ def create_door(
         create_dimension(thickness),
         material,
     )
-    rprint(res)
+    # rprint(res)
 
     doors.append(res.to_json())
     existing_data["DOORS"] = doors
