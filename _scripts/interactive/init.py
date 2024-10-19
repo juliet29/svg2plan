@@ -33,6 +33,7 @@ def init(
     pixel_dec = Decimal(pixel_length)
     world_dim = create_dimension(world_length)
 
+
     sv = SVGReader(case_path, pixel_dec, world_dim.meters)
     sv.run()
     layout = adjust_domains(sv.domains)
@@ -47,12 +48,16 @@ def init(
     # copy svg to case 
     shutil.copy(case_path, output_path)
 
+
+
     # copy assignment helper
-    details_path = Path(output_path.parent / "details" / case_name)
-    assign_helper = details_path / "assign.txt"
-    if not assign_helper.exists:
+    details_path = Path(output_path.parent / "details" / case_path.stem)
+    assign_helper = details_path / "assign.sh"
+    print(f"{assign_helper}: {assign_helper.exists()}.")
+    if not assign_helper.exists():
+        print(f"Assign helper doesnt exist -> creating {assign_helper}")
         details_path.mkdir(exist_ok=True)
-        shutil.copy(Path("assign.txt"), details_path)
+        shutil.copy(Path("assign.sh"), details_path)
 
     # write dimensions in config.. 
     (output_path / "config.txt").write_text(f"{pixel_length}px -> {world_dim}", encoding="utf-8")

@@ -12,4 +12,4 @@ trun assign-subsurfaces $r1 1 2 8 16 19 20 22 24
 trun assign-subsurfaces $r1 1 10 12 14 26 27 28 29 30 32 33 -w
 
 trun save-connectivity-graph $r1
-trun clean-up-domains $r1
+

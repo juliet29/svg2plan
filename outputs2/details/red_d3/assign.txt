@@ -1,0 +1,9 @@
+
+# alias trun "typer app.py run" (for fish) 
+
+trun assign-connectivity $r2 3 4 8 9 10 11 12 14 16 18 20 21 23 2
+# # no real door here
+trun assign-subsurfaces $r2 0 11 2 3
+
+# trun assign_remaining_subsurfaces $1
+# trun save-connectivity-graph $1

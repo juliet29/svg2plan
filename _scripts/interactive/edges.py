@@ -58,9 +58,8 @@ def assign_subsurfaces(
         typer.Option("--window", "-w", help="'WINDOW' if not DOOR"),
     ] = False,
 ):
-    print(is_window)
     subsurface_type = SubsurfaceType.DOORS if not is_window else SubsurfaceType.WINDOWS
-    print(subsurface_type)
+    rprint(f"Assigning {subsurface_type}...")
 
 
     subsurfaces = get_subsurfaces(case_name)[subsurface_type.name]
@@ -75,6 +74,18 @@ def assign_subsurfaces(
         item.detail = id
     write_edges(case_name, edge_details)
     rprint("Result:", relevant_edges)
+
+
+def assign_remaining_subsurfaces(case_name: CaseNameInput):
+    # TODO add option to change for different cases..
+    edge_details = get_edge_details(case_name)
+    for e in edge_details:
+        if e.connectivity and not isinstance(e.detail, int):
+            e.detail=1
+    write_edges(case_name, edge_details)
+    rprint(f"assigned remaining subsurfaces ")
+
+
 
 
 def save_connectivity_graph(case_name: CaseNameInput):

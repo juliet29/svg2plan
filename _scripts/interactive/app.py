@@ -4,9 +4,10 @@ import sys
 sys.path.append(str(Path.cwd().parent))
 
 import typer
-from interactive.subsurfaces import create_window, create_door
+from interactive.subsurfaces import copy_existing_subsurfaces, create_window, create_door
 from interactive.init import init
 from interactive.edges import (
+    assign_remaining_subsurfaces,
     show_edges,
     show_subsurfaces,
     assign_connectivity,
@@ -22,12 +23,14 @@ app.command()(init)
 
 app.command()(create_window)
 app.command()(create_door)
+app.command()(copy_existing_subsurfaces)
 
 app.command()(show_edges)
 app.command()(show_subsurfaces)
 app.command()(assign_connectivity)
 app.command()(assign_subsurfaces)
 app.command()(save_connectivity_graph)
+app.command()(assign_remaining_subsurfaces)
 
 app.command()(clean_up_domains)
 

@@ -72,7 +72,9 @@ def display_edges(edge_details):
     for adj, conn in zip_longest(y_adj, y_conn):
         table.add_row(adj, conn)
 
-    console = Console()
+    console = Console(record=True)
     console.print(table)
+    # can save files from here.. 
+    # console.save_text("text.txt")
 
     return table

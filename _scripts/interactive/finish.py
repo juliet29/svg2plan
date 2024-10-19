@@ -1,7 +1,7 @@
 from rich import print as rprint
 from actions.selection import FixLayout
 from actions.leveler import level_sides
-from interactive.helpers import CaseNameInput, get_layout, write_plan
+from interactive.helpers import CaseNameInput, error_print, get_layout, write_plan
 from helpers.save import create_plan
 from visuals.plotter import plot_general
 
@@ -22,7 +22,7 @@ def clean_up_domains(case_name: CaseNameInput):
     try:
         fl.run_to_completion()
     except Exception as e:
-        rprint(e)
+        error_print(e)
 
     new_doms = level_sides(fl.bl.layout)
 

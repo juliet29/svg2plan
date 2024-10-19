@@ -1,1 +1,15 @@
-[[{"id": 0, "label": "dining", "left": "0.00", "top": "4.91", "width": "3.56", "height": "2.05", "color": ""}, {"id": 1, "label": "bedroom_1", "left": "3.56", "top": "4.91", "width": "2.51", "height": "2.05", "color": ""}, {"id": 2, "label": "bedroom_2", "left": "6.07", "top": "4.91", "width": "2.21", "height": "2.05", "color": ""}, {"id": 3, "label": "prim_bed", "left": "5.87", "top": "2.10", "width": "2.41", "height": "2.1", "color": ""}, {"id": 4, "label": "prim_bath", "left": "3.69", "top": "1.32", "width": "1.76", "height": "1.32", "color": ""}, {"id": 5, "label": "prim_bed2", "left": "5.45", "top": "1.32", "width": "0.42", "height": "1.32", "color": ""}, {"id": 6, "label": "bath_1", "left": "2.65", "top": "2.10", "width": "1.04", "height": "2.1", "color": ""}, {"id": 7, "label": "laundry", "left": "3.69", "top": "2.10", "width": "2.18", "height": "0.78", "color": ""}, {"id": 8, "label": "closet", "left": "6.99", "top": "2.86", "width": "1.29", "height": "0.76", "color": ""}, {"id": 9, "label": "transit", "left": "2.65", "top": "2.86", "width": "4.34", "height": "0.76", "color": ""}, {"id": 10, "label": "living", "left": "0.00", "top": "2.86", "width": "2.65", "height": "2.86", "color": ""}]]
+[
+  [
+    { "id": 0, "label": "dining", "left": "0.00", "top": "4.91", "width": "3.56", "height": "2.05", "color": "" },
+    { "id": 1, "label": "bedroom_1", "left": "3.56", "top": "4.91", "width": "2.51", "height": "2.05", "color": "" },
+    { "id": 2, "label": "bedroom_2", "left": "6.07", "top": "4.91", "width": "2.21", "height": "2.05", "color": "" },
+    { "id": 3, "label": "prim_bed", "left": "5.87", "top": "2.10", "width": "2.41", "height": "2.1", "color": "" },
+    { "id": 4, "label": "prim_bath", "left": "3.69", "top": "1.32", "width": "1.76", "height": "1.32", "color": "" },
+    { "id": 5, "label": "prim_bed2", "left": "5.45", "top": "1.32", "width": "0.42", "height": "1.32", "color": "" },
+    { "id": 6, "label": "bath_1", "left": "2.65", "top": "2.10", "width": "1.04", "height": "2.1", "color": "" },
+    { "id": 7, "label": "laundry", "left": "3.69", "top": "2.10", "width": "2.18", "height": "0.78", "color": "" },
+    { "id": 8, "label": "closet", "left": "6.99", "top": "2.86", "width": "1.29", "height": "0.76", "color": "" },
+    { "id": 9, "label": "transit", "left": "2.65", "top": "2.86", "width": "4.34", "height": "0.76", "color": "" },
+    { "id": 10, "label": "living", "left": "0.00", "top": "2.86", "width": "2.65", "height": "2.86", "color": "" }
+  ]
+]
