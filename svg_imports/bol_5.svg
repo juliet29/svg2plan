@@ -1,0 +1,11 @@
+<svg width="391" height="468" viewBox="0 0 391 468" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="bol_5">
+<rect id="bed_n" width="181" height="154" fill="#476EEF" fill-opacity="0.6"></rect>
+<rect id="living" x="191" width="200" height="468" fill="#47EF6E" fill-opacity="0.6"></rect>
+<rect id="closet_n" x="1" y="154" width="129" height="35" fill="#6347EF" fill-opacity="0.6"></rect>
+<rect id="bath" y="198" width="129" height="73" fill="#EF479E" fill-opacity="0.6"></rect>
+<rect id="closet_s" x="1" y="280" width="129" height="35" fill="#47EF6E" fill-opacity="0.6"></rect>
+<rect id="bed" y="315" width="181" height="153" fill="#6347EF" fill-opacity="0.6"></rect>
+<rect id="transit" x="138" y="154" width="53" height="161" fill="#47EF6E" fill-opacity="0.6"></rect>
+</g>
+</svg>

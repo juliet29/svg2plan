@@ -37,9 +37,11 @@ def are_connectivity_edges(edge_details, n_edges, relevant_edges):
     if not set(n_edges) <= connectivity_edges:
         error_print(f"Edges are not connectivity edges: {relevant_edges} ")
    
-def is_valid_assignment(id, subsurface_type, subsurfaces, relevant_edges, edge_details, n_edges):
+def is_valid_assignment(id, subsurface_type, subsurfaces, edge_details, edge_ids):
+    # TODO when creating edges, said that external must be window, but always true.. 
+    relevant_edges = [i for i in edge_details if i.ix in edge_ids]
     edge_types = [i.external for i in relevant_edges]
     is_valid_id(subsurfaces, id)
     are_all_same_type(edge_types, relevant_edges)
     are_matching_subsurface_type(subsurface_type, edge_types, relevant_edges)
-    are_connectivity_edges(edge_details, n_edges, relevant_edges)
+    are_connectivity_edges(edge_details, edge_ids, relevant_edges)

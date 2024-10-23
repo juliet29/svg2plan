@@ -56,3 +56,7 @@ def filter_none(lst: Iterable[T|None]) -> List[T]:
 
 def uniter(iterer: Iterable):
     return [i for i in iterer]
+
+
+def set_difference(s_large:Iterable, s2:Iterable):
+    return list(set(s_large).difference(set(s2)))

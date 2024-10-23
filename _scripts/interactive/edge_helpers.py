@@ -1,12 +1,16 @@
 from itertools import zip_longest
-from typing import Iterable
-from rich.console import Console
-from rich.table import Table
+from typing import Iterable, List, Sequence
 from helpers.directions import Direction
 from helpers.helpers import sort_and_group_objects
 from helpers.layout import Layout
-from interactive.helpers import EdgeDetails
+from interactive.interfaces import EdgeDetails
 from placement.cardinal import create_cardinal_dags
+
+from rich.console import Console
+from rich.table import Table
+from beaupy import confirm, select_multiple
+
+STYLE = "cyan1 bold"
 
 
 def number_edges(G, ax, start=0):
@@ -27,42 +31,37 @@ def init_edge_details(layout: Layout):
     return x_assign + y_assign
 
 
-def stringify(ix, e):
-    u, v = e
-    return f"{ix}.({u} - {v})"
+
+def filter_ax_and_external(edge_details: list[EdgeDetails], axis: str, external: bool):
+    return list(
+        filter(lambda i: i.external == external and i.axis == axis, edge_details)
+    )
 
 
-def stringify_with_detail(ix, e, d):
-    u, v = e
-    return f"{ix}.({u} - {v}) ({d})"
+
+def filter_ax_and_connectivity(
+    edge_details: list[EdgeDetails], axis: str, connectivity: bool
+):
+    return list(
+        filter(
+            lambda i: i.connectivity == connectivity and i.axis == axis, edge_details
+        )
+    )
 
 
-def prepare(edge_details: Iterable[EdgeDetails] | None):
-    res = []
-    if edge_details:
-        for i in edge_details:
-            if not isinstance(i.detail, int):
-                res.append(stringify(i.ix, i.edge))
-            else:
-                res.append(stringify_with_detail(i.ix, i.edge, i.detail))
-        return res
-    else:
-        return []
+def get_edge_strings(edge_details: Iterable[EdgeDetails]):
+    return [f"{i!s}" for i in edge_details]
 
 
-def display_edges(edge_details):
+def display_edges(edge_details: list[EdgeDetails]):
     table = Table(title="Edges")
     table.add_column("Adjacency", style="cyan")
     table.add_column("Connectivity", style="magenta")
 
-    x_conn = prepare(filter(lambda i: i.connectivity and i.axis == "x", edge_details))
-    y_conn = prepare(filter(lambda i: i.connectivity and i.axis == "y", edge_details))
-    x_adj = prepare(
-        filter(lambda i: not i.connectivity and i.axis == "x", edge_details)
-    )
-    y_adj = prepare(
-        filter(lambda i: not i.connectivity and i.axis == "y", edge_details)
-    )
+    pairs = [("x", False), ("x", True), ("y", False), ("y", True)]
+    x_adj, x_conn, y_adj, y_conn = [
+        get_edge_strings(filter_ax_and_connectivity(edge_details, *p)) for p in pairs
+    ]
 
     for adj, conn in zip_longest(x_adj, x_conn):
         table.add_row(adj, conn)
@@ -72,9 +71,57 @@ def display_edges(edge_details):
     for adj, conn in zip_longest(y_adj, y_conn):
         table.add_row(adj, conn)
 
-    console = Console(record=True)
+    console = Console()
     console.print(table)
-    # can save files from here.. 
-    # console.save_text("text.txt")
 
     return table
+
+
+def get_edges_for_prompt(
+    edge_details: list[EdgeDetails], axis: str, external: bool,
+subsurfaces=True) -> tuple[Iterable[EdgeDetails], List[str]]:
+    if subsurfaces:
+        edges = filter_ax_and_connectivity(edge_details, axis, True)
+    else:
+        edges = filter_ax_and_external(edge_details, axis, external)
+    strings = get_edge_strings(edges)
+
+    return edges, strings
+
+
+def ask_about_connected_edges(
+    edge_details: list[EdgeDetails], axis: str, external: bool
+) -> list[int]:
+    console = Console()
+    edges, strings = get_edges_for_prompt(edge_details, axis, external, False)
+
+    ticked_indices = [ix for ix, e in enumerate(edges) if e.connectivity]
+
+    location = "Exterior" if external else "Interior"
+    console.print(f"[{axis.upper()} {location}] Which edges are connected?")
+
+    items = select_multiple(strings, return_indices=True, ticked_indices=ticked_indices, tick_style=STYLE, cursor_style=STYLE)  # type: ignore
+    
+
+    return [e.ix for ix, e in enumerate(edges) if ix in items]
+
+
+
+def ask_about_edges_for_subsurface(
+    edge_details: list[EdgeDetails], axis: str,  s_id: int, stype: str
+) -> list[int]:
+    console = Console()
+    edges, strings = get_edges_for_prompt(edge_details, axis, True, True)
+
+    if not edges:
+        print(f"No connected edges in {axis.upper()} ")
+        return []
+
+    console.print(f"Select {axis.upper()} edges for {stype} type {s_id}")
+
+    items = select_multiple(strings, return_indices=True, tick_style=STYLE, cursor_style=STYLE)  # type: ignore
+
+
+    return [e.ix for ix, e in enumerate(edges) if ix in items]
+
+

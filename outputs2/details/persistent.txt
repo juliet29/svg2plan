@@ -1,0 +1,28 @@
+# code names
+set amb1 amb_b1.svg
+set b5 bol_5.svg
+set r1 red_b1.svg
+
+
+
+./init.sh $r1 211 15 1 0 
+./init.sh $b5 490 32 0 0 
+./init.sh $amb1 314 23 3 1/2
+
+
+
+# in interactive 
+# run ./init.sh
+# edit the adjacencies.txt and run the codes
+# run ./finsih.sh 
+
+
+# ---- ADJACENCIES 
+
+# red_b1.svg old.. 
+trun assign-connectivity $r1 2 3 8 10 12 14 16 19 20 22 24 25 26 27 28 29 30 32 33 18
+
+# no real door here
+trun assign-subsurfaces $r1 0 3 18 25 
+
+

@@ -1,0 +1,6 @@
+trun assign-connectivity $r2 2 7 9 10 13 14 16 17 18 21 23 24 25 26 27 28 29 30
+# # no real door here
+trun assign-subsurfaces $r2 0 7 16 23
+
+# trun assign_remaining_subsurfaces $1
+# trun save-connectivity-graph $1

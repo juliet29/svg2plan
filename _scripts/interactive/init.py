@@ -48,17 +48,6 @@ def init(
     # copy svg to case 
     shutil.copy(case_path, output_path)
 
-
-
-    # copy assignment helper
-    details_path = Path(output_path.parent / "details" / case_path.stem)
-    assign_helper = details_path / "assign.sh"
-    print(f"{assign_helper}: {assign_helper.exists()}.")
-    if not assign_helper.exists():
-        print(f"Assign helper doesnt exist -> creating {assign_helper}")
-        details_path.mkdir(exist_ok=True)
-        shutil.copy(Path("assign.sh"), details_path)
-
     # write dimensions in config.. 
     (output_path / "config.txt").write_text(f"{pixel_length}px -> {world_dim}", encoding="utf-8")
 

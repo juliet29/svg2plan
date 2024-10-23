@@ -95,6 +95,23 @@ class EdgeDetails():
     external: bool = False
     connectivity: bool = False
     detail: int | None = None
+    
+    def __str__(self) -> str:
+        u, v = self.edge
+        txt = f"{self.ix}.({u} - {v}) " 
+        if isinstance(self.detail, int):
+            return txt + str([self.detail])
+        else:
+            return txt
+        
+    def __eq__(self, other) -> bool:
+        a = sorted(self.edge)
+        b = sorted(other.edge)
+        return a == b
+    def __hash__(self) -> int:
+        u, v = self.edge
+        return hash(u) + hash(v)
+        
 
 
 
