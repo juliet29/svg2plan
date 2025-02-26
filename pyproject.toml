@@ -7,7 +7,12 @@ authors = [
     { name = "Juliet Nwagwu Ume-Ezeoke", email = "jnwagwu@stanford.edu" }
 ]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "colored-traceback>=0.4.2",
+    "networkx>=3.4.2",
+    "pytest>=8.3.4",
+    "shapely>=2.0.7",
+]
 
 [project.scripts]
 svg2plan = "svg2plan:main"
