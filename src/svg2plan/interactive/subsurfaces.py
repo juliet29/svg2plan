@@ -1,24 +1,25 @@
-from pathlib import Path
 import shutil
 import sys
+from pathlib import Path
+
 sys.path.append(str(Path.cwd().parent))
 
-from interactive.helpers import get_output_path, get_subsurfaces, write_subsurfaces
-from interactive.helpers import CaseNameInput
-from interactive.subsurface_helpers import (
+import typer
+from typing_extensions import Annotated
+
+from .helpers import CaseNameInput, get_output_path, get_subsurfaces, write_subsurfaces
+from .interfaces import DoorsJSON, DoorType, WindowsJSON, WindowType
+from .subsurface_helpers import (
     DimInput,
     complete_wtype,
     create_dimension,
     validate_id,
     validate_wtype,
 )
-import typer
-from typing_extensions import Annotated
-from rich import print as rprint
-from interactive.interfaces import DoorType, DoorsJSON, WindowType, WindowsJSON
+
 
 def copy_existing_subsurfaces(case_name: CaseNameInput):
-    # TODO optionally copy from another case.. 
+    # TODO optionally copy from another case..
     output_path = get_output_path(case_name)
     def_subsurfaces = Path(output_path.parent / "details" / "subsurfaces.json")
     shutil.copy(def_subsurfaces, output_path)
@@ -64,7 +65,6 @@ def create_window(
     write_subsurfaces(case_name, existing_data)
 
 
-
 def create_door(
     case_name: CaseNameInput,
     id: Annotated[int, typer.Argument(help="id")],
@@ -92,4 +92,3 @@ def create_door(
     doors.append(res.to_json())
     existing_data["DOORS"] = doors
     write_subsurfaces(case_name, existing_data)
-

@@ -3,9 +3,9 @@ import networkx as nx
 import typer
 from rich import print as rprint
 from typing_extensions import Annotated
-from interactive.edge_checks import is_valid_assignment
-from interactive.edge_helpers import display_edges
-from interactive.helpers import (
+from .edge_checks import is_valid_assignment
+from .edge_helpers import display_edges
+from .helpers import (
     CaseNameInput,
     error_print,
     get_edge_details,
@@ -29,11 +29,9 @@ def assign_remaining_subsurfaces(case_name: CaseNameInput):
     edge_details = get_edge_details(case_name)
     for e in edge_details:
         if e.connectivity and not isinstance(e.detail, int):
-            e.detail=1
+            e.detail = 1
     write_edges(case_name, edge_details)
     rprint(f"assigned remaining subsurfaces ")
-
-
 
 
 def save_connectivity_graph(case_name: CaseNameInput):

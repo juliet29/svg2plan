@@ -8,10 +8,16 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
+    "bpython>=0.25",
     "colored-traceback>=0.4.2",
     "networkx>=3.4.2",
+    "pyprojroot>=0.3.0",
     "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+    "rich>=13.9.4",
+    "scipy>=1.15.2",
     "shapely>=2.0.7",
+    "typer>=0.15.1",
 ]
 
 [project.scripts]

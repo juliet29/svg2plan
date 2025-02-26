@@ -1,7 +1,7 @@
 from typing import Dict, NamedTuple
 from shapely import Polygon
 from networkx import DiGraph
-from domains.domain import Domain
+from ..domains.domain import Domain
 
 DomainsDict = Dict[str, Domain]
 OptionalDomainsDict = Dict[str, Domain | None]

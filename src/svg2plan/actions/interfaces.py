@@ -1,11 +1,11 @@
-from enum import Enum
 from dataclasses import dataclass
-from domains.domain import Domain
-from typing import Dict, Callable, Union
-from operator import add, sub
-from helpers.directions import Direction
 from decimal import Decimal
+from enum import Enum
+from operator import add, sub
+from typing import Callable, Dict
 
+from ..domains.domain import Domain
+from ..helpers.directions import Direction
 
 ReductiveCallable = Callable[[Decimal, Decimal], Decimal]
 
@@ -74,8 +74,6 @@ class OperationLog:
 
 
 from decimal import Decimal
-
-
 
 
 @dataclass

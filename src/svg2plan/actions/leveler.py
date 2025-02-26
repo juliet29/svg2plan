@@ -1,11 +1,11 @@
 from copy import deepcopy
 from decimal import Decimal, localcontext
 from statistics import mean
-from domains.domain import Domain
-from helpers.directions import Direction
-from helpers.layout import DiGraphs, Layout
-from helpers.layout import DomainsDict
-from placement.cardinal import create_cardinal_dags
+
+from ..domains.domain import Domain
+from ..helpers.directions import Direction
+from ..helpers.layout import DomainsDict, Layout
+from ..placement.cardinal import create_cardinal_dags
 
 
 def normalize_to_target(arr):
@@ -14,8 +14,10 @@ def normalize_to_target(arr):
         ctx.prec = 3
         r_min, r_max = min(arr), max(arr)
         t_min, t_max = Decimal("0.1"), 1
-        normalize = lambda x: (x - r_min) / (r_max - r_min)
-        scale = lambda x: (normalize(x) * (t_max - t_min)) + t_min
+        def normalize(x):
+            return (x - r_min) / (r_max - r_min)
+        def scale(x):
+            return (normalize(x) * (t_max - t_min)) + t_min
         return [scale(i) for i in arr]
 
 

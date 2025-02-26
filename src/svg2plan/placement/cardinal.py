@@ -1,15 +1,12 @@
 from copy import deepcopy
-from typing import Optional
-import networkx as nx
-from itertools import product
-from itertools import chain
+from itertools import chain, product
 
-from helpers.directions import Direction
-from helpers.utils import chain_flatten
-from helpers.layout import Layout
-from helpers.layout import DomainsDict
-from placement.attract import draw_digraph
-from domains.domain import AxisNames
+import networkx as nx
+
+from ..domains.domain import AxisNames
+from ..helpers.directions import Direction
+from ..helpers.layout import DomainsDict, Layout
+from ..helpers.utils import chain_flatten
 
 
 def get_roots_and_leaves_for_dag(G: nx.DiGraph):

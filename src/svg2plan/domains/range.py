@@ -26,7 +26,7 @@ class Range:
 
     def __post_init__(self):
         try:
-            assert self.min <= self.max
+            assert self.min < self.max
         except AssertionError:
             raise InvalidRangeException
 
@@ -45,13 +45,10 @@ class Range:
         # 'projected' on to x axis
         return LineString([[self.min, 0], [self.max, 0]])
 
-    # @property
-    # def line_string_y(self):
-    #     return LineString([[0, self.min], [0, self.max]])
-
     def is_intersecting_shapely(self, other):
         are_related = not self.line_string.disjoint(other.line_string)
-        are_insides_related = not self.line_string.touches(other.line_string) # not only boundaries touch
+        # touches returns true if the ONLY points share are on the boundary... 
+        are_insides_related = not self.line_string.touches(other.line_string) 
         return are_related and are_insides_related
 
     def contains(self, other):
@@ -108,12 +105,14 @@ class Range:
 
     @classmethod
     def create_range(cls, a: float, b: float):
-        fx = lambda x: round(Decimal(x), ROUNDING_LIM)
+        def fx(x):
+            return round(Decimal(x), ROUNDING_LIM)
         return cls(fx(a), fx(b))
     
     @classmethod
     def recreate_range(cls, a: str, b: str):
-        fx = lambda x: Decimal(x)
+        def fx(x):
+            return Decimal(x)
         return cls(fx(a), fx(b))
 
 

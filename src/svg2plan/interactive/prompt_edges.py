@@ -1,14 +1,14 @@
 from copy import deepcopy
 import typer
-from interactive.edge_checks import is_valid_id
-from interactive.helpers import (
+from .edge_checks import is_valid_id
+from .helpers import (
     CaseNameInput,
     EdgeDetails,
     get_edge_details,
     get_subsurfaces,
     write_edges,
 )
-from interactive.edge_helpers import (
+from .edge_helpers import (
     Console,
     ask_about_connected_edges,
     ask_about_edges_for_subsurface,
@@ -18,8 +18,9 @@ from interactive.edge_helpers import (
 from typing import Annotated, List
 from beaupy import confirm, select_multiple
 from helpers.utils import chain_flatten, set_difference
-from interactive.interfaces import SubsurfaceType
+from .interfaces import SubsurfaceType
 from rich import print as rprint
+
 
 def reset_edge_details(case_name: CaseNameInput):
     _edge_details = get_edge_details(case_name)
@@ -33,7 +34,6 @@ def reset_edge_details(case_name: CaseNameInput):
         write_edges(case_name, edge_details)
     else:
         rprint("Abandoning changes...")
-
 
 
 def assign_connectivity(case_name: CaseNameInput):
@@ -57,14 +57,14 @@ def assign_connectivity(case_name: CaseNameInput):
     for i in edge_ids:
         edge_details[i].connectivity = True
 
-
     display_edges(edge_details)
     if confirm("Are the edges correct?"):
         write_edges(case_name, edge_details)
     else:
         rprint("Abandoning changes...")
-    
-# TOD possibly unassign connectivity with undo flag.. 
+
+
+# TOD possibly unassign connectivity with undo flag..
 
 
 def assign_subsurfaces(
@@ -80,7 +80,7 @@ def assign_subsurfaces(
 ):
     _edge_details = get_edge_details(case_name)
     edge_details = deepcopy(_edge_details)
-    
+
     subsurface_type = SubsurfaceType.DOORS if not is_window else SubsurfaceType.WINDOWS
 
     subsurfaces = get_subsurfaces(case_name)[subsurface_type.name]
@@ -91,16 +91,16 @@ def assign_subsurfaces(
 
     edge_ids = []
     for ax in axes:
-        selected_ids = ask_about_edges_for_subsurface(edge_details, ax, id, subsurface_type.name)
+        selected_ids = ask_about_edges_for_subsurface(
+            edge_details, ax, id, subsurface_type.name
+        )
         edge_ids.append(selected_ids)
     edge_ids = chain_flatten(edge_ids)
     rprint(f"Selected edges: {edge_ids}")
 
-
     for i in edge_ids:
         edge_details[i].detail = id
 
-    
     display_edges(edge_details)
     if confirm("Are the edges correct?"):
         write_edges(case_name, edge_details)

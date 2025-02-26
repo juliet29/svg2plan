@@ -1,11 +1,8 @@
-from decimal import Decimal
-from turtle import pos
-from sympy import EX
-from domains.domain import Domain
-from domains.range import Range
-from helpers.directions import get_opposite_axis
-from helpers.utils import filter_none
-from helpers.layout import DomainsDict
+from ..domains.domain import Domain
+from ..domains.range import Range, InvalidRangeException
+from ..helpers.directions import get_opposite_axis
+from ..helpers.utils import filter_none
+from ..helpers.layout import DomainsDict
 
 
 def get_possible_nbs(node: Domain, domains: DomainsDict, ax) -> list[Domain]:
@@ -28,14 +25,14 @@ def create_ranges_between(
     def create_range(other: Domain):
         try:
             return Range(node[ax].max, other[ax].min)
-        except:
+        except InvalidRangeException:
             return Range(node[ax].max, node[ax].max)
 
     res = {}
     for i in poss_nbs:
         try:
             res[i.name] = create_range(i)
-        except:
+        except InvalidRangeException:
             print(node.name, i.name)
             raise Exception("ranges failed")
         
@@ -53,6 +50,7 @@ def find_possible_nbs_and_ranges(node: Domain, domains: DomainsDict, ax):
 
 
 def find_adjacent_nodes(ranges: dict[str, Range], domains: DomainsDict, ax):
+    # TODO test this.. 
 
     def create_comparisons(poss_nbs: list[str]) -> list[list[str]]:
         comparisons = []

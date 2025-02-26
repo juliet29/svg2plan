@@ -1,18 +1,20 @@
 from rich import print as rprint
 from actions.selection import FixLayout
 from actions.leveler import level_sides
-from interactive.helpers import CaseNameInput, error_print, get_layout, write_plan
+from .helpers import CaseNameInput, error_print, get_layout, write_plan
 from helpers.save import create_plan
 from visuals.plotter import plot_general
+
 
 def show_remaining(a, a1):
     def str_split(arr):
         return set(str(arr).split())
+
     l = str_split(a)
     l1 = str_split(a1)
     diff = l.difference(l1)
-    res =  sorted([int(i) for i in diff])
-    print(' '.join(map(str, res)) )
+    res = sorted([int(i) for i in diff])
+    print(" ".join(map(str, res)))
 
 
 def clean_up_domains(case_name: CaseNameInput):

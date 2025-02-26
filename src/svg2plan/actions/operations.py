@@ -1,14 +1,12 @@
 from copy import deepcopy
-from typing import Counter, List, Optional
-from actions.actions import CreateModifiedDomain
-from actions.results_log import ResultsLog
-from identify.reporter import Reporter
-from helpers.shapely import domain_to_shape
-from actions.interfaces import ActionDetails
-from helpers.layout import Layout
-from identify.interfaces import Problem
-from actions.interfaces import OperationLog
-from svg_logger.settings import svlogger
+from typing import List
+
+from ..helpers.layout import Layout
+from ..identify.interfaces import Problem
+from ..identify.reporter import Reporter
+from .actions import CreateModifiedDomain
+from .interfaces import ActionDetails, OperationLog
+from .results_log import ResultsLog
 
 
 def create_node_operations(action_details: ActionDetails):

@@ -1,13 +1,11 @@
-from decimal import Decimal
-from actions.interfaces import OperationLog
-from identify.interfaces import Problem
-from helpers.utils import chain_flatten
-from helpers.layout import Layout
-
-
 from collections import Counter
 from dataclasses import dataclass
+from decimal import Decimal
 
+from ..helpers.layout import Layout
+from ..helpers.utils import chain_flatten
+from ..identify.interfaces import Problem
+from .interfaces import OperationLog
 
 N_PROBS_WEIGHT = Decimal(0.5)
 SIZE_PROBS_WEIGHT = Decimal(0.5)
@@ -45,10 +43,6 @@ class ResultsLog:
 
     def short_message(self):
         return f"{self.operation.node.name}-{self.operation.action_type.name}-for-{self.problem_being_addressed.problem_type.name} near {self.problem_being_addressed.nbs[:2]}{self.num_unresolved_problems}-PS:{self.problem_size:.2f}-S:{self.score:.2f}"
-    
 
     def display_message(self):
         return f"{self.operation.action_type.name} {self.operation.node.name} for {self.problem_being_addressed.problem_type.name} near {self.problem_being_addressed.nbs[:2]} <br> Remaining Problems: {self.num_unresolved_problems} | Problem Size: {self.problem_size:.2f}"
-    
-
-

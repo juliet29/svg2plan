@@ -1,8 +1,8 @@
-from domains.range import InvalidRangeException, Range
-from actions.interfaces import ActionDetails
-from helpers.directions import get_axis
-from domains.domain import Domain
-from actions.interfaces import (
+from ..domains.domain import Domain
+from ..domains.range import InvalidRangeException, Range
+from ..helpers.directions import get_axis
+from .interfaces import (
+    ActionDetails,
     ActionType,
     OperationLog,
     get_action_protocol,

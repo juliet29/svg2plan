@@ -1,17 +1,16 @@
-from pathlib import Path
-from xml.dom import minidom
-from typing import NamedTuple
 from decimal import Decimal
+from pathlib import Path
+from typing import NamedTuple
+from xml.dom import minidom
 
-from scipy import stats
 import numpy as np
+from scipy import stats
 
-from helpers.utils import filter_none
-from helpers.layout import PartialLayout, DomainsDict
-from constants import ROUNDING_LIM, INIT_WORLD_LEN_M, INIT_PX_LEN
-
-from domains.domain import Domain
-from domains.range import nonDecimalRange
+from .constants import INIT_PX_LEN, INIT_WORLD_LEN_M, ROUNDING_LIM
+from .domains.domain import Domain
+from .domains.range import nonDecimalRange
+from .helpers.layout import DomainsDict
+from .helpers.utils import filter_none
 
 
 class SVGRect(NamedTuple):
@@ -35,7 +34,13 @@ def filter_outlier_domains(domains: DomainsDict, threshold_z:int=2):
     return {i.name: i for i in valid_domains}
 
 
+# TODO why is this a class?
+
 class SVGReader:
+    """
+    When exporting, make sure SVGs have id attribute. And be concious of if want to ignore ids..
+    
+    """
     def __init__(
         self,
         svg_path: Path,
@@ -43,6 +48,7 @@ class SVGReader:
         real_len=Decimal(INIT_WORLD_LEN_M),
         filter_outliers=False
     ) -> None:
+        
         assert svg_path.exists(), "Invalid SVG Path"
         self.svg_path = svg_path
 
@@ -63,6 +69,7 @@ class SVGReader:
             for path in doc.getElementsByTagName("rect")
             if path.getAttribute("id")
         ])
+        assert len(self.rectangles) >= 1, "Check that svgs include ids!"
         doc.unlink()
 
     def parse_single_rectangle(self, path):

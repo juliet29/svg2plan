@@ -6,10 +6,10 @@ from rich import print as rprint
 from helpers.save import RoomType, read_pickle
 from helpers.save import write_pickle
 from helpers.layout import Layout
-from interactive.interfaces import EdgeDetails, SubSurfacesJSON
+from .interfaces import EdgeDetails, SubSurfacesJSON
 from typing_extensions import Annotated
 
-from interactive.subsurface_helpers import open_subsurface_json
+from .subsurface_helpers import open_subsurface_json
 import networkx as nx
 
 ROOT_DIR = Path.cwd().parent.parent

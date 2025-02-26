@@ -131,7 +131,7 @@ class ComparedDomain:
 def get_domain_from_range(
     axis: str, domain_a: Domain, domain_b: Domain, range: Range | None
 ):
-    if range == None:
+    if range is None:
         return None
     if domain_a == domain_b:
         raise Exception("equivalent domains not handled")

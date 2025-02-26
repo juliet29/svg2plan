@@ -1,6 +1,6 @@
 from typing import Literal, Tuple
 from rich import print as rprint
-from interactive.interfaces import FootInchesDimension, SubSurfacesJSON
+from .interfaces import FootInchesDimension, SubSurfacesJSON
 import json
 from fractions import Fraction
 from pathlib import Path

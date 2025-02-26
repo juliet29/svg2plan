@@ -3,13 +3,14 @@ from decimal import Decimal
 from functools import reduce
 from itertools import pairwise, product
 from operator import add
-from typing import NamedTuple, Optional
-from numpy import isin
-from helpers.utils import sort_and_group_objects
-from helpers.layout import DiGraphs, DomainsDict, Layout
+from typing import NamedTuple
+
 import networkx as nx
 
-from placement.neighbors import create_ranges_for_all_nodes
+from ..helpers.layout import DiGraphs, DomainsDict, Layout
+from ..helpers.utils import sort_and_group_objects
+from .neighbors import create_ranges_for_all_nodes
+
 
 class DistanceToMove(NamedTuple):
     root: str
@@ -89,7 +90,6 @@ def adjust_domains(domains: DomainsDict):
 
 
 def create_pos(domains: DomainsDict):
-
     return {k: (float(v.x.min), float(v.y.min)) for k, v in domains.items()}
 
 NodePositions = dict[str, tuple[float, float]]

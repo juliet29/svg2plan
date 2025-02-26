@@ -1,26 +1,35 @@
-from svg2plan.domains.range import InvalidRangeException, nonDecimalRange
+from svg2plan.domains.range import InvalidRangeException, Range, nonDecimalRange
 import pytest
 
 
 class TestRange:
 
     @pytest.fixture(autouse=True)
-    def get_control(self, control):
+    def get_control(self, control: Range):
         self._control = control
 
-    def test_is_smaller(self, larger):
+    @pytest.mark.parametrize(
+        "larger, expected",
+        [
+            (nonDecimalRange(21, 24).toRange(), True),
+            (nonDecimalRange(19, 23).toRange(), False),
+        ]
+    )
+    def test_is_strictly_smaller(self, larger, expected):
+        assert self._control.is_strictly_smaller(larger) == expected
+
+    def test_is_smaller(self, larger: Range):
         assert self._control.is_smaller(larger)
 
-    def test_is_larger(self, smaller):
+    def test_is_larger(self, smaller: Range):
         assert self._control.is_larger(smaller)
 
-    def test_compared_gap(self, larger, smaller):
+    def test_compared_gap(self, larger: Range, smaller: Range):
         result = self._control.compare_ranges(larger)
         assert result.Lesser == self._control
 
         result = self._control.compare_ranges(smaller)
         assert result.Lesser == smaller
-
 
     def test_within_is_not_overlapping_larger(self):
         narrower = nonDecimalRange(12, 18).toRange()
@@ -43,7 +52,6 @@ class TestRange:
     def test_is_overlapping_and_smaller(self):
         overlap_larger = nonDecimalRange(14, 24).toRange()
         assert self._control.is_overlapping_and_smaller(overlap_larger)
-
 
     def test_compared_touching(self):
         smaller_touching = nonDecimalRange(6, 10).toRange()
@@ -72,7 +80,6 @@ class TestRange:
         with pytest.raises(InvalidRangeException):
             nonDecimalRange(10, 1).toRange()
 
-    @pytest.mark.skip()
     def test_zero_width_range(self):
         with pytest.raises(InvalidRangeException):
             nonDecimalRange(1, 1).toRange()
@@ -80,6 +87,19 @@ class TestRange:
     def test_modification(self):
         def fx(x):
             return x + 2
+
         res = self._control.modify(fx)
         assert res.min == self._control.min + 2
         assert res.max == self._control.max + 2
+
+    @pytest.mark.parametrize(
+        "min, max, expected",
+        [
+            pytest.param(20, 25, False, id="touch_at_one_point"),
+            pytest.param(22, 25, False, id="disjoint"),
+            pytest.param(15, 25, True, id="intersecting"),
+        ],
+    )
+    def test_shapely_intersecting(self, min: int, max: int, expected: bool):
+        other = nonDecimalRange(min, max).toRange()
+        assert self._control.is_intersecting_shapely(other) == expected

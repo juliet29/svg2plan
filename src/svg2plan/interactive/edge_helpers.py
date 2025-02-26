@@ -3,7 +3,7 @@ from typing import Iterable, List, Sequence
 from helpers.directions import Direction
 from helpers.utils import sort_and_group_objects
 from helpers.layout import Layout
-from interactive.interfaces import EdgeDetails
+from .interfaces import EdgeDetails
 from placement.cardinal import create_cardinal_dags
 
 from rich.console import Console
@@ -31,12 +31,10 @@ def init_edge_details(layout: Layout):
     return x_assign + y_assign
 
 
-
 def filter_ax_and_external(edge_details: list[EdgeDetails], axis: str, external: bool):
     return list(
         filter(lambda i: i.external == external and i.axis == axis, edge_details)
     )
-
 
 
 def filter_ax_and_connectivity(
@@ -78,8 +76,8 @@ def display_edges(edge_details: list[EdgeDetails]):
 
 
 def get_edges_for_prompt(
-    edge_details: list[EdgeDetails], axis: str, external: bool,
-subsurfaces=True) -> tuple[Iterable[EdgeDetails], List[str]]:
+    edge_details: list[EdgeDetails], axis: str, external: bool, subsurfaces=True
+) -> tuple[Iterable[EdgeDetails], List[str]]:
     if subsurfaces:
         edges = filter_ax_and_connectivity(edge_details, axis, True)
     else:
@@ -101,14 +99,12 @@ def ask_about_connected_edges(
     console.print(f"[{axis.upper()} {location}] Which edges are connected?")
 
     items = select_multiple(strings, return_indices=True, ticked_indices=ticked_indices, tick_style=STYLE, cursor_style=STYLE)  # type: ignore
-    
 
     return [e.ix for ix, e in enumerate(edges) if ix in items]
 
 
-
 def ask_about_edges_for_subsurface(
-    edge_details: list[EdgeDetails], axis: str,  s_id: int, stype: str
+    edge_details: list[EdgeDetails], axis: str, s_id: int, stype: str
 ) -> list[int]:
     console = Console()
     edges, strings = get_edges_for_prompt(edge_details, axis, True, True)
@@ -121,7 +117,4 @@ def ask_about_edges_for_subsurface(
 
     items = select_multiple(strings, return_indices=True, tick_style=STYLE, cursor_style=STYLE)  # type: ignore
 
-
     return [e.ix for ix, e in enumerate(edges) if ix in items]
-
-

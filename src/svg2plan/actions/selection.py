@@ -1,12 +1,13 @@
 from typing import List
-from helpers.layout import Layout
-from identify.reporter import Reporter
-from actions.results_log import ResultsLog
-from actions.operations import (
+
+from ..helpers.layout import Layout
+from ..identify.reporter import Reporter
+from ..visuals.plots import make_subplot_for_all_probs
+from ..visuals.plotter import plot_general
+from .operations import (
     study_many_problems,
 )
-from visuals.plots import make_subplot_for_all_probs
-from visuals.plotter import plot_general
+from .results_log import ResultsLog
 
 
 def sort_results_by_score(results: List[ResultsLog]):
@@ -97,13 +98,10 @@ class FixLayout:
     def plot(self, ix):
         plot_general(self.history[ix], f"iteration {ix}")
 
-    def plot_all(
-        self,
-        xrange=[-1, 12],
-        yrange=[-1, 10],
-        save_location=None
-    ):
-        make_subplot_for_all_probs(self.history[0], self.bl_hist, xrange, yrange, save_location)
+    def plot_all(self, xrange=[-1, 12], yrange=[-1, 10], save_location=None):
+        make_subplot_for_all_probs(
+            self.history[0], self.bl_hist, xrange, yrange, save_location
+        )
 
     def show_results_at_ix(self, ix):
         [i.short_message() for i in self.res_hist[ix]]
