@@ -1,1 +1,33 @@
-{"directed": true, "multigraph": false, "graph": {}, "nodes": [{"id": "transit"}, {"id": "living"}, {"id": "bath"}, {"id": "EAST"}, {"id": "WEST"}, {"id": "bed_n"}, {"id": "bed"}, {"id": "closet_n"}, {"id": "closet_s"}, {"id": "NORTH"}, {"id": "SOUTH"}], "links": [{"details": {"external": false, "id": 0}, "source": "transit", "target": "living"}, {"details": {"external": false, "id": 1}, "source": "transit", "target": "bed_n"}, {"details": {"external": true, "id": 1}, "source": "living", "target": "EAST"}, {"details": {"external": true, "id": 1}, "source": "living", "target": "NORTH"}, {"details": {"external": false, "id": 1}, "source": "bath", "target": "transit"}, {"details": {"external": true, "id": 1}, "source": "WEST", "target": "bed_n"}, {"details": {"external": true, "id": 1}, "source": "WEST", "target": "bed"}, {"details": {"external": true, "id": 1}, "source": "bed_n", "target": "NORTH"}, {"details": {"external": false, "id": 1}, "source": "bed", "target": "transit"}, {"details": {"external": false, "id": 1}, "source": "bed", "target": "closet_s"}, {"details": {"external": false, "id": 1}, "source": "closet_n", "target": "bed_n"}, {"details": {"external": true, "id": 1}, "source": "SOUTH", "target": "bed"}, {"details": {"external": true, "id": 1}, "source": "SOUTH", "target": "living"}]}
+{
+  "directed": true,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    { "id": "transit" },
+    { "id": "living" },
+    { "id": "bath" },
+    { "id": "EAST" },
+    { "id": "WEST" },
+    { "id": "bed_n" },
+    { "id": "bed" },
+    { "id": "closet_n" },
+    { "id": "closet_s" },
+    { "id": "NORTH" },
+    { "id": "SOUTH" }
+  ],
+  "links": [
+    { "details": { "external": false, "id": 0 }, "source": "transit", "target": "living" },
+    { "details": { "external": false, "id": 1 }, "source": "transit", "target": "bed_n" },
+    { "details": { "external": true, "id": 1 }, "source": "living", "target": "EAST" },
+    { "details": { "external": true, "id": 1 }, "source": "living", "target": "NORTH" },
+    { "details": { "external": false, "id": 1 }, "source": "bath", "target": "transit" },
+    { "details": { "external": true, "id": 1 }, "source": "WEST", "target": "bed_n" },
+    { "details": { "external": true, "id": 1 }, "source": "WEST", "target": "bed" },
+    { "details": { "external": true, "id": 1 }, "source": "bed_n", "target": "NORTH" },
+    { "details": { "external": false, "id": 1 }, "source": "bed", "target": "transit" },
+    { "details": { "external": false, "id": 1 }, "source": "bed", "target": "closet_s" },
+    { "details": { "external": false, "id": 1 }, "source": "closet_n", "target": "bed_n" },
+    { "details": { "external": true, "id": 1 }, "source": "SOUTH", "target": "bed" },
+    { "details": { "external": true, "id": 1 }, "source": "SOUTH", "target": "living" }
+  ]
+}

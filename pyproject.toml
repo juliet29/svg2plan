@@ -1,0 +1,17 @@
+[project]
+name = "svg2plan"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Juliet Nwagwu Ume-Ezeoke", email = "jnwagwu@stanford.edu" }
+]
+requires-python = ">=3.13"
+dependencies = []
+
+[project.scripts]
+svg2plan = "svg2plan:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

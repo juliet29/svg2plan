@@ -1,0 +1,14 @@
+<svg width="619" height="372" viewBox="0 0 619 372" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="red_b1">
+<rect id="dining" width="261" height="151" fill="#35FFF2" fill-opacity="0.44"></rect>
+<rect id="bedroom_1" x="267" width="182" height="147" fill="#FF6135" fill-opacity="0.44"></rect>
+<rect id="bedroom_2" x="455" width="164" height="147" fill="#35FFF2" fill-opacity="0.44"></rect>
+<rect id="prim_bed" x="427" y="216" width="192" height="150" fill="#35FF42" fill-opacity="0.44"></rect>
+<rect id="prim_bath" x="285" y="273" width="128" height="93" fill="#35FFF2" fill-opacity="0.44"></rect>
+<rect id="bath_1" x="203" y="216" width="75" height="150" fill="#FF35DA" fill-opacity="0.44"></rect>
+<rect id="laundry" x="291" y="216" width="136" height="42" fill="#FF6135" fill-opacity="0.44"></rect>
+<rect id="closet" x="518" y="151" width="101" height="60" fill="#FF3538" fill-opacity="0.44"></rect>
+<rect id="transit" x="195" y="156" width="315" height="55" fill="#FFEE35" fill-opacity="0.44"></rect>
+<rect id="living" x="4" y="154" width="191" height="218" fill="#CC35FF" fill-opacity="0.44"></rect>
+</g>
+</svg>
