@@ -26,7 +26,7 @@ class Range:
 
     def __post_init__(self):
         try:
-            assert self.min < self.max
+            assert self.min <= self.max
         except AssertionError:
             raise InvalidRangeException
 

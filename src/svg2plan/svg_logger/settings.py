@@ -1,6 +1,5 @@
-import logging, json, logging.config
-from turtle import setup
-from pathlib import Path
+import json
+import logging
 
 LOG_CONFIG_PATH = "/Users/julietnwagwuume-ezeoke/_UILCode/gqe-phd/svg2plan/_scripts/svg_logger/config.json"
 

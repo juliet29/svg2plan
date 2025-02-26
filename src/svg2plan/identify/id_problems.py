@@ -1,12 +1,13 @@
 from decimal import Decimal
-import networkx as nx
-from actions.interfaces import HOLE_ACTIONS, OVERLAP_ACTIONS, ActionDetails
-from domains.domain import Domain
-from identify.interfaces import Problem, ProblemType
-from helpers.layout import DiGraphs, Layout
-from helpers.directions import Direction
-from helpers.utils import filter_none
 from typing import NamedTuple
+
+
+from ..actions.interfaces import HOLE_ACTIONS, OVERLAP_ACTIONS, ActionDetails
+from ..domains.domain import Domain
+from ..helpers.directions import Direction
+from ..helpers.layout import DiGraphs, Layout
+from ..helpers.utils import filter_none
+from .interfaces import Problem, ProblemType
 
 
 class DirectedDomain(NamedTuple):

@@ -80,9 +80,9 @@ class TestRange:
         with pytest.raises(InvalidRangeException):
             nonDecimalRange(10, 1).toRange()
 
-    def test_zero_width_range(self):
-        with pytest.raises(InvalidRangeException):
-            nonDecimalRange(1, 1).toRange()
+    def test_zero_width_range_is_valid(self):
+        # with pytest.raises(InvalidRangeException):
+        assert nonDecimalRange(1, 1).toRange()
 
     def test_modification(self):
         def fx(x):

@@ -1,16 +1,12 @@
-from ast import Index
 from itertools import product
-import math
-from re import sub
 from typing import Dict, List
-from domains.domain import Domain
+
 import plotly.express as px
 import plotly.graph_objects as go
-
-from actions.results_log import ResultsLog
 from plotly.subplots import make_subplots
 
-from identify.interfaces import Problem
+from ..actions.results_log import ResultsLog
+from ..domains.domain import Domain
 
 
 def prepare_shape_dict(

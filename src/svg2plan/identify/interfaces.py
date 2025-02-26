@@ -1,11 +1,9 @@
-from dataclasses import dataclass, field
-from typing import Optional
+from dataclasses import dataclass
 from enum import Enum
-from shapely import Polygon
-from actions.interfaces import get_action_protocol
-from actions.interfaces import ActionDetails
-from helpers.layout import Layout
-from domains.domain import Domain
+from typing import Optional
+
+from ..actions.interfaces import ActionDetails
+from ..domains.domain import Domain
 
 
 class ProblemType(Enum):

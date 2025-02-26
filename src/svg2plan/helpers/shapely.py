@@ -1,7 +1,10 @@
 from shapely import Point, Polygon, from_wkt, geometry, to_wkt
 from shapely.coords import CoordinateSequence
-from domains.domain import Domain
-from constants import ROUNDING_LIM
+
+from svg2plan.domains.range import InvalidRangeException
+
+from ..constants import ROUNDING_LIM
+from ..domains.domain import Domain
 
 
 def get_point_as_xy(point: Point):
@@ -12,7 +15,8 @@ def list_coords(coords: CoordinateSequence):
     return [c for c in coords]
 
 
-create_str_pair = lambda x: "{} {}".format(x[0], x[1])
+def create_str_pair(x):
+    return "{} {}".format(x[0], x[1])
 
 
 def domain_to_shape(domain: Domain) -> Polygon:
@@ -49,5 +53,5 @@ def shape_to_domain(shape: Polygon, name: str = ""):
     y_bottom, y_top = min(ys), max(ys)
     try:
         return Domain.create_domain([x_left, x_right, y_bottom, y_top], name)
-    except:
+    except InvalidRangeException:
         return Domain.create_domain([x_left, x_right, y_top, y_bottom], name)

@@ -1,8 +1,9 @@
 from collections import Counter
 from copy import deepcopy
-from helpers.layout import Layout
-from identify.interfaces import Problem
-from identify.id_problems import report_problems
+
+from ..helpers.layout import Layout
+from .id_problems import report_problems
+from .interfaces import Problem
 
 
 class Reporter:
@@ -50,5 +51,5 @@ class Reporter:
 
     def summarize(self):
         self.summary = Counter(
-            [i.problem_type.name for i in self.problems if i.resolved == False]
+            [i.problem_type.name for i in self.problems if not i.resolved]
         )

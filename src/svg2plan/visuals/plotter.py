@@ -1,6 +1,7 @@
 from typing import Dict
-from visuals.plots import prepare_shape_dict, get_plotly_colors, plot_shapes
-from domains.domain import Domain
+
+from ..domains.domain import Domain
+from .plots import get_plotly_colors, plot_shapes, prepare_shape_dict
 
 
 class Plotter:
