@@ -1,14 +1,14 @@
 from itertools import zip_longest
-from typing import Iterable, List, Sequence
-from helpers.directions import Direction
-from helpers.utils import sort_and_group_objects
-from helpers.layout import Layout
+from typing import Iterable, List
+from ..helpers.directions import Direction
+from ..helpers.utils import sort_and_group_objects
+from ..helpers.layout import Layout
 from .interfaces import EdgeDetails
-from placement.cardinal import create_cardinal_dags
+from ..placement.cardinal import create_cardinal_dags
 
 from rich.console import Console
 from rich.table import Table
-from beaupy import confirm, select_multiple
+from beaupy import select_multiple
 
 STYLE = "cyan1 bold"
 
@@ -98,7 +98,13 @@ def ask_about_connected_edges(
     location = "Exterior" if external else "Interior"
     console.print(f"[{axis.upper()} {location}] Which edges are connected?")
 
-    items = select_multiple(strings, return_indices=True, ticked_indices=ticked_indices, tick_style=STYLE, cursor_style=STYLE)  # type: ignore
+    items = select_multiple(
+        strings,
+        return_indices=True,
+        ticked_indices=ticked_indices,
+        tick_style=STYLE,
+        cursor_style=STYLE,
+    )  # type: ignore
 
     return [e.ix for ix, e in enumerate(edges) if ix in items]
 
@@ -115,6 +121,8 @@ def ask_about_edges_for_subsurface(
 
     console.print(f"Select {axis.upper()} edges for {stype} type {s_id}")
 
-    items = select_multiple(strings, return_indices=True, tick_style=STYLE, cursor_style=STYLE)  # type: ignore
+    items = select_multiple(
+        strings, return_indices=True, tick_style=STYLE, cursor_style=STYLE
+    )  # type: ignore
 
     return [e.ix for ix, e in enumerate(edges) if ix in items]

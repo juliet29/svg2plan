@@ -16,7 +16,7 @@ from .edges import (
     show_subsurfaces,
     save_connectivity_graph,
 )
-from .finish import clean_up_domains
+from .finish import clean_up_domains, copy_to_plan2eplus
 from .prompt_edges import assign_connectivity, assign_subsurfaces, reset_edge_details
 
 
@@ -38,6 +38,8 @@ app.command()(save_connectivity_graph)
 app.command()(assign_remaining_subsurfaces)
 
 app.command()(clean_up_domains)
+
+app.command()(copy_to_plan2eplus)
 
 
 @app.callback()

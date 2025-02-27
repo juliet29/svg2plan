@@ -1,20 +1,20 @@
-from os import error
-from pathlib import Path
-import typer
 import json
+from pathlib import Path
+
+import networkx as nx
+import typer
 from rich import print as rprint
-from helpers.save import RoomType, read_pickle
-from helpers.save import write_pickle
-from helpers.layout import Layout
-from .interfaces import EdgeDetails, SubSurfacesJSON
 from typing_extensions import Annotated
 
+from ..constants import BASE_PATH
+from ..helpers.layout import Layout
+from ..helpers.save import RoomType, read_pickle, write_pickle
+from .interfaces import EdgeDetails, SubSurfacesJSON
 from .subsurface_helpers import open_subsurface_json
-import networkx as nx
 
-ROOT_DIR = Path.cwd().parent.parent
-OUTPUT_DIR = ROOT_DIR / "outputs3"
-SVG_DIR = ROOT_DIR / "svg_imports"
+OUTPUT_DIR = BASE_PATH / "outputs3"
+
+SVG_DIR = BASE_PATH / "svg_imports"
 
 
 def error_print(m):
@@ -31,7 +31,7 @@ def complete_case(incomplete: str):
             return tuple(case_names)
 
 
-CaseNameInput = Annotated[
+SVGNameInput = Annotated[
     str, typer.Argument(help="case_name", autocompletion=complete_case)
 ]
 
@@ -42,12 +42,12 @@ class UninitializedSVGError(Exception):
         super().__init__()
 
 
-def get_case_path(case_name) -> Path:
-    return SVG_DIR / case_name
+def get_svg_path(svg_name) -> Path:
+    return SVG_DIR / svg_name
 
 
 def get_output_path(case_name) -> Path:
-    case_path = get_case_path(case_name)
+    case_path = get_svg_path(case_name)
     return OUTPUT_DIR / f"case_{case_path.stem}"
 
 
@@ -104,3 +104,9 @@ def write_plan(case_name, plan: list[list[RoomType]]):
         json.dump(plan, default=str, fp=file)
 
     rprint(f"Saved floorplan to {path.parent / path.name}")
+
+
+def remove_files(path: Path):
+    for file in path.iterdir():
+        if file.is_file():
+            file.unlink()

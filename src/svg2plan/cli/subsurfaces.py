@@ -1,13 +1,10 @@
 import shutil
-import sys
 from pathlib import Path
-
-sys.path.append(str(Path.cwd().parent))
 
 import typer
 from typing_extensions import Annotated
 
-from .helpers import CaseNameInput, get_output_path, get_subsurfaces, write_subsurfaces
+from .helpers import SVGNameInput, get_output_path, get_subsurfaces, write_subsurfaces
 from .interfaces import DoorsJSON, DoorType, WindowsJSON, WindowType
 from .subsurface_helpers import (
     DimInput,
@@ -16,17 +13,20 @@ from .subsurface_helpers import (
     validate_id,
     validate_wtype,
 )
+from ..constants import BASE_PATH
 
 
-def copy_existing_subsurfaces(case_name: CaseNameInput):
+def copy_existing_subsurfaces(case_name: SVGNameInput):
     # TODO optionally copy from another case..
     output_path = get_output_path(case_name)
-    def_subsurfaces = Path(output_path.parent / "details" / "subsurfaces.json")
+    def_subsurfaces = (
+        BASE_PATH / "src/svg2plan" / "cli" / "defaults" / "subsurfaces.json"
+    )
     shutil.copy(def_subsurfaces, output_path)
 
 
 def create_window(
-    case_name: CaseNameInput,
+    case_name: SVGNameInput,
     id: Annotated[int, typer.Argument(help="id")],
     width: Annotated[DimInput, typer.Option("--width", "-w")],
     height: Annotated[DimInput, typer.Option("--height", "-h")],
@@ -66,7 +66,7 @@ def create_window(
 
 
 def create_door(
-    case_name: CaseNameInput,
+    case_name: SVGNameInput,
     id: Annotated[int, typer.Argument(help="id")],
     width: Annotated[DimInput, typer.Option("--width", "-w")],
     height: Annotated[DimInput, typer.Option("--height", "-h")],

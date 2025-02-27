@@ -1,6 +1,8 @@
 from itertools import chain, groupby, tee
 from typing import Any, Callable, Dict, Iterable, List, TypeVar, Union
 import json
+from datetime import datetime
+
 
 
 def key_from_value(dict: Dict, val):
@@ -60,3 +62,8 @@ def uniter(iterer: Iterable):
 
 def set_difference(s_large:Iterable, s2:Iterable):
     return list(set(s_large).difference(set(s2)))
+
+
+def get_curr_datetime():
+    now = datetime.now()
+    return now.strftime("%y%m%d_%H%M%S")

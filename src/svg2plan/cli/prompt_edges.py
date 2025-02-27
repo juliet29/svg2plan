@@ -2,27 +2,24 @@ from copy import deepcopy
 import typer
 from .edge_checks import is_valid_id
 from .helpers import (
-    CaseNameInput,
-    EdgeDetails,
+    SVGNameInput,
     get_edge_details,
     get_subsurfaces,
     write_edges,
 )
 from .edge_helpers import (
-    Console,
     ask_about_connected_edges,
     ask_about_edges_for_subsurface,
-    get_edges_for_prompt,
     display_edges,
 )
-from typing import Annotated, List
-from beaupy import confirm, select_multiple
-from helpers.utils import chain_flatten, set_difference
+from typing import Annotated
+from beaupy import confirm
+from ..helpers.utils import chain_flatten
 from .interfaces import SubsurfaceType
 from rich import print as rprint
 
 
-def reset_edge_details(case_name: CaseNameInput):
+def reset_edge_details(case_name: SVGNameInput):
     _edge_details = get_edge_details(case_name)
     edge_details = deepcopy(_edge_details)
     for i in edge_details:
@@ -36,8 +33,8 @@ def reset_edge_details(case_name: CaseNameInput):
         rprint("Abandoning changes...")
 
 
-def assign_connectivity(case_name: CaseNameInput):
-    _edge_details = get_edge_details(case_name)
+def assign_connectivity(svg_name: SVGNameInput):
+    _edge_details = get_edge_details(svg_name)
     edge_details = deepcopy(_edge_details)
 
     pairs = [
@@ -59,16 +56,18 @@ def assign_connectivity(case_name: CaseNameInput):
 
     display_edges(edge_details)
     if confirm("Are the edges correct?"):
-        write_edges(case_name, edge_details)
+        write_edges(svg_name, edge_details)
     else:
         rprint("Abandoning changes...")
+
+    rprint(f"Completed work on {svg_name}")
 
 
 # TOD possibly unassign connectivity with undo flag..
 
 
 def assign_subsurfaces(
-    case_name: CaseNameInput,
+    svg_name: SVGNameInput,
     id: Annotated[
         int,
         typer.Argument(help="id of subsurface"),
@@ -78,15 +77,15 @@ def assign_subsurfaces(
         typer.Option("--window", "-w", help="'WINDOW' if not DOOR"),
     ] = False,
 ):
-    _edge_details = get_edge_details(case_name)
+    _edge_details = get_edge_details(svg_name)
     edge_details = deepcopy(_edge_details)
 
     subsurface_type = SubsurfaceType.DOORS if not is_window else SubsurfaceType.WINDOWS
 
-    subsurfaces = get_subsurfaces(case_name)[subsurface_type.name]
+    subsurfaces = get_subsurfaces(svg_name)[subsurface_type.name]
     is_valid_id(subsurfaces, id)
 
-    edge_details = get_edge_details(case_name)
+    edge_details = get_edge_details(svg_name)
     axes = ["x", "y"]
 
     edge_ids = []
@@ -103,6 +102,8 @@ def assign_subsurfaces(
 
     display_edges(edge_details)
     if confirm("Are the edges correct?"):
-        write_edges(case_name, edge_details)
+        write_edges(svg_name, edge_details)
     else:
         rprint("Abandoning changes...")
+
+    rprint(f"Completed work on {svg_name}")

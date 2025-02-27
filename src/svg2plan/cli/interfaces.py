@@ -3,9 +3,8 @@ from dataclasses import dataclass
 from typing import Literal, NamedTuple, TypedDict
 from pint import UnitRegistry
 from decimal import Decimal
-from helpers.shapely import ROUNDING_LIM
+from ..helpers.shapely import ROUNDING_LIM
 from enum import Enum
-
 
 
 def rounded_decimal_from_fraction(frac: Fraction):
@@ -37,9 +36,10 @@ class WindowsJSON(TypedDict):
     width: str
     height: str
     head_height: str
-    opening_hieght: str 
-    model: str 
+    opening_hieght: str
+    model: str
     wtype: str
+
 
 class DoorsJSON(TypedDict):
     id: int
@@ -48,12 +48,14 @@ class DoorsJSON(TypedDict):
     thickness: str
     material: str  # TODO
 
+
 def to_json(obj):
     d = obj.__dict__
     for k, v in d.items():
         if hasattr(v, "feet"):
             d[k] = str(v.meters)
     return d
+
 
 @dataclass
 class SubsurfaceBase:
@@ -64,16 +66,16 @@ class SubsurfaceBase:
 
 WTypes = Literal["Casement", "Fixed", "Casement+Fixed"]
 
+
 @dataclass
 class WindowType(SubsurfaceBase):
     head_height: FootInchesDimension
-    opening_hieght: FootInchesDimension 
-    model: str 
+    opening_hieght: FootInchesDimension
+    model: str
     wtype: str
 
     def to_json(self) -> WindowsJSON:
-        return to_json(self) # type: ignore
-
+        return to_json(self)  # type: ignore
 
 
 @dataclass
@@ -82,44 +84,39 @@ class DoorType(SubsurfaceBase):
     material: str  # TODO
 
     def to_json(self) -> DoorsJSON:
-        return to_json(self) # type: ignore
-
-
+        return to_json(self)  # type: ignore
 
 
 @dataclass
-class EdgeDetails():
+class EdgeDetails:
     ix: int
     edge: tuple[str, str]
     axis: Literal["x", "y"]
     external: bool = False
     connectivity: bool = False
     detail: int | None = None
-    
+
     def __str__(self) -> str:
         u, v = self.edge
-        txt = f"{self.ix}.({u} - {v}) " 
+        txt = f"{self.ix}.({u} - {v}) "
         if isinstance(self.detail, int):
             return txt + str([self.detail])
         else:
             return txt
-        
+
     def __eq__(self, other) -> bool:
         a = sorted(self.edge)
         b = sorted(other.edge)
         return a == b
+
     def __hash__(self) -> int:
         u, v = self.edge
         return hash(u) + hash(v)
-        
-
 
 
 class SubsurfaceType(str, Enum):
     DOORS = "DOORS"
     WINDOWS = "WINDOWS"
-
-
 
 
 class SubSurfacesJSON(TypedDict):

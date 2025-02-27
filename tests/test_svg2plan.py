@@ -14,7 +14,7 @@ from svg2plan.svg_reader import SVGReader
 
 
 def run_svg(path):
-    sv = SVGReader(BASE_PATH / path)
+    sv = SVGReader(BASE_PATH /path)
     sv.run()
     ad_layout = adjust_domains(sv.domains)
     # Gxc, Gyc = create_cardinal_dags(ad_layout)
@@ -28,6 +28,7 @@ path_parameters = "path", [
     "svg_imports/red_d3.svg",
     "svg_imports/amb_b1.svg",
     "tests/svgs/_05_rect.svg",
+    # "tests/svgs/messy.svg",
 ]
 
 

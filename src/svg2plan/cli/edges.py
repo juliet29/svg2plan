@@ -1,12 +1,8 @@
-from typing import List
 import networkx as nx
-import typer
 from rich import print as rprint
-from typing_extensions import Annotated
-from .edge_checks import is_valid_assignment
 from .edge_helpers import display_edges
 from .helpers import (
-    CaseNameInput,
+    SVGNameInput,
     error_print,
     get_edge_details,
     get_subsurfaces,
@@ -15,26 +11,26 @@ from .helpers import (
 )
 
 
-def show_edges(case_name: CaseNameInput):
+def show_edges(case_name: SVGNameInput):
     edge_details = get_edge_details(case_name)
     display_edges(edge_details)
 
 
-def show_subsurfaces(case_name: CaseNameInput):
+def show_subsurfaces(case_name: SVGNameInput):
     subsurfaces = get_subsurfaces(case_name)
     rprint(subsurfaces)
 
 
-def assign_remaining_subsurfaces(case_name: CaseNameInput):
+def assign_remaining_subsurfaces(case_name: SVGNameInput):
     edge_details = get_edge_details(case_name)
     for e in edge_details:
         if e.connectivity and not isinstance(e.detail, int):
             e.detail = 1
     write_edges(case_name, edge_details)
-    rprint(f"assigned remaining subsurfaces ")
+    rprint("assigned remaining subsurfaces ")
 
 
-def save_connectivity_graph(case_name: CaseNameInput):
+def save_connectivity_graph(case_name: SVGNameInput):
     edge_details = get_edge_details(case_name)
     Gconn = nx.DiGraph()
     for e in edge_details:

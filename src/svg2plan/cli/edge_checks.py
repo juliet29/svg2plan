@@ -9,7 +9,7 @@ class InvalidAssignmentError(Exception):
 
 def is_valid_id(subsurfaces, id):
     valid_ids = [item["id"] for item in subsurfaces]
-    if not id in valid_ids:
+    if id not in valid_ids:
         error_print(f"passed {id} is not in subsurface ids: {valid_ids}")
 
 

@@ -1,0 +1,11 @@
+<svg width="980" height="407" viewBox="0 0 980 407" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="980" height="407" fill="#F5F5F5"/>
+<g id="Slide 16:9 - 5">
+<rect width="1920" height="1080" transform="translate(-167 -351)" fill="white"/>
+<g id="_03_rect">
+<rect id="mid" x="655.999" y="406.5" width="323" height="406" transform="rotate(180 655.999 406.5)" fill="#2AD5D3"/>
+<rect id="east" x="979.5" y="406" width="323" height="406" transform="rotate(180 979.5 406)" fill="#2AD5D3"/>
+<rect id="west" x="323" y="406.5" width="323" height="406" transform="rotate(180 323 406.5)" fill="#BE2F2F"/>
+</g>
+</g>
+</svg>

@@ -63,7 +63,9 @@ class FixLayout:
         while self.results:
             self.run_again()
             if self.count > self.MAX_ITER:
+                self.plot_all()
                 raise Exception(f"Exceeded {self.MAX_ITER} iterations! ")
+
         print(f"Found best layout: {self.bl.short_message()}")
 
     def run_again(self):
@@ -87,7 +89,7 @@ class FixLayout:
     def sift_layouts(self):
         while is_domain_in_history(self.bl.layout.domains, self.history):
             self.bl = get_next_best_result(self.bl, self.sorted_res)
-            print(f"skipping bc prev domains are in history")
+            print("skipping bc prev domains are in history")
         print(f"next best layout {self.bl.short_message()}")
 
     def update_history(self):

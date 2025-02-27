@@ -11,6 +11,21 @@ wheels = [
 ]
 
 [[package]]
+name = "beaupy"
+version = "3.10.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "emoji" },
+    { name = "python-yakh" },
+    { name = "questo" },
+    { name = "rich" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/24/60/3b3b4d23e135c6828792f84d46be86c126fe72771121723c5775c43a6812/beaupy-3.10.1.tar.gz", hash = "sha256:8d8a1cde212264a0402a672eed322488fb212f2e11c80c08ed011a70b489ef12", size = 16417 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/76/a8/0787af1185f990023d69240a61c46b853bad35d040206b9704179bac8dac/beaupy-3.10.1-py3-none-any.whl", hash = "sha256:b31337581fc445fc81b07701d97de6409d6b13a4d0b620ca461475c2756c45ca", size = 14675 },
+]
+
+[[package]]
 name = "blessed"
 version = "1.20.0"
 source = { registry = "https://pypi.org/simple" }
@@ -164,6 +179,39 @@ wheels = [
 ]
 
 [[package]]
+name = "emoji"
+version = "2.14.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/cb/7d/01cddcbb6f5cc0ba72e00ddf9b1fa206c802d557fd0a20b18e130edf1336/emoji-2.14.1.tar.gz", hash = "sha256:f8c50043d79a2c1410ebfae833ae1868d5941a67a6cd4d18377e2eb0bd79346b", size = 597182 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/91/db/a0335710caaa6d0aebdaa65ad4df789c15d89b7babd9a30277838a7d9aac/emoji-2.14.1-py3-none-any.whl", hash = "sha256:35a8a486c1460addb1499e3bf7929d3889b2e2841a57401903699fef595e942b", size = 590617 },
+]
+
+[[package]]
+name = "flexcache"
+version = "0.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/55/b0/8a21e330561c65653d010ef112bf38f60890051d244ede197ddaa08e50c1/flexcache-0.3.tar.gz", hash = "sha256:18743bd5a0621bfe2cf8d519e4c3bfdf57a269c15d1ced3fb4b64e0ff4600656", size = 15816 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/27/cd/c883e1a7c447479d6e13985565080e3fea88ab5a107c21684c813dba1875/flexcache-0.3-py3-none-any.whl", hash = "sha256:d43c9fea82336af6e0115e308d9d33a185390b8346a017564611f1466dcd2e32", size = 13263 },
+]
+
+[[package]]
+name = "flexparser"
+version = "0.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/82/99/b4de7e39e8eaf8207ba1a8fa2241dd98b2ba72ae6e16960d8351736d8702/flexparser-0.4.tar.gz", hash = "sha256:266d98905595be2ccc5da964fe0a2c3526fbbffdc45b65b3146d75db992ef6b2", size = 31799 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/fe/5e/3be305568fe5f34448807976dc82fc151d76c3e0e03958f34770286278c1/flexparser-0.4-py3-none-any.whl", hash = "sha256:3738b456192dcb3e15620f324c447721023c0293f6af9955b481e91d00179846", size = 27625 },
+]
+
+[[package]]
 name = "greenlet"
 version = "3.1.1"
 source = { registry = "https://pypi.org/simple" }
@@ -294,6 +342,30 @@ wheels = [
 ]
 
 [[package]]
+name = "pint"
+version = "0.24.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "flexcache" },
+    { name = "flexparser" },
+    { name = "platformdirs" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/20/bb/52b15ddf7b7706ed591134a895dbf6e41c8348171fb635e655e0a4bbb0ea/pint-0.24.4.tar.gz", hash = "sha256:35275439b574837a6cd3020a5a4a73645eb125ce4152a73a2f126bf164b91b80", size = 342225 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b7/16/bd2f5904557265882108dc2e04f18abc05ab0c2b7082ae9430091daf1d5c/Pint-0.24.4-py3-none-any.whl", hash = "sha256:aa54926c8772159fcf65f82cc0d34de6768c151b32ad1deb0331291c38fe7659", size = 302029 },
+]
+
+[[package]]
+name = "platformdirs"
+version = "4.3.6"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/13/fc/128cc9cb8f03208bdbf93d3aa862e16d376844a14f9a0ce5cf4507372de4/platformdirs-4.3.6.tar.gz", hash = "sha256:357fb2acbc885b0419afd3ce3ed34564c13c9b95c89360cd9563f73aa5e2b907", size = 21302 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/3c/a6/bc1012356d8ece4d66dd75c4b9fc6c1f6650ddd5991e421177d9f8f671be/platformdirs-4.3.6-py3-none-any.whl", hash = "sha256:73e575e1408ab8103900836b97580d5307456908a03e92031bab39e4554cc3fb", size = 18439 },
+]
+
+[[package]]
 name = "plotly"
 version = "6.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -365,12 +437,34 @@ wheels = [
 ]
 
 [[package]]
+name = "python-yakh"
+version = "0.4.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d2/77/bbff0a1e6fb03b8cc2cc373a44cfbbb4fd22863c657f8630f4a0f5eb207c/python_yakh-0.4.1.tar.gz", hash = "sha256:da03e800b4f2f5d85344f1668e852687c12dc1a99a03c65cf3dc13a3680da49d", size = 3988 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/22/42/72571b24514b5f59c328f12e5294b246958951b889fac2bd5321e08a4bab/python_yakh-0.4.1-py3-none-any.whl", hash = "sha256:d69507e13e03d09cefd88030f74b6d5369b67de004be975a35be28eb286122e4", size = 5826 },
+]
+
+[[package]]
 name = "pyxdg"
 version = "0.28"
 source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/b0/25/7998cd2dec731acbd438fbf91bc619603fc5188de0a9a17699a781840452/pyxdg-0.28.tar.gz", hash = "sha256:3267bb3074e934df202af2ee0868575484108581e6f3cb006af1da35395e88b4", size = 77776 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/e5/8d/cf41b66a8110670e3ad03dab9b759704eeed07fa96e90fdc0357b2ba70e2/pyxdg-0.28-py2.py3-none-any.whl", hash = "sha256:bdaf595999a0178ecea4052b7f4195569c1ff4d344567bccdc12dfdf02d545ab", size = 49520 },
+]
+
+[[package]]
+name = "questo"
+version = "0.4.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "python-yakh" },
+    { name = "rich" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/1b/2a/ace6f441af4bf71a926183255ecf82dc2574c0203408ff466354f3c2256c/questo-0.4.1.tar.gz", hash = "sha256:efe4fb0ca68606555a5357d6424d4116081e9af7f10d8a6208039aa9b130d30f", size = 7418 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/53/d5/71ad81de9c569b1b2e2baa5a60e85102c35fe898007de7ea2136c291b4ce/questo-0.4.1-py3-none-any.whl", hash = "sha256:57515abdec03e9b2ddcdfe7031e8b1742408fe61c9914b1395c0caa4f9abad7b", size = 10108 },
 ]
 
 [[package]]
@@ -470,9 +564,11 @@ name = "svg2plan"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "beaupy" },
     { name = "bpython" },
     { name = "colored-traceback" },
     { name = "networkx" },
+    { name = "pint" },
     { name = "plotly" },
     { name = "pyprojroot" },
     { name = "pytest" },
@@ -485,9 +581,11 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "beaupy", specifier = ">=3.10.1" },
     { name = "bpython", specifier = ">=0.25" },
     { name = "colored-traceback", specifier = ">=0.4.2" },
     { name = "networkx", specifier = ">=3.4.2" },
+    { name = "pint", specifier = ">=0.24.4" },
     { name = "plotly", specifier = ">=6.0.0" },
     { name = "pyprojroot", specifier = ">=0.3.0" },
     { name = "pytest", specifier = ">=8.3.4" },

@@ -1,4 +1,4 @@
-from typing import Literal, Tuple
+from typing import Tuple
 from rich import print as rprint
 from .interfaces import FootInchesDimension, SubSurfacesJSON
 import json
@@ -30,7 +30,7 @@ def validate_id(data, id):
     if data:
         existing_ids = [i["id"] for i in data]
         while id in existing_ids:
-            rprint(f"ID {id} already exists. Incrementing to {id+1}")
+            rprint(f"ID {id} already exists. Incrementing to {id + 1}")
             id += 1
     return id
 

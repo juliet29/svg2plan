@@ -1,0 +1,15 @@
+<svg width="282" height="780" viewBox="0 0 282 780" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="amb_b1">
+<rect id="w_bed" width="149" height="166" fill="#FF6135" fill-opacity="0.44"></rect>
+<rect id="w_living" y="407" width="110" height="369" fill="#FF6135" fill-opacity="0.44"></rect>
+<rect id="laundry" x="203" y="171" width="79" height="105" fill="#FFEE35" fill-opacity="0.44"></rect>
+<rect id="bed_1" x="157" width="125" height="166" fill="#35FFF2" fill-opacity="0.44"></rect>
+<rect id="w_bath" y="171" width="104" height="157" fill="#CC35FF" fill-opacity="0.44"></rect>
+<rect id="s_bath" y="341" width="104" height="58" fill="#CC35FF" fill-opacity="0.44"></rect>
+<rect id="den" x="156" y="281" width="126" height="139" fill="#35FFF2" fill-opacity="0.44"></rect>
+<rect id="entry" x="222" y="429" width="57" height="351" fill="#35FFF2" fill-opacity="0.44"></rect>
+<rect id="transit" x="112" y="281" width="37" height="145" fill="#FF3538" fill-opacity="0.44"></rect>
+<rect id="e_living" x="111" y="429" width="111" height="347" fill="#476EEF" fill-opacity="0.6"></rect>
+<rect id="transit2" x="112" y="171" width="82" height="107" fill="#35FFF2" fill-opacity="0.44"></rect>
+</g>
+</svg>
