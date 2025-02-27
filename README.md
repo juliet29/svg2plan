@@ -1,10 +1,6 @@
 # svg2plan
 
-*Transform SVGs into floorplans that are valid for creation of energy models. *
-
-
-
-
+*Transform SVGs into floorplans that are valid for creation of energy models.*
 
 This interactive, command-line based module allows you to mark up a rasterized floor plan (pdf or image) quickly and get out a floorplan that is rectangular, and has no holes or overlaps. This makes them valid not just for use in EnergyPlus, but also with EnergyPlus's Airflow Network. You can also export connectivy information, which makes it simple to add doors and windows. This makes understanding how ventilation flows through floor plans a "breeze". 
 
