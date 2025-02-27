@@ -2,8 +2,7 @@
 
 *Transform SVGs into floorplans that are valid for creation of energy models. *
 
-![Going from marked up floor plan as svg, to EnergyPlus compliant plan](<figures/red_b1_figs/Closed Gaps.png>)
-![Rectangular shape is ideal for use with the Airflow Network](<figures/red_b1_figs/Closed Gaps.png>)
+
 
 
 
@@ -23,6 +22,7 @@ This module is meant to be paired with `plan2eplus` which generates Airflow Netw
       * Extract information about the relative adjacencies of the rooms
       * Try to resolve existing problems with the plan (eliminate holes and overlaps)
         * This is an iterative process (that should complete in seconds), and less than 10 iterations are typically needed. If the process fails because it exceeds the max iterations, try splitting up the plan or using rectangles have more similar sizes. 
+      * "Clean up" the floor plan by making sure the entire plan is rectangular. 
     * Initialize some default door and window information 
     * Invite you to note which adjacent edges should be part of the *connectivity graph*. I.e., which edge connections denote doors and windows. Having the actual floor plan open in order to see where the windows and doors are helps here!
 4. **Assign.** Once you have noted where doors and windows are, you can optionally run 
@@ -38,4 +38,6 @@ This module is meant to be paired with `plan2eplus` which generates Airflow Netw
    * the `.pkl` files contain intermediate information used in processing. 
   
 
-  
+![Going from marked up floor plan as svg, to EnergyPlus compliant plan](<figures/red_b1_figs/Closed Gaps.png>)
+![Rectangular shape is ideal for use with the Airflow Network](<figures/red_b1_figs/Leveled Sides.png>)
+
