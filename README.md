@@ -17,7 +17,7 @@ Git clone this module. UV is used as the package manager. Run the `/tests` to he
 Mark up your floor plan with rectangles and room names and export a .svg file (software like Figma is ideal) to `svg_imports`. The .svg file should have rectangular objects with height, width, x, y, and an id. See `/svg_imports` for examples. Take note of a pixel length dimension relative to a room length (feet and inches is used here).  This information will be used to rescale the plan. 
 
 ### Initialize
-Run the initialization script on your command line. You will have to make it an executable. On Mac, the command is `chmod +x <script>`. The script is `/src/svg2plan/cli/scripts/init.sh`. Add the name of your svg file afterwards. So on the command line you would enter `/src/svg2plan/cli/scripts/init.sh <your-svg-file.svg>`. You can optionally add dimensional information to rescale the plan. Otherwise defaults will be used. Add `--help` for more information. This script will:
+Run the initialization script on your command line. You will have to make it an executable. On Mac, the command is `chmod +x <script>`. The script is `./src/svg2plan/cli/scripts/init.sh`. Add the name of your svg file afterwards. So on the command line you would enter `/src/svg2plan/cli/scripts/init.sh <your-svg-file.svg>`. You can optionally add dimensional information to rescale the plan. Otherwise defaults will be used. Add `--help` for more information. This script will:
 * Create a directory for the case outputs in `/outputs3/case_<your-svg-file>`
 * Analyze the .svg file and 
     * Extract information about the room dimensions

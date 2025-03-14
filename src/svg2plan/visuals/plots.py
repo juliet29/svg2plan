@@ -1,6 +1,7 @@
 from itertools import product
 from typing import Dict, List
 
+from numpy import isin
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -66,7 +67,7 @@ def plot_shapes(plot_dict, x_range=[-10, 300], y_range=[-300, 10]):
 
 def subplot_layout(
     fig,
-    domains: Dict[str, Domain],
+    domains: Dict[str, Domain] | list[Domain],
     row: int,
     col: int,
     label: str,
@@ -76,10 +77,19 @@ def subplot_layout(
 ):
     colors, _ = get_plotly_colors(n_colors=len(domains))
     plot_dict = {}
-    for ix, (k, v) in enumerate(domains.items()):
-        plot_dict[k] = prepare_shape_dict(v, color=colors[ix])  # type: ignore
-        if label_shapes:
-            plot_dict[k]["label"] = dict(text=k, font=dict(size=8))
+
+    if isinstance(domains, dict):
+        for ix, (k, v) in enumerate(domains.items()):
+            plot_dict[k] = prepare_shape_dict(v, color=colors[ix])  # type: ignore
+            if label_shapes:
+                plot_dict[k]["label"] = dict(text=k, font=dict(size=8))
+    else:
+        for ix, v in enumerate(domains):
+            k = v.name
+            plot_dict[k] = prepare_shape_dict(v, color=colors[ix])  # type: ignore
+            if label_shapes:
+                plot_dict[k]["label"] = dict(text=k, font=dict(size=8))
+
 
     fig.update_xaxes(
         range=xrange,

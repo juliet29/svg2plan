@@ -1,7 +1,10 @@
+from decimal import Decimal
 from itertools import chain, groupby, tee
 from typing import Any, Callable, Dict, Iterable, List, TypeVar, Union
 import json
 from datetime import datetime
+
+from svg2plan.constants import ROUNDING_LIM
 
 
 
@@ -67,3 +70,10 @@ def set_difference(s_large:Iterable, s2:Iterable):
 def get_curr_datetime():
     now = datetime.now()
     return now.strftime("%y%m%d_%H%M%S")
+
+
+def float_to_decimal(x:float):
+    return round(Decimal(x), ROUNDING_LIM)
+
+def tuple_to_decimal(a: float, b: float):
+    return (float_to_decimal(a), float_to_decimal(b))

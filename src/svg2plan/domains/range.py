@@ -3,6 +3,8 @@ from decimal import Decimal
 from typing import Callable
 from shapely import LineString
 
+from svg2plan.helpers.utils import tuple_to_decimal
+
 from ..constants import ROUNDING_LIM
 
 
@@ -44,6 +46,10 @@ class Range:
     def line_string(self):
         # 'projected' on to x axis
         return LineString([[self.min, 0], [self.max, 0]])
+    
+    @property
+    def as_list(self):
+        return [self.min, self.max]
 
     def is_intersecting_shapely(self, other):
         are_related = not self.line_string.disjoint(other.line_string)
@@ -105,12 +111,11 @@ class Range:
 
     @classmethod
     def create_range(cls, a: float, b: float):
-        def fx(x):
-            return round(Decimal(x), ROUNDING_LIM)
-        return cls(fx(a), fx(b))
+        return cls(*tuple_to_decimal(a,b))
     
     @classmethod
     def recreate_range(cls, a: str, b: str):
+        # TODO investigate why no round? 
         def fx(x):
             return Decimal(x)
         return cls(fx(a), fx(b))

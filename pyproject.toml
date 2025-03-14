@@ -11,6 +11,8 @@ dependencies = [
     "beaupy>=3.10.1",
     "bpython>=0.25",
     "colored-traceback>=0.4.2",
+    "ipykernel>=6.29.5",
+    "nbformat>=5.10.4",
     "networkx>=3.4.2",
     "pint>=0.24.4",
     "plotly>=6.0.0",
@@ -19,6 +21,7 @@ dependencies = [
     "pytest-cov>=6.0.0",
     "rich>=13.9.4",
     "scipy>=1.15.2",
+    "seaborn>=0.13.2",
     "shapely>=2.0.7",
     "typer>=0.15.1",
 ]

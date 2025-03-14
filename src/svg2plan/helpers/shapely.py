@@ -1,4 +1,4 @@
-from shapely import Point, Polygon, from_wkt, geometry, to_wkt
+from shapely import Point, Polygon, from_wkt, geometry, to_wkt, unary_union
 from shapely.coords import CoordinateSequence
 
 from svg2plan.domains.range import InvalidRangeException
@@ -38,6 +38,9 @@ def domain_to_shape(domain: Domain) -> Polygon:
     assert isinstance(shape, Polygon)
 
     return shape
+
+def domains_to_shape(domains: list[Domain]):
+    return unary_union([domain_to_shape(i) for i in domains]) 
 
 
 def shape_to_domain(shape: Polygon, name: str = ""):

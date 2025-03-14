@@ -5,10 +5,10 @@ from typing import Optional
 import networkx as nx
 
 
-from domains.domain import Domain
-from helpers.directions import Direction
-from helpers.layout import DomainsDict
-from placement.attract import create_pos
+from ..domains.domain import Domain
+from ..helpers.directions import Direction
+from ..helpers.layout import DomainsDict
+from .attract import create_pos
 
 
 
@@ -17,6 +17,8 @@ NodePositions = dict[str, tuple[float, float]]
 
 def create_tuple_of_floats(u, v):
     return (float(u), float(v))
+
+
 
 
 def get_bounds_of_positioned_graph(pos: NodePositions):

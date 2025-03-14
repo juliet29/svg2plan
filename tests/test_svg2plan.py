@@ -41,10 +41,10 @@ def test_domains_are_valid_and_rectangular(path):
 
     assert shapely.get_num_interior_rings(union_res) == 0
 
-    convave_hull_ext = shapely.get_exterior_ring(shapely.concave_hull(union_res))
+    concave_hull_ext = shapely.get_exterior_ring(shapely.concave_hull(union_res))
     union_ext = shapely.get_exterior_ring(union_res)
-    assert union_ext and convave_hull_ext
-    assert set(union_ext.coords) == set(convave_hull_ext.coords)
+    assert union_ext and concave_hull_ext
+    assert set(union_ext.coords) == set(concave_hull_ext.coords)
 
     assert math.isclose(union_res.minimum_rotated_rectangle.area, union_res.area)
 
